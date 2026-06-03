@@ -1,7 +1,8 @@
 # Tailored Resumes — London DS £150k+ Target List
 
-Twelve role-tailored resumes for the **"To apply"** roles in the
-`London_DS_Target_List_150k Main` tracker. Each is derived **only** from the
+Fourteen role-tailored resumes covering the **"To apply"** roles in the
+`London_DS_Target_List_150k Main` tracker plus **Revolut** and **QuantumBlack**
+from the wider Target List. Each is derived **only** from the
 improved base CV (`../base/Hani_Azam_base_CV.md`) — no facts are imported from
 any other resume. Tailoring is limited to the summary wording, skills ordering,
 and which bullets lead; every metric and claim traces to the base CV.
@@ -23,6 +24,8 @@ in the Drive folder **"Tailored Resumes - London DS 150k"**.
 | 10 | Bloomberg | Data Scientist | 6 | `Hani_Azam_Bloomberg_DataScientist.md` | 5/10 |
 | 11 | Man Group | Senior DS, Responsible Investment | 5 | `Hani_Azam_ManGroup_SeniorDataScientist_ResponsibleInvestment.md` | 7.5/10 |
 | 12 | TikTok | Senior Data Scientist, Operations | 5 | `Hani_Azam_TikTok_SeniorDataScientist_Operations.md` | 9/10 |
+| 13 | Revolut | Senior Data Scientist | 7 | `Hani_Azam_Revolut_SeniorDataScientist.md` | 7/10 |
+| 14 | QuantumBlack | Senior Data Scientist | 5 | `Hani_Azam_QuantumBlack_SeniorDataScientist.md` | 8/10 |
 
 ¹ Fit-to-JD is an internal adversarial-review score of how well the
 candidate's *actual* experience matches each JD — not resume quality. Low
@@ -32,9 +35,8 @@ the resumes deliberately do **not** fabricate to close them.
 
 ## Excluded from this set
 
-- **XTX Markets** — no live DS role (monitoring only).
-- **Revolut**, **QuantumBlack** — in the 15-row Target List but not in the
-  apply tracker. Say the word and I'll add them.
+- **XTX Markets** — no live DS role (monitoring only). Say the word and I'll
+  draft one against the Data Platform / SWE posting.
 
 ## Regenerating
 

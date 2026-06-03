@@ -39,6 +39,8 @@ KEYWORDS = {
     "Bloomberg": ["machine learning", "tf-idf", "fasttext"],
     "ManGroup": ["responsible investment", "political-economy", "product"],
     "TikTok": ["commerce", "experiment", "growth", "spark", "hadoop"],
+    "Revolut": ["propensity", "growth", "python", "experiment"],
+    "QuantumBlack": ["model", "python", "executive", "experiment"],
 }
 
 
