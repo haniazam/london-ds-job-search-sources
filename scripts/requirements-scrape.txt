@@ -1,0 +1,10 @@
+# Dependencies for the JD scrapers (run in an environment with outbound web).
+#
+# Plain scraper (Greenhouse/Ashby API + HTML fallback) needs only the stdlib:
+#   python3 scripts/fetch_jds.py
+#
+# Headless-browser scraper (for JS-rendered sites) needs Playwright + Chromium:
+#   pip install -r scripts/requirements-scrape.txt
+#   python -m playwright install chromium
+#   python3 scripts/fetch_jds_browser.py
+playwright>=1.44
