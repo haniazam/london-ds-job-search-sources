@@ -48,22 +48,31 @@ def host_of(url):
 
 
 def fetch_with_browser(page, url):
-    page.goto(url, wait_until="networkidle", timeout=60000)
+    # domcontentloaded (not networkidle): SPA sites with persistent analytics /
+    # websocket connections never reach networkidle and time out at 60s,
+    # returning an empty shell. Load the DOM, then give client JS time to
+    # render the JD and settle.
+    page.goto(url, wait_until="domcontentloaded", timeout=45000)
+    try:
+        page.wait_for_load_state("networkidle", timeout=8000)
+    except Exception:  # noqa: BLE001
+        pass
     sel = CONTENT_SELECTORS.get(host_of(url))
     if sel:
+        first = sel.split(",")[0].strip()
         try:
-            page.wait_for_selector(sel.split(",")[0].strip(), timeout=8000)
+            page.wait_for_selector(first, timeout=8000)
         except Exception:  # noqa: BLE001
             pass
-        html = page.content()
-        # Prefer the selector's HTML if it matches, else whole page.
+        # Prefer the selector's HTML, but only if it actually has substance;
+        # otherwise fall through to the whole rendered page.
         try:
-            el = page.query_selector(sel.split(",")[0].strip())
-            if el:
+            el = page.query_selector(first)
+            if el and len(el.inner_text().strip()) > 200:
                 return strip_html(el.inner_html())
         except Exception:  # noqa: BLE001
             pass
-        return strip_html(html)
+    page.wait_for_timeout(1500)
     return strip_html(page.content())
 
 
@@ -79,10 +88,17 @@ def main():
            "(JS-rendered). Source URLs: `docs/job-posting-urls.md`.\n"]
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page(user_agent=(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"))
+        # --ignore-certificate-errors + ignore_https_errors let Chromium work
+        # behind a TLS-intercepting egress proxy (whose CA it doesn't trust);
+        # otherwise every goto fails with net::ERR_CERT_AUTHORITY_INVALID.
+        browser = p.chromium.launch(
+            headless=True, args=["--ignore-certificate-errors"])
+        context = browser.new_context(
+            ignore_https_errors=True,
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"))
+        page = context.new_page()
         for company, postings in COMPANIES:
             out.append(f"\n========================================================\n"
                        f"## {company}\n")
