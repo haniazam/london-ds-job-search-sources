@@ -276,10 +276,17 @@ for c, reason in NO_ROLE:
         norole.append((c, reason))
 
 # ---------------- write CSV ----------------
-order = ["openai", "deepmind", "Microsoft", "Spotify", "monzo", "mangroup",
-         "Point72", "quberesearchandtechnologies", "G-Research", "Bloomberg",
-         "Amazon", "thetradedesk", "TikTok", "datadog", "gocardless", "dunnhumby",
-         "wayve"]
+# Proper display names (per CLAUDE.md) instead of raw ATS tokens.
+PRETTY = {"openai": "OpenAI", "deepmind": "Google DeepMind", "monzo": "Monzo",
+          "mangroup": "Man Group", "gocardless": "GoCardless", "dunnhumby": "dunnhumby",
+          "wayve": "Wayve", "datadog": "Datadog", "thetradedesk": "The Trade Desk",
+          "quberesearchandtechnologies": "Qube RT", "palantir": "Palantir",
+          "anthropic": "Anthropic", "hubspotjobs": "HubSpot"}
+active = [(PRETTY.get(c, c), role, lv, loc, url) for (c, role, lv, loc, url) in active]
+order = ["OpenAI", "Google DeepMind", "Google", "Microsoft", "Spotify", "Monzo",
+         "Man Group", "Point72", "Qube RT", "G-Research", "Bloomberg", "Amazon",
+         "The Trade Desk", "TikTok", "Datadog", "GoCardless", "dunnhumby", "Faculty AI",
+         "Wayve"]
 def okey(r):
     c = r[0]
     return (order.index(c) if c in order else 99, 0 if r[2] == "Senior+" else 1, r[1])
