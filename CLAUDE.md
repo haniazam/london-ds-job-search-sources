@@ -34,6 +34,20 @@ The `refresh-london-ds` skill regenerates both; keep them in these formats.
   (per-role cap ~1.1k chars; whole doc < ~90 KB).
 - Title pattern: `London DS — Active Role JDs & Requirements vN (<YYYY-MM-DD>)`.
 
+## Visual style guide (from the user's Claude Doc Style Guide, claude.ai artifact)
+Applies to planning/tracking docs (this JD doc + tracker) — NOT to ATS resume bodies
+(those stay plain, no tables/graphics).
+- Body: Lato 10pt, color `#202124`, line spacing 1.2.
+- Headings: slate blue `#3D5A80`, using named heading styles only.
+- One accent colour only across the doc (the slate blue). Do not over-style — restraint is the goal.
+- Tables: header row tinted `#EAEFF5` with bold accent text; pale gridlines; padded cells.
+- Space before headings ~10–12pt; HR dividers between major sections.
+- Produce the Google Doc by uploading **HTML** (`contentMimeType: text/html`) so Drive
+  converts it to a styled Doc with real heading styles/colours/tables — NOT markdown and
+  NOT raw plain text. (A native Google Sheet cannot be cell-styled via `create_file`, which
+  only ingests raw CSV values; keep the tracker as a data Sheet, or render the roster as a
+  styled table inside a Doc if styling is required.)
+
 ## Upload mechanism
 - The Google Drive connector is a model-only tool; scripts cannot upload. The
   assistant reads the generated file and calls `mcp__Google_Drive__create_file`
