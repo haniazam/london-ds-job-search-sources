@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
-CAP = 1100  # per-role body cap (keeps the whole doc uploadable in one shot)
+CAP = 800   # per-role body cap (keeps the whole doc uploadable in one shot)
 
 def get(url, t=25):
     r = urllib.request.Request(url, headers=UA)
@@ -182,6 +182,6 @@ for comp, role, lvl, loc, url in roles:
 text = "\n".join(out)
 open("/tmp/ldn_ds_jds.txt", "w").write(text)
 print(f"WROTE /tmp/ldn_ds_jds.txt : {len(roles)} roles, {len(text.encode())} bytes, "
-      f"{len(re.findall(chr(35)+'|'+chr(42)+'|'+chr(96), text))} stray md chars (C#/footnote ok).")
+      f"{len(re.findall(r'[#*`]', text))} stray md chars (C#/footnote ok).")
 print("NEXT: assistant reads the file and uploads it to Drive folder "
       "1jkaK-hFTZf8U6iRJ9clV6Q-LSxJ3eaYI as text/plain (Google Doc). See SKILL.md.")
