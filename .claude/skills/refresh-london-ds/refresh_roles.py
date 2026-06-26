@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Refresh the London DS active-roles list -> /tmp/ldn_ds_active.csv
 
-Enumerates company ATS boards (Greenhouse/Lever/Ashby/Amazon/Workday via urllib)
-and the JS career sites (Spotify/TikTok/Microsoft/Point72/Google/Bloomberg/
-Faculty/Revolut/Citadel/G-Research via Playwright). Classifies each role's level,
+Enumerates company ATS boards (Greenhouse/Lever/Ashby/Amazon/Workday via urllib),
+Google careers (server-rendered results HTML via urllib — no browser), and the
+JS career sites (Spotify/TikTok/Microsoft/Point72/Bloomberg/Faculty/Revolut/
+Citadel/G-Research via Playwright). Classifies each role's level,
 keeps only active London (or London-eligible) Data-Science-family roles with a
 unique job-post URL, and writes a combined CSV: active rows first, then companies
 with no active London DS role.
@@ -251,6 +252,37 @@ if HAVE_PW:
         active += spa_refresh()
     except Exception as e:
         print("[spa] failed:", type(e).__name__, e, file=sys.stderr)
+
+# ---------------- Google careers (server-rendered HTML; no Playwright needed) ----------------
+# Google's careers SPA hydrates from server HTML that embeds each posting as
+# `jobs/results/<id>-<slug>`. We pull DS-titled London posts straight from that
+# HTML with urllib — no browser — which closes a long-standing blind spot where
+# the Playwright path claimed Google but never actually fetched it (so live DS
+# roles like "Staff Product Data Scientist, Google Shopping" were silently missed).
+# DeepMind is already covered via its Greenhouse board (GREENHOUSE token "deepmind").
+def google_refresh():
+    out, seen = [], set()
+    base = "https://www.google.com/about/careers/applications/jobs/results/"
+    try:
+        html = get(base + "?location=London%2C%20UK&q=data%20scientist", t=25)
+    except Exception as e:
+        print("[google]", type(e).__name__, file=sys.stderr); return out
+    for m in re.finditer(r"jobs/results/(\d+)-([a-z0-9-]+)", html):
+        jid, slug = m.group(1), m.group(2)
+        if jid in seen: continue
+        if not re.search(r"data-scientist|data-science|quantitative-analyst", slug): continue
+        if re.search(r"research-(scientist|engineer)|software-engineer", slug): continue
+        if EXCLUDE.search(slug): continue
+        seen.add(jid)
+        title = re.sub(r"\s+", " ", slug.replace("-", " ")).strip().title()
+        out.append(("Google", title, level(title), "London (verify)", base + jid + "-" + slug))
+    print(f"[google] {len(seen)} London DS post(s)", file=sys.stderr)
+    return out
+
+try:
+    active += google_refresh()
+except Exception as e:
+    print("[google] failed:", type(e).__name__, file=sys.stderr)
 
 # ---------------- companies known to have NO active London DS (documented) ----------------
 NO_ROLE = [

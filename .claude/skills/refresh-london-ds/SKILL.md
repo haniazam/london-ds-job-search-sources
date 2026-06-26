@@ -83,8 +83,13 @@ shell scripts).
 - **Point72**: `careers.point72.com` CSOD — anchors `/CSJobDetail?jobName=...&jobCode=...`.
 - **Bloomberg**: `bloomberg.avature.net/careers/SearchJobs/data%20scientist`
   → `/careers/JobDetail/<slug>/<id>` (London DS = Economics DS).
-- **Google**: `google.com/about/careers/applications/jobs/results?location=London%2C+UK&q=data+scientist`
-  → anchors `/jobs/results/<id>-<slug>`.
+- **Google**: `google.com/about/careers/applications/jobs/results/?location=London%2C+UK&q=data+scientist`
+  → server-rendered HTML embeds `/jobs/results/<id>-<slug>`; `refresh_roles.py`
+  now parses these via urllib (no browser). Filter slug to `data-scientist`/
+  `data-science`, drop `research-(scientist|engineer)`/`software-engineer`; mark
+  `London (verify)` and confirm the location on the post (some results are
+  London+Dublin). Do NOT rely on Playwright for Google — the page is JS-heavy and
+  the slugs are in the raw HTML anyway. DeepMind DS is covered via Greenhouse.
 - **G-Research**: `gresearch.com/vacancies/` → individual `/vacancies/<slug>/`.
 - **Faculty**: `faculty.ai/job-listing/london/.../<role>` (unique pages).
 - **Revolut**: careers SPA; type "data scientist" in search, collect
