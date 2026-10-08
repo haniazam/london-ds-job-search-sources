@@ -20,8 +20,13 @@ pick up a policy change. With the default **Trusted** policy every fetch 403s.
 > instead. Then **commit `docs/job-descriptions-scraped.md` and push it to
 > `main`** so the scraped JDs live in the repo. Finally, upload that same file to
 > my Google Drive folder `1jkaK-hFTZf8U6iRJ9clV6Q-LSxJ3eaYI` ("Job Descriptions -
-> London DS 150k") as a new Google Doc titled "London DS — Full Job Descriptions
-> (scraped)" using the Google Drive connector.
+> London DS 150k") as a Google Doc titled "London DS — Full Job Descriptions
+> (scraped)" using the Google Drive connector. This is a **replace, not append**:
+> on every rerun, overwrite the existing `docs/job-descriptions-scraped.md` commit
+> on GitHub with the fresh output, and update the existing Google Doc of that
+> title in place (same file id) rather than creating a second copy — if a Doc with
+> that title already exists in the folder, replace its contents; only create a new
+> Doc if none exists.
 
 ## Manual steps
 
@@ -38,19 +43,36 @@ git commit -m "Update scraped job descriptions"
 git push origin main                  # or push to your working branch
 ```
 
-### Step 1 — commit the JDs to GitHub
+### Step 1 — commit the JDs to GitHub (replace on rerun)
 The generated `docs/job-descriptions-scraped.md` lives in the repo, so committing
 and pushing it (the `git add/commit/push` above) is all it takes to store the job
 descriptions in GitHub. Do this **before** the Drive upload so the source of
 truth is version-controlled. If you're running inside a Claude Code session that
 is restricted to a feature branch, push there instead of `main` and open a PR.
 
-### Step 2 — upload to Google Drive
+**On a rerun this is a replace, not a new file.** The path is fixed
+(`docs/job-descriptions-scraped.md`), so re-running the scraper overwrites it in
+place and the next commit simply supersedes the old scraped content — do not
+create a dated/`-v2` copy alongside it. Commit the overwrite to the same path on
+the same branch so the repo always holds exactly one, current set of JDs.
+
+### Step 2 — upload to / update Google Drive (replace on rerun)
 Then, **as the assistant** (the Python script cannot do this itself — the Drive
 connector is only available to Claude, not to scripts): read
-`docs/job-descriptions-scraped.md` and create a Google Doc from its text in the
-Drive folder **`1jkaK-hFTZf8U6iRJ9clV6Q-LSxJ3eaYI`** via the Drive MCP
-`create_file` tool (`contentMimeType: text/plain`, `parentId` = that folder id).
+`docs/job-descriptions-scraped.md` and put its text into the Google Doc titled
+**"London DS — Full Job Descriptions (scraped)"** in the Drive folder
+**`1jkaK-hFTZf8U6iRJ9clV6Q-LSxJ3eaYI`**. This is **replace-in-place, not a second
+copy**:
+
+1. First `search_files` for a Doc of that title in that folder.
+2. **If it exists**, overwrite its contents with the fresh text via the Drive MCP
+   `update_file` tool (same `fileId`) so the existing Doc — and its link/history —
+   is kept and just updated.
+3. **If it does not exist**, create it once with `create_file`
+   (`contentMimeType: text/plain`, `parentId` = that folder id).
+
+Never leave two Docs of the same title in the folder; every rerun should end with
+exactly one, carrying the latest scrape.
 
 ## Why the script can't upload directly
 The Google Drive integration is an Anthropic-managed MCP connector. Its
