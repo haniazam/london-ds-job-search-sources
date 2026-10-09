@@ -21,12 +21,12 @@ Primary posting per role = the one each tailored resume targets. The scraper
   datasciencejobs.com mirror (role expired). No live London DS on Ashby beyond
   the two above.
 
-## Citadel Securities — Data Scientist  [walled]
+## Citadel Securities — Data Scientist  [walled — manual only]
 - **Primary:** https://www.citadelsecurities.com/careers/details/data-scientist/
-  (own ATS behind Cloudflare — 403 to plain fetch)
+  (Cloudflare bot-check blocks plain fetch **and** headless Chromium — manual paste only)
 
-## Revolut — Senior Data Scientist  [walled]
-_All revolut.com careers pages sit behind Cloudflare (403); no public ATS API found._
+## Revolut — Senior Data Scientist  [walled — manual only]
+_All revolut.com careers pages sit behind a Cloudflare challenge that blocks plain fetch **and** headless Chromium; no public ATS API found — manual paste only._
 - **Primary:** https://www.revolut.com/careers/position/1a0f390b-ed4a-441a-9535-82d0e185906a/
 - Senior DS (Computer Vision): https://www.revolut.com/careers/position/senior-data-scientist-computer-vision-85b790a2-ca60-4095-a28f-b4e29f0136eb/
 - DS (Risk): https://www.revolut.com/careers/position/data-scientist-risk-46917c00-41ca-4c82-be38-00894cc2c136/
@@ -71,10 +71,9 @@ _The `data-scientist` vacancy is filled/removed; slugs below are live as of 2026
 - **Primary (Avature DS search):** https://bloomberg.avature.net/careers/SearchJobs/data%20scientist
   (Economics DS Avature JobDetail 19933 expired/404; careers.bloomberg.com 403s)
 
-## QuantumBlack (McKinsey) — Senior Data Scientist  [walled]
-_mckinsey.com careers are JS-rendered (plain fetch times out) — use the browser variant. IDs may still be live._
-- **Primary (Senior Data Scientist I):** https://www.mckinsey.com/careers/search-jobs/jobs/seniordatascientisti-quantumblackaibymckinsey-108819
-- Data Scientist I: https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714
+## QuantumBlack (McKinsey) — Data Scientist I  [walled — browser variant works]
+_mckinsey.com careers are JS-rendered (plain fetch times out) but NOT Cloudflare-walled, so the browser variant fetches them. "Senior Data Scientist I" 108819 is dead (upstream error); Data Scientist I 102714 is the live London role (2026-10-09). Other QuantumBlack DS roles are Toronto/São Paulo/Seoul/Germany, not London._
+- **Primary (Data Scientist I — London):** https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714
 
 ## Man Group — Quant Research (Greenhouse board `mangroup`, EU)
 _All four earlier IDs (incl. Responsible Investment) expired; current live London roles:_

@@ -44,11 +44,11 @@ COMPANIES = [
         ("Protection Scientist Engineer, Integrity — London", "https://jobs.ashbyhq.com/openai/3fefc615-6950-4a29-9214-eefdc4e659e3", False),
     ]),
     ("Citadel Securities", [
-        # [walled] Own ATS behind Cloudflare — plain fetch 403s; browser variant / manual.
+        # [walled] Cloudflare bot-check blocks plain fetch AND headless Chromium ("security verification") — manual paste only.
         ("Data Scientist (Expression of Interest)", "https://www.citadelsecurities.com/careers/details/data-scientist/", True),
     ]),
     ("Revolut", [
-        # [walled] revolut.com careers behind Cloudflare — all 403 to plain fetch; no public API found.
+        # [walled] Cloudflare challenge blocks plain fetch AND headless Chromium ("Just a moment...") — manual paste only; no public API.
         ("Senior Data Scientist", "https://www.revolut.com/careers/position/1a0f390b-ed4a-441a-9535-82d0e185906a/", True),
         ("Senior DS (Computer Vision)", "https://www.revolut.com/careers/position/senior-data-scientist-computer-vision-85b790a2-ca60-4095-a28f-b4e29f0136eb/", False),
         ("DS (Risk)", "https://www.revolut.com/careers/position/data-scientist-risk-46917c00-41ca-4c82-be38-00894cc2c136/", False),
@@ -93,9 +93,9 @@ COMPANIES = [
         ("Data Scientist — search (Avature)", "https://bloomberg.avature.net/careers/SearchJobs/data%20scientist", True),
     ]),
     ("QuantumBlack (McKinsey)", [
-        # [walled] mckinsey.com careers are JS-rendered (plain fetch times out) — browser variant needed. IDs may still be live.
-        ("Senior Data Scientist I", "https://www.mckinsey.com/careers/search-jobs/jobs/seniordatascientisti-quantumblackaibymckinsey-108819", True),
-        ("Data Scientist I", "https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714", False),
+        # [walled] mckinsey.com careers are JS-rendered (plain fetch times out) — browser variant gets them (no Cloudflare).
+        # 'Senior Data Scientist I' 108819 is dead (upstream error); Data Scientist I 102714 is the live London role (2026-10-09).
+        ("Data Scientist I — London", "https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714", True),
     ]),
     ("Man Group", [
         # All four old Greenhouse IDs expired; these are the current live London quant roles (board 'mangroup', EU).
