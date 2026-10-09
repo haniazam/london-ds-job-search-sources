@@ -89,6 +89,16 @@ As of the 2026-10-09 sweep the registry holds ~70 Greenhouse, 25 Ashby, 10 Lever
 7 SmartRecruiters, 6 Pinpoint, 7 Workday boards; the sweep found ~75 live London DS posts at
 ~32 employers that the old fixed list had never looked at.
 
+## Comp coverage (run `pay_enrich.py` after `refresh_roles.py`)
+`pay_enrich.py /tmp/ldn_ds_active.csv` writes `/tmp/ldn_ds_active_pay.csv` with an
+"Approx London TC" column that is never blank and always labelled: **posted** (the
+employer's range, from structured ATS pay fields or a £-range regex on the text; ~15% of
+London posts disclose) → **sourced** (company figure in `pay_overrides.json`, each with
+source + date; add one whenever a Levels.fyi/Glassdoor London figure for that employer is
+found) → **market est.** (ITJobsWatch London median for the title, -15%/+25%, fetched
+live). The Sheet's comp column is this output. Never present a market band as if it were
+company data — the label is the point.
+
 ## Company taxonomy (as of 2026-06)
 - **Greenhouse boards** (`boards-api.greenhouse.io/v1/boards/<token>/jobs`):
   deepmind, monzo, gocardless, dunnhumby, quberesearchandtechnologies, ocadogroup, coreweave, isomorphiclabs, wise,

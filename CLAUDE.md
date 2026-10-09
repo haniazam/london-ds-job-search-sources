@@ -14,7 +14,8 @@ The `refresh-london-ds` skill regenerates both; keep them in these formats.
 - Dedupe by URL. Re-verify links each refresh — IDs go 404 often.
 
 ## Consolidated spreadsheet (CSV → Google Sheet)
-- Columns, in order: `Company, Role, Level, Location, Apply URL (unique active post), Status, Notes`.
+- Columns, in order: `Company, Role, Role Type, Level, Approx London TC, Location, Apply URL (unique active post), Status, Notes`.
+  `Approx London TC` is the three-tier labelled comp from `pay_enrich.py` (posted › sourced › market est.) — never blank, never unlabelled.
 - `Level` = `Senior+` (title has senior/staff/lead/principal/head/director/manager/sr/distinguished)
   or `Regular/Mid` otherwise.
 - **Active roles first**, one row per URL, grouped by company; use proper display
