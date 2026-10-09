@@ -58,6 +58,37 @@ shell scripts).
 - **Exclude** intern / graduate / apprentice programmes.
 - Keep roles deduped by URL.
 
+## Discovery — keeping the company universe exhaustive (run every refresh)
+The script only enumerates boards listed in `boards.json`; a company not in the registry is
+never seen. So each refresh starts with a **harvest** step (assistant action — WebSearch is
+model-only) that widens the registry before the script runs:
+
+1. **Site-scoped searches** over each ATS host, two title forms each ("Data Scientist" and
+   "Data Science", plus Senior/Lead/Staff/Principal/Head variants) and the London-eligible
+   location forms ("London", "Remote (UK)", "United Kingdom"):
+   `site:job-boards.greenhouse.io`, `site:boards.greenhouse.io`, `site:job-boards.eu.greenhouse.io`,
+   `site:jobs.ashbyhq.com`, `site:jobs.lever.co`, `site:apply.workable.com`,
+   `site:jobs.smartrecruiters.com`, `site:myworkdayjobs.com`, `site:pinpointhq.com`,
+   `site:teamtailor.com`, `site:recruitee.com`. The **board token in each result URL** is the
+   harvest (greenhouse.io/<token>/, ashbyhq.com/<org>/, lever.co/<org>/, workable.com/<acct>/,
+   smartrecruiters.com/<Company>/, <tenant>.<wdN>.myworkdayjobs.com/.../<Site>/,
+   <acct>.pinpointhq.com). A result may be stale — the token is what matters; the API decides
+   liveness.
+2. **Known-employer probe**: guess tokens for London DS employers by name (fintechs, quant
+   funds, scale-ups); a wrong guess just 404s. Keep every reachable board even at 0 London DS.
+3. Add new tokens to `boards.json` (+ `display_names`). Never list recruiters/agencies as
+   employers — put them in `recruiters_exclude` (Jobgether, Degree 6, Qurious, KIMARU…).
+4. Run `refresh_roles.py`; it enumerates the whole registry and filters London + DS title.
+
+Gotchas: Workable rate-limits (429) aggressively — the script paces calls; a 429 run leaves
+that board unverified, not empty. SmartRecruiters' public API is gated per company (IQVIA,
+Checkout.com, Trainline return 0 even with live posts) — verify those by GET on the posting
+URL (server-rendered; dead posts change the <title>). JobDataLake MCP, when connected, is a
+faster first pass (`search_jobs`, countries=GB, location=London) but it was down on 2026-10-09.
+As of the 2026-10-09 sweep the registry holds ~70 Greenhouse, 25 Ashby, 10 Lever, 10 Workable,
+7 SmartRecruiters, 6 Pinpoint, 7 Workday boards; the sweep found ~75 live London DS posts at
+~32 employers that the old fixed list had never looked at.
+
 ## Company taxonomy (as of 2026-06)
 - **Greenhouse boards** (`boards-api.greenhouse.io/v1/boards/<token>/jobs`):
   deepmind, monzo, gocardless, dunnhumby, quberesearchandtechnologies, ocadogroup, coreweave, isomorphiclabs, wise,
