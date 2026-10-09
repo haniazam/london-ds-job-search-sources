@@ -89,12 +89,10 @@ def host_of(url):
     return re.sub(r"^https?://", "", url).split("/")[0]
 
 
-def fetch_with_browser(page, url):
-    if host_of(url) in CLOUDFLARE_BLOCKED:
-        raise ManualOnly("Cloudflare bot-check blocks automation — paste JD manually")
+def _fetch_once(page, url):
     # domcontentloaded + a short settle is far faster and more reliable than
     # networkidle (which never fires on pages with long-polling/analytics).
-    page.goto(url, wait_until="domcontentloaded", timeout=30000)
+    page.goto(url, wait_until="domcontentloaded", timeout=45000)
     sel = CONTENT_SELECTORS.get(host_of(url))
     if sel:
         try:
@@ -110,6 +108,25 @@ def fetch_with_browser(page, url):
         except Exception:  # noqa: BLE001
             pass
     return strip_html(page.content())
+
+
+def fetch_with_browser(page, url, retries=1):
+    if host_of(url) in CLOUDFLARE_BLOCKED:
+        raise ManualOnly("Cloudflare bot-check blocks automation — paste JD manually")
+    # Some hosts (McKinsey) are flaky: slow first load, or a 200 page whose body
+    # is just "upstream request failed". One retry after a pause catches most.
+    for attempt in range(retries + 1):
+        try:
+            text = _fetch_once(page, url)
+            if "upstream request failed" in text.lower() and attempt < retries:
+                page.wait_for_timeout(5000)
+                continue
+            return text
+        except Exception:  # noqa: BLE001
+            if attempt < retries:
+                page.wait_for_timeout(5000)
+                continue
+            raise
 
 
 def main():

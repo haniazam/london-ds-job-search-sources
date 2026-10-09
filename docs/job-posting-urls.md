@@ -53,9 +53,12 @@ _The `data-scientist` vacancy is filled/removed; slugs below are live as of 2026
 - ML Engineer: https://www.gresearch.com/vacancies/machine-learning-engineer/
 - AI Engineer: https://www.gresearch.com/vacancies/ai-engineer/
 
-## Spotify — Data Science  [search]
-- **Primary (London DS search):** https://www.lifeatspotify.com/jobs?c=data-science&l=london
-  (old per-role lifeatspotify slugs all 404; roles churn fast — monitor the search)
+## Spotify — Data Science / Research (London)
+_Live London roles per the lifeatspotify jobs API (2026-10-09). Pages are JS-rendered — use the browser variant._
+- **Primary (Data Scientist, Company Planning & Execution):** https://www.lifeatspotify.com/jobs/data-scientist-company-planning-execution
+- Senior Applied Research Scientist, Personalization: https://www.lifeatspotify.com/jobs/senior-applied-research-scientist-personalization
+- Research Scientist, Personalization: https://www.lifeatspotify.com/jobs/research-scientist-personalization-3
+- Research Scientist, Generative Audio: https://www.lifeatspotify.com/jobs/research-scientist-generative-audio-2
 
 ## Monzo — Data Science (Greenhouse board `monzo`)
 - **Primary (Lead Data Scientist):** https://job-boards.greenhouse.io/monzo/jobs/6369658

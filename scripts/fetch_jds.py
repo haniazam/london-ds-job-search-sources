@@ -75,8 +75,11 @@ COMPANIES = [
         ("AI Engineer", "https://www.gresearch.com/vacancies/ai-engineer/", False),
     ]),
     ("Spotify", [
-        # [search] Old lifeatspotify slugs all 404; roles churn fast, so monitor the London Data Science search.
-        ("Data Science — London search", "https://www.lifeatspotify.com/jobs?c=data-science&l=london", True),
+        # Live London roles per the lifeatspotify jobs API (2026-10-09). JS-rendered pages — browser variant.
+        ("Data Scientist, Company Planning & Execution — London", "https://www.lifeatspotify.com/jobs/data-scientist-company-planning-execution", True),
+        ("Senior Applied Research Scientist, Personalization — London", "https://www.lifeatspotify.com/jobs/senior-applied-research-scientist-personalization", False),
+        ("Research Scientist, Personalization — London", "https://www.lifeatspotify.com/jobs/research-scientist-personalization-3", False),
+        ("Research Scientist, Generative Audio — London", "https://www.lifeatspotify.com/jobs/research-scientist-generative-audio-2", False),
     ]),
     ("Monzo", [
         ("Lead Data Scientist", "https://job-boards.greenhouse.io/monzo/jobs/6369658", True),
