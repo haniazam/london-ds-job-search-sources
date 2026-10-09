@@ -13,20 +13,21 @@ Primary posting per role = the one each tailored resume targets. The scraper
 > - **[search]** — the specific posting closed; URL is a listing/search page to
 >   monitor (no single live JD to scrape).
 
-## OpenAI — Data Scientist, Safety
-- **Primary:** https://jobs.ashbyhq.com/openai/90c711dc-5f50-46e3-a5ab-82359a56d683
-- Protection Scientist Engineer, Integrity — London: https://jobs.ashbyhq.com/openai/3fefc615-6950-4a29-9214-eefdc4e659e3
-- _Dropped 2026-10-09:_ the `openai.com/careers` "DS, Integrity Measurement" and
-  "Protection Scientist Engineer" links (403'd); "DS, Monitoring Ops"
-  datasciencejobs.com mirror (role expired). No live London DS on Ashby beyond
-  the two above.
+## OpenAI — Protection Scientist Engineer, Integrity (London)
+- **Primary:** https://jobs.ashbyhq.com/openai/3fefc615-6950-4a29-9214-eefdc4e659e3  (Ashby: London, UK)
+- _Dropped 2026-10-09:_ **"Data Scientist, Safety" (90c711dc…) — it is San Francisco /
+  New York, not London** (location audit). Also dropped earlier: the
+  `openai.com/careers` "DS, Integrity Measurement" and "Protection Scientist
+  Engineer" links (403'd) and the "DS, Monitoring Ops" datasciencejobs.com
+  mirror (expired). No other live London DS role on OpenAI's Ashby board.
 
 ## Citadel Securities — Data Scientist  [walled — manual only]
 - **Primary:** https://www.citadelsecurities.com/careers/details/data-scientist/
-  (Cloudflare bot-check blocks plain fetch **and** headless Chromium — manual paste only)
+  (Cloudflare bot-check blocks plain fetch **and** headless Chromium — manual paste only.
+  London per the source target list; unverifiable while blocked.)
 
 ## Revolut — Senior Data Scientist  [walled — manual only]
-_All revolut.com careers pages sit behind a Cloudflare challenge that blocks plain fetch **and** headless Chromium; no public ATS API found — manual paste only._
+_All revolut.com careers pages sit behind a Cloudflare challenge that blocks plain fetch **and** headless Chromium; no public ATS API found — manual paste only. London per the source target list; unverifiable while blocked._
 - **Primary:** https://www.revolut.com/careers/position/1a0f390b-ed4a-441a-9535-82d0e185906a/
 - Senior DS (Computer Vision): https://www.revolut.com/careers/position/senior-data-scientist-computer-vision-85b790a2-ca60-4095-a28f-b4e29f0136eb/
 - DS (Risk): https://www.revolut.com/careers/position/data-scientist-risk-46917c00-41ca-4c82-be38-00894cc2c136/
@@ -34,8 +35,9 @@ _All revolut.com careers pages sit behind a Cloudflare challenge that blocks pla
 - DS (Core): https://www.revolut.com/careers/position/76be454e-fe77-4daf-abd6-9ae9c41afd70/
 
 ## Stripe — Data Scientist  [search]
-- **Primary (search):** https://stripe.com/jobs/search?l=London
-  (DS, EMEA 7516102 closed; Stripe is on Greenhouse board `stripe`, no London DS live now)
+- **Primary (London office search):** https://stripe.com/jobs/search?office_locations=Europe--London&query=data+scientist
+  (DS, EMEA 7516102 closed; Stripe is on Greenhouse board `stripe`, no London DS live now.
+  Stripe filters by `office_locations=`, not `?l=`, which it ignores.)
 
 ## Google DeepMind — Applied Data Scientist / Research Scientist  [search]
 - **Primary (careers site):** https://deepmind.google/about/careers/

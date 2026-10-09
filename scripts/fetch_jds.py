@@ -39,16 +39,18 @@ TIMEOUT = 30
 # entries are listing pages to monitor (no single live JD to scrape).
 COMPANIES = [
     ("OpenAI", [
-        ("Data Scientist, Safety", "https://jobs.ashbyhq.com/openai/90c711dc-5f50-46e3-a5ab-82359a56d683", True),
-        # Live London role (Ashby). Replaces the two openai.com/careers links that 403'd.
-        ("Protection Scientist Engineer, Integrity — London", "https://jobs.ashbyhq.com/openai/3fefc615-6950-4a29-9214-eefdc4e659e3", False),
+        # Only live London DS-adjacent role on the Ashby board (2026-10-09). "Data Scientist, Safety"
+        # (90c711dc…) was dropped: it is San Francisco / New York, not London.
+        ("Protection Scientist Engineer, Integrity — London", "https://jobs.ashbyhq.com/openai/3fefc615-6950-4a29-9214-eefdc4e659e3", True),
     ]),
     ("Citadel Securities", [
-        # [walled] Cloudflare bot-check blocks plain fetch AND headless Chromium ("security verification") — manual paste only.
+        # [walled] Cloudflare bot-check blocks plain fetch AND headless Chromium — manual paste only.
+        # London per the source target list; location unverifiable while blocked.
         ("Data Scientist (Expression of Interest)", "https://www.citadelsecurities.com/careers/details/data-scientist/", True),
     ]),
     ("Revolut", [
-        # [walled] Cloudflare challenge blocks plain fetch AND headless Chromium ("Just a moment...") — manual paste only; no public API.
+        # [walled] Cloudflare challenge blocks plain fetch AND headless Chromium — manual paste only; no public API.
+        # London per the source target list; locations unverifiable while blocked.
         ("Senior Data Scientist", "https://www.revolut.com/careers/position/1a0f390b-ed4a-441a-9535-82d0e185906a/", True),
         ("Senior DS (Computer Vision)", "https://www.revolut.com/careers/position/senior-data-scientist-computer-vision-85b790a2-ca60-4095-a28f-b4e29f0136eb/", False),
         ("DS (Risk)", "https://www.revolut.com/careers/position/data-scientist-risk-46917c00-41ca-4c82-be38-00894cc2c136/", False),
@@ -57,7 +59,8 @@ COMPANIES = [
     ]),
     ("Stripe", [
         # [search] DS, EMEA (7516102) no longer live; Stripe is on Greenhouse (board 'stripe'), no London DS currently.
-        ("Data Scientist — London search", "https://stripe.com/jobs/search?l=London", True),
+        # Stripe's search filters by office_locations=, not ?l= (which it ignores and shows all offices).
+        ("Data Scientist — London office search", "https://stripe.com/jobs/search?office_locations=Europe--London&query=data+scientist", True),
     ]),
     ("Google DeepMind", [
         # [search] DeepMind left the 'deepmind' Greenhouse board (all old IDs 404); roles now only on the JS careers site.
