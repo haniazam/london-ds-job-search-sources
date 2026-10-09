@@ -1,79 +1,95 @@
-# Job-posting URLs (verified, from Target List columns D–H)
+# Job-posting URLs (London DS target list)
 
-Extracted from the `HYPERLINK()` targets in the **Target List** tab of
-`London_DS_Target_List_150k Main`. Column D is each role's primary posting.
+Primary posting per role = the one each tailored resume targets. The scraper
+(`scripts/fetch_jds.py`) holds the authoritative copy of these URLs in its
+`COMPANIES` list; this file mirrors it for humans.
 
-> These are the live London posting URLs. Scraping full JD text requires an
-> environment with outbound web access (see `scripts/fetch_jds.py`). In the
-> environment this list was built in, outbound web was blocked (egress proxy
-> 403s all hosts), so only the URLs — not the page contents — could be captured.
+> **Last refreshed: 2026-10-09** against each employer's live ATS. Prefer
+> **Greenhouse/Ashby** URLs — the scraper pulls clean JD text from their open
+> JSON APIs. Tags below:
+> - **[walled]** — Cloudflare/JS-protected, no public API. Plain fetch 403s or
+>   times out; needs the browser variant (`scripts/fetch_jds_browser.py`) or a
+>   manual paste. Even headless Chromium hits Cloudflare challenges on some.
+> - **[search]** — the specific posting closed; URL is a listing/search page to
+>   monitor (no single live JD to scrape).
 
-## OpenAI — Data Scientist, Safety
-- **Primary:** https://jobs.ashbyhq.com/openai/90c711dc-5f50-46e3-a5ab-82359a56d683
-- DS, Integrity Measurement: https://openai.com/careers/data-scientist-integrity-measurement-london-uk/
-- DS, Monitoring Ops: https://datasciencejobs.com/jobs/data-scientist-openai-united-kingdom-11/
-- Protection Sci Eng: https://openai.com/careers/protection-scientist-engineer-intelligence-and-investigations-london-uk/
+## OpenAI — Protection Scientist Engineer, Integrity (London)
+- **Primary:** https://jobs.ashbyhq.com/openai/3fefc615-6950-4a29-9214-eefdc4e659e3  (Ashby: London, UK)
+- _Dropped 2026-10-09:_ **"Data Scientist, Safety" (90c711dc…) — it is San Francisco /
+  New York, not London** (location audit). Also dropped earlier: the
+  `openai.com/careers` "DS, Integrity Measurement" and "Protection Scientist
+  Engineer" links (403'd) and the "DS, Monitoring Ops" datasciencejobs.com
+  mirror (expired). No other live London DS role on OpenAI's Ashby board.
 
-## Citadel Securities — Data Scientist
+## Citadel Securities — Data Scientist  [walled — manual only]
 - **Primary:** https://www.citadelsecurities.com/careers/details/data-scientist/
+  (Cloudflare bot-check blocks plain fetch **and** headless Chromium — manual paste only.
+  London per the source target list; unverifiable while blocked.)
 
-## Revolut — Senior Data Scientist
+## Revolut — Senior Data Scientist  [walled — manual only]
+_All revolut.com careers pages sit behind a Cloudflare challenge that blocks plain fetch **and** headless Chromium; no public ATS API found — manual paste only. London per the source target list; unverifiable while blocked._
 - **Primary:** https://www.revolut.com/careers/position/1a0f390b-ed4a-441a-9535-82d0e185906a/
 - Senior DS (Computer Vision): https://www.revolut.com/careers/position/senior-data-scientist-computer-vision-85b790a2-ca60-4095-a28f-b4e29f0136eb/
 - DS (Risk): https://www.revolut.com/careers/position/data-scientist-risk-46917c00-41ca-4c82-be38-00894cc2c136/
-- DS (NLP DL Eng): https://www.revolut.com/careers/position/data-scientist-nlp-deep-learning-engineer-7fdeec15-cd49-4ca9-b509-ae6ca2613cd5/
+- DS (NLP / DL Eng): https://www.revolut.com/careers/position/data-scientist-nlp-deep-learning-engineer-7fdeec15-cd49-4ca9-b509-ae6ca2613cd5/
 - DS (Core): https://www.revolut.com/careers/position/76be454e-fe77-4daf-abd6-9ae9c41afd70/
 
-## Stripe — Data Scientist, EMEA
-- **Primary:** https://stripe.com/jobs/listing/data-scientist-emea/7516102
+## Stripe — Data Scientist  [search]
+- **Primary (London office search):** https://stripe.com/jobs/search?office_locations=Europe--London&query=data+scientist
+  (DS, EMEA 7516102 closed; Stripe is on Greenhouse board `stripe`, no London DS live now.
+  Stripe filters by `office_locations=`, not `?l=`, which it ignores.)
 
-## Google DeepMind — Applied Data Scientist
-- **Primary:** https://job-boards.greenhouse.io/deepmind/jobs/7126983
-- RS, Gemini Diffusion: https://job-boards.greenhouse.io/deepmind/jobs/7700399
-- RS, Reinforcement Learning: https://job-boards.greenhouse.io/deepmind/jobs/7716037
-- RS, World Models (London/Toronto): https://job-boards.greenhouse.io/deepmind/jobs/7372638
-- RE, Frontier Safety: https://job-boards.greenhouse.io/deepmind/jobs/7493360
+## Google DeepMind — Applied Data Scientist / Research Scientist  [search]
+- **Primary (careers site):** https://deepmind.google/about/careers/
+  (DeepMind left the `deepmind` Greenhouse board — all old job IDs now 404; roles
+  live only on the JS careers site, so per-role clean scrape isn't possible)
 
-## The Trade Desk — Data Scientist II / Staff Applied Scientist
-- **Primary:** https://careers.thetradedesk.com/jobs/5118594007/staff-applied-scientist
+## The Trade Desk — Applied Scientist / Data Scientist  [search]
+- **Primary (board):** https://job-boards.greenhouse.io/thetradedesk
+  (Staff Applied Scientist 5118594007 closed; board live but no London DS/applied-sci currently)
 
-## G-Research — Data Scientist
-- **Primary:** https://www.gresearch.com/vacancies/data-scientist/
-- ML Researcher: https://www.gresearch.com/vacancies/machine-learning-researcher/
+## G-Research — ML / NLP Research
+_The `data-scientist` vacancy is filled/removed; slugs below are live as of 2026-10-09._
+- **Primary (ML Researcher):** https://www.gresearch.com/vacancies/machine-learning-researcher/
 - NLP Researcher: https://www.gresearch.com/vacancies/natural-language-processing-researcher/
 - ML Engineer: https://www.gresearch.com/vacancies/machine-learning-engineer/
+- AI Engineer: https://www.gresearch.com/vacancies/ai-engineer/
 
-## Spotify — Senior Data Scientist (Platform / Subscriptions)
-- **Primary:** https://www.lifeatspotify.com/jobs/senior-data-scientist-platform-mission
-- Senior DS — Global Strategy Ops: https://www.lifeatspotify.com/jobs/senior-data-scientist-global-strategy-operations-people
-- DS — Subscriptions: https://www.lifeatspotify.com/jobs/data-scientist-subscriptions-2
-- DS — Platform & Partner Exp: https://www.lifeatspotify.com/jobs/data-scientist-platform-partner-experience
-- DS — Content Understanding: https://www.lifeatspotify.com/jobs/data-scientist-content-understanding
+## Spotify — Data Science / Research (London)
+_Live London roles per the lifeatspotify jobs API (2026-10-09). Pages are JS-rendered — use the browser variant._
+- **Primary (Data Scientist, Company Planning & Execution):** https://www.lifeatspotify.com/jobs/data-scientist-company-planning-execution
+- Senior Applied Research Scientist, Personalization: https://www.lifeatspotify.com/jobs/senior-applied-research-scientist-personalization
+- Research Scientist, Personalization: https://www.lifeatspotify.com/jobs/research-scientist-personalization-3
+- Research Scientist, Generative Audio: https://www.lifeatspotify.com/jobs/research-scientist-generative-audio-2
 
-## Monzo — Senior Data Scientist
+## Monzo — Data Science (Greenhouse board `monzo`)
 - **Primary (Lead Data Scientist):** https://job-boards.greenhouse.io/monzo/jobs/6369658
-- Senior ML Scientist, Borrowing: https://job-boards.greenhouse.io/monzo/jobs/7686352
+- Senior ML Manager, Borrowing: https://job-boards.greenhouse.io/monzo/jobs/7996955
+  (replaces "Senior ML Scientist, Borrowing" 7686352, now closed)
+- Senior Data Scientist: https://job-boards.greenhouse.io/monzo/jobs/6180814
+- Staff Data Scientist: https://job-boards.greenhouse.io/monzo/jobs/8232732
 
-## Google — Product Data Scientist (L5)
-- **Primary (search; no DS live — set alert):** https://www.google.com/about/careers/applications/jobs/results?location=London%2C+UK
+## Google — Product Data Scientist (L5)  [search]
+- **Primary (London search):** https://www.google.com/about/careers/applications/jobs/results?location=London%2C+UK
 
-## Bloomberg — Data Scientist
-- **Primary (Economics Data Scientist):** https://bloomberg.avature.net/careers/JobDetail/Bloomberg-Economics-Data-Scientist/19933
-- Data Scientist (req 111117): https://careers.bloomberg.com/job/detail/111117
-- DS search (all live): https://bloomberg.avature.net/careers/SearchJobs/data%20scientist
+## Bloomberg — Data Scientist  [walled]
+- **Primary (Avature DS search):** https://bloomberg.avature.net/careers/SearchJobs/data%20scientist
+  (Economics DS Avature JobDetail 19933 expired/404; careers.bloomberg.com 403s)
 
-## QuantumBlack (McKinsey) — Senior Data Scientist
-- **Primary (Senior Data Scientist I):** https://www.mckinsey.com/careers/search-jobs/jobs/seniordatascientisti-quantumblackaibymckinsey-108819
-- Data Scientist I: https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714
+## QuantumBlack (McKinsey) — Data Scientist I  [walled — browser variant works]
+_mckinsey.com careers are JS-rendered (plain fetch times out) but NOT Cloudflare-walled, so the browser variant fetches them. "Senior Data Scientist I" 108819 is dead (upstream error); Data Scientist I 102714 is the live London role (2026-10-09). Other QuantumBlack DS roles are Toronto/São Paulo/Seoul/Germany, not London._
+- **Primary (Data Scientist I — London):** https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714
 
-## Man Group — Senior Data Scientist, Responsible Investment
-- **Primary:** https://job-boards.eu.greenhouse.io/mangroup/jobs/4863672101
-- Senior DS Analyst (12m FTC): https://job-boards.eu.greenhouse.io/mangroup/jobs/4807838101
-- Quant Researcher — Macro: https://job-boards.eu.greenhouse.io/mangroup/jobs/4724414101
-- Quant Researcher — Discretionary: https://job-boards.eu.greenhouse.io/mangroup/jobs/4772820101
+## Man Group — Quant Research (Greenhouse board `mangroup`, EU)
+_All four earlier IDs (incl. Responsible Investment) expired; current live London roles:_
+- **Primary (Quant Researcher — Macro; Futures/FX):** https://job-boards.eu.greenhouse.io/mangroup/jobs/4966466101
+- Quant Researcher — Macro Trend: https://job-boards.eu.greenhouse.io/mangroup/jobs/4880305101
+- Quant — Systematic Multi-Strategy: https://job-boards.eu.greenhouse.io/mangroup/jobs/4965180101
+- Quantitative Developer — Systematic: https://job-boards.eu.greenhouse.io/mangroup/jobs/4844843101
 
-## TikTok — Senior Data Scientist, Operations
+## TikTok — Senior Data Scientist, Operations  [walled]
 - **Primary:** https://careers.tiktok.com/position/7344026106091604275/detail
+  (own ATS, JS-rendered — needs browser variant / manual)
 
 ## XTX Markets — (no live DS role; monitoring only)
 - Careers landing: https://www.xtxmarkets.com/careers/
