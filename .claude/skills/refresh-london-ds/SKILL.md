@@ -89,6 +89,17 @@ As of the 2026-10-09 sweep the registry holds ~70 Greenhouse, 25 Ashby, 10 Lever
 7 SmartRecruiters, 6 Pinpoint, 7 Workday boards; the sweep found ~75 live London DS posts at
 ~32 employers that the old fixed list had never looked at.
 
+## Sheet build rule (learned the hard way on 2026-10-09)
+The Sheet is built FROM the script's CSV — `refresh_roles.py` → `pay_enrich.py` → filter
+`Role Type == Standard DS` → write the Sheet in place. Never hand-merge "the rows I audited"
+with "the new companies I found": that dropped 12 live Standard-DS roles at 8 registry
+companies (Monzo ×5 incl. a £124k–£165k Staff post, Spotify, TikTok, GoCardless) because the
+original-registry output never reached the Sheet. Every refresh also diffs against the
+external lists in `boards.json` (`external_lists`, e.g. the ChatGPT Job Search Radar at
+`/api/state`): a role there but not here is dead, out of scope, or a missing board token —
+classify each, never ignore. Employer sites with no ATS API are in `employer_sites`; verify
+those by GET + `<title>`.
+
 ## Comp coverage (run `pay_enrich.py` after `refresh_roles.py`)
 `pay_enrich.py /tmp/ldn_ds_active.csv` writes `/tmp/ldn_ds_active_pay.csv` with an
 "Approx London TC" column that is never blank and always labelled: **posted** (the

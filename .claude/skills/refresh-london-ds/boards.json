@@ -31,10 +31,12 @@
   "fosphamarketing",
   "getyourguide",
   "gocardless",
+  "goodnotes",
   "graphcore",
   "hubspotjobs",
   "hudl",
   "imc",
+  "intercom",
   "isomorphiclabs",
   "janestreet",
   "jumptrading",
@@ -75,6 +77,7 @@
  ],
  "ashby": [
   "Abound",
+  "arq",
   "bolt",
   "chainalysis-careers",
   "chattermill",
@@ -82,23 +85,30 @@
   "deel",
   "elevenlabs",
   "faculty",
+  "gradient-labs",
+  "hims-and-hers",
   "iwoca.co.uk",
   "junior",
+  "legora",
   "lendable",
   "lovable",
   "marshmallow",
   "moneybox",
   "multiverse",
+  "omaze",
   "openai",
   "paddle",
   "quantexa",
+  "quantum",
   "ramp",
   "render",
   "socure",
   "synthesia",
   "trainline",
   "wayflyer",
-  "xyz-reality"
+  "wayve",
+  "xyz-reality",
+  "zego"
  ],
  "lever": [
   "analyticpartners",
@@ -106,6 +116,7 @@
   "fresha",
   "kpler",
   "merklescience",
+  "moonpig",
   "octoenergy",
   "omnidian",
   "palantir",
@@ -131,7 +142,8 @@
   "PublicisGroupe",
   "ReedBusinessInformationLimited",
   "Talan",
-  "Trainline"
+  "Trainline",
+  "wise"
  ],
  "pinpoint": [
   "alcumus",
@@ -151,7 +163,10 @@
   "G-Research": "https://gresearch.wd103.myworkdayjobs.com/wday/cxs/gresearch/G-Research/jobs",
   "Hiscox": "https://hiscox.wd3.myworkdayjobs.com/wday/cxs/hiscox/Hiscox_External_Site/jobs",
   "SHI": "https://shi.wd12.myworkdayjobs.com/wday/cxs/shi/shicareers/jobs",
-  "IRC": "https://theirc.wd1.myworkdayjobs.com/wday/cxs/theirc/External_Careers/jobs"
+  "IRC": "https://theirc.wd1.myworkdayjobs.com/wday/cxs/theirc/External_Careers/jobs",
+  "PayPal": "https://paypal.wd1.myworkdayjobs.com/wday/cxs/paypal/jobs/jobs",
+  "Western Union": "https://westernunion.wd5.myworkdayjobs.com/wday/cxs/westernunion/WesternUnionJobs/jobs",
+  "ICF": "https://icf.wd5.myworkdayjobs.com/wday/cxs/icf/ICFExternal_Career_Site/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -225,6 +240,30 @@
   "getyourguide": "GetYourGuide",
   "rockstargames": "Rockstar Games",
   "capitalontap": "Capital on Tap",
-  "onrunning": "On"
+  "onrunning": "On",
+  "intercom": "Intercom",
+  "goodnotes": "Goodnotes",
+  "arq": "ARQ",
+  "gradient-labs": "Gradient Labs",
+  "hims-and-hers": "Hims & Hers",
+  "legora": "Legora",
+  "quantum": "Quantum",
+  "wayve": "Wayve",
+  "zego": "Zego",
+  "omaze": "Omaze",
+  "moonpig": "Moonpig"
+ },
+ "employer_sites": {
+  "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
+  "Wise": "https://wise.jobs/jobs?search=data%20scientist",
+  "Bauer Media": "https://jobs.bauermedia.com/",
+  "Disney": "https://www.disneycareers.com/en/search-jobs?k=data%20scientist&l=London",
+  "Spotify": "https://www.lifeatspotify.com/jobs?q=data%20scientist&l=london",
+  "Expedia": "https://careers.expediagroup.com/jobs/?keyword=data+scientist&location=London",
+  "Ripple": "https://ripple.com/careers/all-jobs/"
+ },
+ "external_lists": {
+  "_doc": "Other lists of the same search to diff against on every refresh; a role there but not here is either dead, out of scope, or a missed board token.",
+  "Hani Job Search Radar (ChatGPT site)": "https://hani-job-search-radar.azamhani95.chatgpt.site/api/state"
  }
 }

@@ -30,6 +30,12 @@ SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\
 EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student", re.I)
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
+# "Standard DS" = a Data Scientist / Data Science title that is not research, ML-eng, applied,
+# quant, analyst, engineer or economist. The Sheet and board list Standard DS only; the CSV
+# keeps the whole DS family with this column so the filter is mechanical, never a hand-merge.
+STD = re.compile(r"data scien", re.I)
+NOTSTD = re.compile(r"research|machine learning|\bml\b|quant|applied|analyst|engineer|economist", re.I)
+def role_type(t): return "Standard DS" if STD.search(t) and not NOTSTD.search(t) else "Other DS-family"
 
 def get(url, t=20, post=None):
     data = json.dumps(post).encode() if post is not None else None
@@ -351,7 +357,7 @@ except Exception as e:
 
 # ---------------- companies known to have NO active London DS (documented) ----------------
 NO_ROLE = [
-    ("Wayve", "Left Greenhouse (board 404); no DS roles on wayve.firststage.co"),
+    ("Wayve", "Moved to Ashby (token wayve) — 0 London DS on the board this run"),
     ("Point72", "London DS post removed; current DS roles are HK/Singapore/NY only"),
     ("OpenAI", "0 London DS on Ashby board (both prior posts closed) — re-check"),
     ("Revolut", "DS roles exist but EU/remote, not London"),
@@ -397,16 +403,17 @@ def okey(r):
     return (order.index(c) if c in order else 99, 0 if r[2] == "Senior+" else 1, r[1])
 active.sort(key=okey)
 reg = sum(1 for r in active if r[2] == "Regular/Mid")
+std = sum(1 for r in active if role_type(r[1]) == "Standard DS")
 with open("/tmp/ldn_ds_active.csv", "w", newline="") as f:
     w = csv.writer(f)
-    w.writerow(["Company", "Role", "Level", "Location", "Apply URL (unique active post)", "Status", "Notes"])
+    w.writerow(["Company", "Role", "Role Type", "Level", "Location", "Apply URL (unique active post)", "Status", "Notes"])
     for c, role, lv, loc, url in active:
-        w.writerow([c, role, lv, loc, url, "Active", ""])
-    w.writerow(["", "", "", "", "", "", ""])
-    w.writerow(["— COMPANIES WITH NO ACTIVE LONDON DS ROLE —", "", "", "", "", "", ""])
+        w.writerow([c, role, role_type(role), lv, loc, url, "Active", ""])
+    w.writerow([""] * 8)
+    w.writerow(["— COMPANIES WITH NO ACTIVE LONDON DS ROLE —"] + [""] * 7)
     for c, reason in norole:
-        w.writerow([c, "—", "—", "—", "", "No active London DS role", reason])
-print(f"\nWROTE /tmp/ldn_ds_active.csv : {len(active)} active roles "
+        w.writerow([c, "—", "—", "—", "—", "", "No active London DS role", reason])
+print(f"\nWROTE /tmp/ldn_ds_active.csv : {len(active)} active roles ({std} Standard DS) "
       f"({reg} regular/mid, {len(active)-reg} senior+) across "
       f"{len({a[0] for a in active})} companies; {len(norole)} no-role companies.")
 print("NEXT: build_jd_doc.py, then assistant uploads both files to Drive folder "
