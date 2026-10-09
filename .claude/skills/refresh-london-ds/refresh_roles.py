@@ -40,7 +40,11 @@ norole = []   # (company, reason)
 
 # ---------------- Greenhouse ----------------
 GREENHOUSE = ["deepmind", "monzo", "mangroup", "gocardless", "dunnhumby",
-              "quberesearchandtechnologies", "wayve", "datadog", "thetradedesk",
+              "quberesearchandtechnologies", "datadog", "thetradedesk",
+              # NOTE: "wayve" removed — Wayve left Greenhouse (board 404); see NO_ROLE.
+              # Token is "ocadogroup" (not "ocado"); these were missing and caused
+              # live London DS roles to be dropped from the sheet:
+              "ocadogroup", "coreweave", "isomorphiclabs", "wise",
               # big-tech boards that historically return 0 London DS (catch new):
               "databricks", "cloudflare", "braze", "amplitude", "figma",
               "mongodb", "elasticsearch", "unity3d", "catonetworks", "polyai",
@@ -60,7 +64,7 @@ for tok in GREENHOUSE:
     print(f"[gh] {tok}: {len(d.get('jobs',[]))} jobs, {len(hits)} London DS", file=sys.stderr)
 
 # ---------------- Ashby ----------------
-for org in ["openai"]:
+for org in ["openai", "lendable", "multiverse"]:
     try:
         d = json.loads(get(f"https://api.ashbyhq.com/posting-api/job-board/{org}?includeCompensation=true"))
         for j in d.get("jobs", []):
@@ -113,7 +117,8 @@ for name, url in WORKDAY.items():
         for j in d.get("jobPostings", []):
             t = j.get("title", ""); loc = j.get("locationsText", "")
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
-                active.append((name, t, level(t), loc, "(Workday — see careers site)"))
+                host = url.split("/wday/")[0]; site = url.rstrip("/").rsplit("/", 2)[-2]
+                active.append((name, t, level(t), loc, f"{host}/en-US/{site}{j.get('externalPath', '')}"))
     except Exception as e:
         print(f"[workday] {name}: {type(e).__name__}", file=sys.stderr)
 
@@ -129,7 +134,16 @@ except ImportError:
 def spa_refresh():
     out = []
     with sync_playwright() as p:
-        b = p.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
+        try:
+            b = p.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
+        except Exception:
+            # pip's playwright may want a newer Chromium than the pre-installed one
+            # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
+            # instead of failing the whole JS-site pass.
+            import glob
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            if not exe: raise
+            b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
         pg = ctx.new_page()
         def goto(url, wait=2500):
@@ -286,6 +300,9 @@ except Exception as e:
 
 # ---------------- companies known to have NO active London DS (documented) ----------------
 NO_ROLE = [
+    ("Wayve", "Left Greenhouse (board 404); no DS roles on wayve.firststage.co"),
+    ("Point72", "London DS post removed; current DS roles are HK/Singapore/NY only"),
+    ("OpenAI", "0 London DS on Ashby board (both prior posts closed) — re-check"),
     ("Revolut", "DS roles exist but EU/remote, not London"),
     ("Stripe", "No London DS at any level (Greenhouse board)"),
     ("Citadel Securities", "Perennial talent-pool EOI only; no live London DS"),
@@ -313,12 +330,14 @@ PRETTY = {"openai": "OpenAI", "deepmind": "Google DeepMind", "monzo": "Monzo",
           "mangroup": "Man Group", "gocardless": "GoCardless", "dunnhumby": "dunnhumby",
           "wayve": "Wayve", "datadog": "Datadog", "thetradedesk": "The Trade Desk",
           "quberesearchandtechnologies": "Qube RT", "palantir": "Palantir",
-          "anthropic": "Anthropic", "hubspotjobs": "HubSpot"}
+          "anthropic": "Anthropic", "hubspotjobs": "HubSpot", "ocadogroup": "Ocado",
+          "coreweave": "CoreWeave", "isomorphiclabs": "Isomorphic Labs", "wise": "Wise",
+          "lendable": "Lendable", "multiverse": "Multiverse"}
 active = [(PRETTY.get(c, c), role, lv, loc, url) for (c, role, lv, loc, url) in active]
 order = ["OpenAI", "Google DeepMind", "Google", "Microsoft", "Spotify", "Monzo",
          "Man Group", "Point72", "Qube RT", "G-Research", "Bloomberg", "Amazon",
          "The Trade Desk", "TikTok", "Datadog", "GoCardless", "dunnhumby", "Faculty AI",
-         "Wayve"]
+         "Wise", "Ocado", "Lendable", "CoreWeave", "Isomorphic Labs", "Multiverse"]
 def okey(r):
     c = r[0]
     return (order.index(c) if c in order else 99, 0 if r[2] == "Senior+" else 1, r[1])

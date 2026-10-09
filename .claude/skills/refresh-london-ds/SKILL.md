@@ -60,7 +60,7 @@ shell scripts).
 
 ## Company taxonomy (as of 2026-06)
 - **Greenhouse boards** (`boards-api.greenhouse.io/v1/boards/<token>/jobs`):
-  deepmind, monzo, gocardless, dunnhumby, quberesearchandtechnologies, wayve,
+  deepmind, monzo, gocardless, dunnhumby, quberesearchandtechnologies, ocadogroup, coreweave, isomorphiclabs, wise,
   datadog, thetradedesk; Man Group is on the EU host
   (`boards-api.greenhouse.io` token `mangroup`, job URLs `job-boards.eu...`).
   Many big-tech boards exist but return 0 London DS (databricks, cloudflare,
@@ -80,6 +80,15 @@ shell scripts).
 - **TikTok**: `api.lifeattiktok.com/api/v1/public/supplier/search/job/posts`
   (captured by loading `lifeattiktok.com/search?keyword=data%20scientist`);
   job URL `careers.tiktok.com/position/<id>/detail`.
+- **Board drift (Oct-2026 link audit):** Wayve left Greenhouse (`wayve` → 404; now no DS
+  roles at all). Ocado's token is `ocadogroup`, not `ocado`. Lendable and Multiverse are on
+  **Ashby**, not Greenhouse. Point72 currently has no London DS (HK/Singapore/NY only).
+  OpenAI has 0 London DS on its Ashby board. LinkedIn mirrors expire silently — a dead
+  LinkedIn job returns HTTP 200 but redirects to a generic "N,000+ … jobs" listing; judge
+  liveness by the page `<title>` (must name the company + role), never by status code.
+  Same for Google: a closed google.com post returns 200 with title "Jobs search — Google
+  Careers"; a live one is titled "<Role> — Google Careers". Google postings turn over
+  fast (the Staff/Shopping DS post closed within a day of being listed).
 - **Point72**: `careers.point72.com` CSOD — anchors `/CSJobDetail?jobName=...&jobCode=...`.
 - **Bloomberg**: `bloomberg.avature.net/careers/SearchJobs/data%20scientist`
   → `/careers/JobDetail/<slug>/<id>` (London DS = Economics DS).
