@@ -75,27 +75,40 @@ CONTENT_SELECTORS = {
 }
 
 
+# Hosts behind a Cloudflare bot-check that blocks headless Chromium too (verified
+# 2026-10-09: the page only ever renders the "Just a moment..." challenge). No
+# point waiting on them — flag for manual capture instead.
+CLOUDFLARE_BLOCKED = {"www.revolut.com", "www.citadelsecurities.com"}
+
+
+class ManualOnly(Exception):
+    """Raised for hosts that cannot be fetched by any automated method."""
+
+
 def host_of(url):
     return re.sub(r"^https?://", "", url).split("/")[0]
 
 
 def fetch_with_browser(page, url):
-    page.goto(url, wait_until="networkidle", timeout=60000)
+    if host_of(url) in CLOUDFLARE_BLOCKED:
+        raise ManualOnly("Cloudflare bot-check blocks automation — paste JD manually")
+    # domcontentloaded + a short settle is far faster and more reliable than
+    # networkidle (which never fires on pages with long-polling/analytics).
+    page.goto(url, wait_until="domcontentloaded", timeout=30000)
     sel = CONTENT_SELECTORS.get(host_of(url))
     if sel:
         try:
             page.wait_for_selector(sel.split(",")[0].strip(), timeout=8000)
         except Exception:  # noqa: BLE001
             pass
-        html = page.content()
-        # Prefer the selector's HTML if it matches, else whole page.
+    page.wait_for_timeout(4000)  # let client-side JD render
+    if sel:
         try:
             el = page.query_selector(sel.split(",")[0].strip())
             if el:
                 return strip_html(el.inner_html())
         except Exception:  # noqa: BLE001
             pass
-        return strip_html(html)
     return strip_html(page.content())
 
 
@@ -131,6 +144,8 @@ def main():
                     else:
                         text = fetch_with_browser(page, url)
                     out.append("```\n" + text.strip() + "\n```\n")
+                except ManualOnly as e:
+                    out.append(f"**Manual capture required:** {e}\n")
                 except Exception as e:  # noqa: BLE001
                     out.append(f"**Could not fetch:** {type(e).__name__}: {e}\n")
         browser.close()
