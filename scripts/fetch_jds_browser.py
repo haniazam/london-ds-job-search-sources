@@ -17,12 +17,44 @@ Run:
 
 Writes: docs/job-descriptions-scraped.md
 """
+import glob
+import os
 import re
 import sys
 from pathlib import Path
 
 # Reuse the canonical posting list + API helpers from the plain scraper.
 from fetch_jds import COMPANIES, GH_RE, ASHBY_RE, fetch_jd, strip_html  # noqa: E402
+
+
+def _chromium_executable():
+    """Locate a pre-installed Chromium (e.g. PLAYWRIGHT_BROWSERS_PATH on managed
+    runners) so we don't depend on `playwright install` matching the pip build."""
+    base = os.environ.get("PLAYWRIGHT_BROWSERS_PATH", "")
+    cands = []
+    if base:
+        cands.append(os.path.join(base, "chromium"))  # common symlink
+        cands += sorted(glob.glob(os.path.join(base, "chromium-*/chrome-linux/chrome")))
+        cands += sorted(glob.glob(os.path.join(base, "chromium-*/chrome-linux/headless_shell")))
+    return next((c for c in cands if os.path.exists(c)), None)
+
+
+def _proxied():
+    """True when outbound HTTPS goes through a proxy with its own CA (managed
+    cloud runners). Only then do we relax TLS verification, so normal runs stay
+    strict."""
+    return bool(os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy"))
+
+
+def _launch(p):
+    args = ["--ignore-certificate-errors"] if _proxied() else []
+    try:
+        return p.chromium.launch(headless=True, args=args)
+    except Exception:  # noqa: BLE001 — fall back to a pre-installed binary
+        exe = _chromium_executable()
+        if not exe:
+            raise
+        return p.chromium.launch(headless=True, executable_path=exe, args=args)
 
 # Optional per-host CSS selector to wait for / extract (best-effort). Falls back
 # to document.body.innerText when the selector is absent.
@@ -79,10 +111,13 @@ def main():
            "(JS-rendered). Source URLs: `docs/job-posting-urls.md`.\n"]
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page(user_agent=(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"))
+        browser = _launch(p)
+        context = browser.new_context(
+            ignore_https_errors=_proxied(),  # trust the runner's proxy CA
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"))
+        page = context.new_page()
         for company, postings in COMPANIES:
             out.append(f"\n========================================================\n"
                        f"## {company}\n")
