@@ -17,12 +17,44 @@ Run:
 
 Writes: docs/job-descriptions-scraped.md
 """
+import glob
+import os
 import re
 import sys
 from pathlib import Path
 
 # Reuse the canonical posting list + API helpers from the plain scraper.
 from fetch_jds import COMPANIES, GH_RE, ASHBY_RE, fetch_jd, strip_html  # noqa: E402
+
+
+def _chromium_executable():
+    """Locate a pre-installed Chromium (e.g. PLAYWRIGHT_BROWSERS_PATH on managed
+    runners) so we don't depend on `playwright install` matching the pip build."""
+    base = os.environ.get("PLAYWRIGHT_BROWSERS_PATH", "")
+    cands = []
+    if base:
+        cands.append(os.path.join(base, "chromium"))  # common symlink
+        cands += sorted(glob.glob(os.path.join(base, "chromium-*/chrome-linux/chrome")))
+        cands += sorted(glob.glob(os.path.join(base, "chromium-*/chrome-linux/headless_shell")))
+    return next((c for c in cands if os.path.exists(c)), None)
+
+
+def _proxied():
+    """True when outbound HTTPS goes through a proxy with its own CA (managed
+    cloud runners). Only then do we relax TLS verification, so normal runs stay
+    strict."""
+    return bool(os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy"))
+
+
+def _launch(p):
+    args = ["--ignore-certificate-errors"] if _proxied() else []
+    try:
+        return p.chromium.launch(headless=True, args=args)
+    except Exception:  # noqa: BLE001 — fall back to a pre-installed binary
+        exe = _chromium_executable()
+        if not exe:
+            raise
+        return p.chromium.launch(headless=True, executable_path=exe, args=args)
 
 # Optional per-host CSS selector to wait for / extract (best-effort). Falls back
 # to document.body.innerText when the selector is absent.
@@ -43,28 +75,58 @@ CONTENT_SELECTORS = {
 }
 
 
+# Hosts behind a Cloudflare bot-check that blocks headless Chromium too (verified
+# 2026-10-09: the page only ever renders the "Just a moment..." challenge). No
+# point waiting on them — flag for manual capture instead.
+CLOUDFLARE_BLOCKED = {"www.revolut.com", "www.citadelsecurities.com"}
+
+
+class ManualOnly(Exception):
+    """Raised for hosts that cannot be fetched by any automated method."""
+
+
 def host_of(url):
     return re.sub(r"^https?://", "", url).split("/")[0]
 
 
-def fetch_with_browser(page, url):
-    page.goto(url, wait_until="networkidle", timeout=60000)
+def _fetch_once(page, url):
+    # domcontentloaded + a short settle is far faster and more reliable than
+    # networkidle (which never fires on pages with long-polling/analytics).
+    page.goto(url, wait_until="domcontentloaded", timeout=45000)
     sel = CONTENT_SELECTORS.get(host_of(url))
     if sel:
         try:
             page.wait_for_selector(sel.split(",")[0].strip(), timeout=8000)
         except Exception:  # noqa: BLE001
             pass
-        html = page.content()
-        # Prefer the selector's HTML if it matches, else whole page.
+    page.wait_for_timeout(4000)  # let client-side JD render
+    if sel:
         try:
             el = page.query_selector(sel.split(",")[0].strip())
             if el:
                 return strip_html(el.inner_html())
         except Exception:  # noqa: BLE001
             pass
-        return strip_html(html)
     return strip_html(page.content())
+
+
+def fetch_with_browser(page, url, retries=1):
+    if host_of(url) in CLOUDFLARE_BLOCKED:
+        raise ManualOnly("Cloudflare bot-check blocks automation — paste JD manually")
+    # Some hosts (McKinsey) are flaky: slow first load, or a 200 page whose body
+    # is just "upstream request failed". One retry after a pause catches most.
+    for attempt in range(retries + 1):
+        try:
+            text = _fetch_once(page, url)
+            if "upstream request failed" in text.lower() and attempt < retries:
+                page.wait_for_timeout(5000)
+                continue
+            return text
+        except Exception:  # noqa: BLE001
+            if attempt < retries:
+                page.wait_for_timeout(5000)
+                continue
+            raise
 
 
 def main():
@@ -79,10 +141,13 @@ def main():
            "(JS-rendered). Source URLs: `docs/job-posting-urls.md`.\n"]
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page(user_agent=(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"))
+        browser = _launch(p)
+        context = browser.new_context(
+            ignore_https_errors=_proxied(),  # trust the runner's proxy CA
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"))
+        page = context.new_page()
         for company, postings in COMPANIES:
             out.append(f"\n========================================================\n"
                        f"## {company}\n")
@@ -96,6 +161,8 @@ def main():
                     else:
                         text = fetch_with_browser(page, url)
                     out.append("```\n" + text.strip() + "\n```\n")
+                except ManualOnly as e:
+                    out.append(f"**Manual capture required:** {e}\n")
                 except Exception as e:  # noqa: BLE001
                     out.append(f"**Could not fetch:** {type(e).__name__}: {e}\n")
         browser.close()

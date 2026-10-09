@@ -32,17 +32,25 @@ TIMEOUT = 30
 
 # Company -> list of (label, url, is_primary). Order = document order.
 # Primary = column D (the role each tailored resume targets).
+# URL list refreshed 2026-10-09 against each employer's live ATS (Greenhouse /
+# Ashby open APIs where available). Prefer Greenhouse/Ashby URLs — the scraper
+# pulls clean JD text from their JSON APIs. Entries marked "[walled]" sit behind
+# Cloudflare/JS and need the browser variant or manual capture; "[search]"
+# entries are listing pages to monitor (no single live JD to scrape).
 COMPANIES = [
     ("OpenAI", [
-        ("Data Scientist, Safety", "https://jobs.ashbyhq.com/openai/90c711dc-5f50-46e3-a5ab-82359a56d683", True),
-        ("DS, Integrity Measurement", "https://openai.com/careers/data-scientist-integrity-measurement-london-uk/", False),
-        ("DS, Monitoring Ops", "https://datasciencejobs.com/jobs/data-scientist-openai-united-kingdom-11/", False),
-        ("Protection Scientist Engineer", "https://openai.com/careers/protection-scientist-engineer-intelligence-and-investigations-london-uk/", False),
+        # Only live London DS-adjacent role on the Ashby board (2026-10-09). "Data Scientist, Safety"
+        # (90c711dc…) was dropped: it is San Francisco / New York, not London.
+        ("Protection Scientist Engineer, Integrity — London", "https://jobs.ashbyhq.com/openai/3fefc615-6950-4a29-9214-eefdc4e659e3", True),
     ]),
     ("Citadel Securities", [
+        # [walled] Cloudflare bot-check blocks plain fetch AND headless Chromium — manual paste only.
+        # London per the source target list; location unverifiable while blocked.
         ("Data Scientist (Expression of Interest)", "https://www.citadelsecurities.com/careers/details/data-scientist/", True),
     ]),
     ("Revolut", [
+        # [walled] Cloudflare challenge blocks plain fetch AND headless Chromium — manual paste only; no public API.
+        # London per the source target list; locations unverifiable while blocked.
         ("Senior Data Scientist", "https://www.revolut.com/careers/position/1a0f390b-ed4a-441a-9535-82d0e185906a/", True),
         ("Senior DS (Computer Vision)", "https://www.revolut.com/careers/position/senior-data-scientist-computer-vision-85b790a2-ca60-4095-a28f-b4e29f0136eb/", False),
         ("DS (Risk)", "https://www.revolut.com/careers/position/data-scientist-risk-46917c00-41ca-4c82-be38-00894cc2c136/", False),
@@ -50,54 +58,60 @@ COMPANIES = [
         ("DS (Core)", "https://www.revolut.com/careers/position/76be454e-fe77-4daf-abd6-9ae9c41afd70/", False),
     ]),
     ("Stripe", [
-        ("Data Scientist, EMEA", "https://stripe.com/jobs/listing/data-scientist-emea/7516102", True),
+        # [search] DS, EMEA (7516102) no longer live; Stripe is on Greenhouse (board 'stripe'), no London DS currently.
+        # Stripe's search filters by office_locations=, not ?l= (which it ignores and shows all offices).
+        ("Data Scientist — London office search", "https://stripe.com/jobs/search?office_locations=Europe--London&query=data+scientist", True),
     ]),
     ("Google DeepMind", [
-        ("Applied Data Scientist — London (FTC)", "https://job-boards.greenhouse.io/deepmind/jobs/7126983", True),
-        ("Research Scientist, Gemini Diffusion", "https://job-boards.greenhouse.io/deepmind/jobs/7700399", False),
-        ("Research Scientist, Reinforcement Learning", "https://job-boards.greenhouse.io/deepmind/jobs/7716037", False),
-        ("Research Scientist, World Models (London/Toronto)", "https://job-boards.greenhouse.io/deepmind/jobs/7372638", False),
-        ("Research Engineer, Frontier Safety", "https://job-boards.greenhouse.io/deepmind/jobs/7493360", False),
+        # [search] DeepMind left the 'deepmind' Greenhouse board (all old IDs 404); roles now only on the JS careers site.
+        ("DeepMind careers — London DS/RS (ATS moved off Greenhouse)", "https://deepmind.google/about/careers/", True),
     ]),
     ("The Trade Desk", [
-        ("Staff Applied Scientist / Data Scientist II", "https://careers.thetradedesk.com/jobs/5118594007/staff-applied-scientist", True),
+        # [search] Staff Applied Scientist (5118594007) gone; board 'thetradedesk' live but no London DS/applied-sci currently.
+        ("Applied Scientist / DS — careers board", "https://job-boards.greenhouse.io/thetradedesk", True),
     ]),
     ("G-Research", [
-        ("Data Scientist", "https://www.gresearch.com/vacancies/data-scientist/", True),
-        ("Machine Learning Researcher", "https://www.gresearch.com/vacancies/machine-learning-researcher/", False),
+        # 'data-scientist' vacancy is filled/removed; these slugs are live as of 2026-10-09.
+        ("Machine Learning Researcher", "https://www.gresearch.com/vacancies/machine-learning-researcher/", True),
         ("NLP Researcher", "https://www.gresearch.com/vacancies/natural-language-processing-researcher/", False),
         ("Machine Learning Engineer", "https://www.gresearch.com/vacancies/machine-learning-engineer/", False),
+        ("AI Engineer", "https://www.gresearch.com/vacancies/ai-engineer/", False),
     ]),
     ("Spotify", [
-        ("Senior Data Scientist — Platform Mission", "https://www.lifeatspotify.com/jobs/senior-data-scientist-platform-mission", True),
-        ("Senior DS — Global Strategy & Operations", "https://www.lifeatspotify.com/jobs/senior-data-scientist-global-strategy-operations-people", False),
-        ("DS — Subscriptions", "https://www.lifeatspotify.com/jobs/data-scientist-subscriptions-2", False),
-        ("DS — Platform & Partner Experience", "https://www.lifeatspotify.com/jobs/data-scientist-platform-partner-experience", False),
-        ("DS — Content Understanding", "https://www.lifeatspotify.com/jobs/data-scientist-content-understanding", False),
+        # Live London roles per the lifeatspotify jobs API (2026-10-09). JS-rendered pages — browser variant.
+        ("Data Scientist, Company Planning & Execution — London", "https://www.lifeatspotify.com/jobs/data-scientist-company-planning-execution", True),
+        ("Senior Applied Research Scientist, Personalization — London", "https://www.lifeatspotify.com/jobs/senior-applied-research-scientist-personalization", False),
+        ("Research Scientist, Personalization — London", "https://www.lifeatspotify.com/jobs/research-scientist-personalization-3", False),
+        ("Research Scientist, Generative Audio — London", "https://www.lifeatspotify.com/jobs/research-scientist-generative-audio-2", False),
     ]),
     ("Monzo", [
         ("Lead Data Scientist", "https://job-boards.greenhouse.io/monzo/jobs/6369658", True),
-        ("Senior ML Scientist, Borrowing", "https://job-boards.greenhouse.io/monzo/jobs/7686352", False),
+        # 'Senior ML Scientist, Borrowing' (7686352) gone; nearest current role + extra live DS roles.
+        ("Senior ML Manager, Borrowing", "https://job-boards.greenhouse.io/monzo/jobs/7996955", False),
+        ("Senior Data Scientist", "https://job-boards.greenhouse.io/monzo/jobs/6180814", False),
+        ("Staff Data Scientist", "https://job-boards.greenhouse.io/monzo/jobs/8232732", False),
     ]),
     ("Google", [
         ("Product Data Scientist (L5) — London search", "https://www.google.com/about/careers/applications/jobs/results?location=London%2C+UK", True),
     ]),
     ("Bloomberg", [
-        ("Economics Data Scientist", "https://bloomberg.avature.net/careers/JobDetail/Bloomberg-Economics-Data-Scientist/19933", True),
-        ("Data Scientist (req 111117)", "https://careers.bloomberg.com/job/detail/111117", False),
-        ("DS search (all live)", "https://bloomberg.avature.net/careers/SearchJobs/data%20scientist", False),
+        # [walled] Avature JobDetail 19933 expired (404); careers.bloomberg.com 403s. Monitor the Avature DS search.
+        ("Data Scientist — search (Avature)", "https://bloomberg.avature.net/careers/SearchJobs/data%20scientist", True),
     ]),
     ("QuantumBlack (McKinsey)", [
-        ("Senior Data Scientist I", "https://www.mckinsey.com/careers/search-jobs/jobs/seniordatascientisti-quantumblackaibymckinsey-108819", True),
-        ("Data Scientist I", "https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714", False),
+        # [walled] mckinsey.com careers are JS-rendered (plain fetch times out) — browser variant gets them (no Cloudflare).
+        # 'Senior Data Scientist I' 108819 is dead (upstream error); Data Scientist I 102714 is the live London role (2026-10-09).
+        ("Data Scientist I — London", "https://www.mckinsey.com/careers/search-jobs/jobs/datascientisti-quantumblackaibymckinsey-102714", True),
     ]),
     ("Man Group", [
-        ("Senior DS — Responsible Investment", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4863672101", True),
-        ("Senior DS Analyst (12m FTC)", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4807838101", False),
-        ("Quant Researcher — Macro", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4724414101", False),
-        ("Quant Researcher — Discretionary", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4772820101", False),
+        # All four old Greenhouse IDs expired; these are the current live London quant roles (board 'mangroup', EU).
+        ("Quant Researcher — Macro; Futures/FX", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4966466101", True),
+        ("Quant Researcher — Macro Trend", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4880305101", False),
+        ("Quant — Systematic Multi-Strategy", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4965180101", False),
+        ("Quantitative Developer — Systematic", "https://job-boards.eu.greenhouse.io/mangroup/jobs/4844843101", False),
     ]),
     ("TikTok", [
+        # [walled] careers.tiktok.com own ATS, JS-rendered — browser variant / manual.
         ("Senior Data Scientist, Operations", "https://careers.tiktok.com/position/7344026106091604275/detail", True),
     ]),
     ("XTX Markets", [
