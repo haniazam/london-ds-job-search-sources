@@ -172,6 +172,7 @@ def search_token(company):
         if s == 200:
             try: urls = [r.get("url", "") for r in json.loads(b).get("web", {}).get("results", [])]
             except Exception: urls = []
+        time.sleep(1.1)                                                         # Brave free tier: 1 request/second
     else:
         s, b, _ = get("https://html.duckduckgo.com/html/?q=" + urllib.parse.quote(q), tries=1)
         if s == 200:
