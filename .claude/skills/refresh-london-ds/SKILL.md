@@ -129,6 +129,14 @@ external lists in `boards.json` (`external_lists`, e.g. the ChatGPT Job Search R
 classify each, never ignore. Employer sites with no ATS API are in `employer_sites`; verify
 those by GET + `<title>`.
 
+## WLB and stability (researched, never inferred) — wlb_stability.py + data/wlb_stability.json
+WLB is a Glassdoor/Levels.fyi score out of 5 (DS cohort where the sample allows), thresholds
+> 4.5 strong / 4.0–4.5 moderate / < 4.0 weak, null = not researched. Stability is
+Growing / Stable / Caution from 2024–26 layoff reporting with an evidence sentence and date
+(rules in the module docstring). The board merges these per company via `wlb_stability.lookup`;
+a company not in the file shows "not researched". Refresh by research only. The curated Target
+List's full role notes are archived in data/target_list_2026-10.json.
+
 ## Comp coverage (run `pay_enrich.py` after `refresh_roles.py`)
 `pay_enrich.py /tmp/ldn_ds_active.csv` writes `/tmp/ldn_ds_active_pay.csv` with an
 "Approx London TC" column that is never blank and always labelled: **posted** (the
