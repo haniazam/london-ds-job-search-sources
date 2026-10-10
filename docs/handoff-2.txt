@@ -9,8 +9,6 @@ What exists
 - Board: https://claude.ai/artifact/UcMLHVF7Zfh5y67a77Skp3 (v11) — every verified-live London DS role, Target List format: rule-based 0–10 score, tiers, fit and stability, pipeline status per role, next action, cards or table, tagged set-aside list. Lato, light and dark.
 - Sheet (source of truth): https://docs.google.com/spreadsheets/d/1tr7h-veYlLIQtewkBw8OY-Zz_7l-4cNNNjs8AO7BoSg — 109 roles at 52 employers as of 10 Oct 2026, plus 27 no-role or unverified rows.
 - Repo: haniazam/london-ds-job-search-sources, branch claude/optimistic-ramanujan-80by3 (main at f2acc05). Skill: .claude/skills/refresh-london-ds — discover.py, refresh_roles.py, pay_enrich.py, role_taxonomy.py, boards.json, pay_overrides.json, SKILL.md.
-- Target List (separate, curated, 11 scored roles): https://claude.ai/artifact/P6Qxk28gaa1udcZhNGjevA — overlaps the board; merge proposed, not done.
-- Mockups of five UI improvements: https://claude.ai/artifact/9AGY2BoKRPWbMuTyRBtizE.
 
 The rules
 - Scope: Standard DS titles = the core role is Data Scientist, or Data Science Manager / Lead / Head / Director. Specialism words (Economist, Machine Learning, Research, Applied) never exclude; only a different core discipline does (Research Scientist, ML Engineer, Applied Scientist, Quant, Analyst, Engineer, Economist-as-the-job). Tested in role_taxonomy.py.
@@ -51,7 +49,6 @@ How to refresh daily
 Open items
 - Seven leads unverified, not dropped: Checkout.com and IQVIA (SmartRecruiters gated), Wise Lead DS Causal Inference (radar saw it open at £90.5k–£127k), Warden AI, Uncapped, Day30, Clarity AI, Adzact (Workable rate-limited).
 - The word "monitor" means three things (pipeline default, bottom tier, set-aside tag); rename proposed: pipeline default → Not started, bottom tier → Low priority.
-- Target List merge into the board as a judgement layer: proposed, not done.
 - Adzuna and Reed keys not yet created; discovery runs without them at reduced coverage.
 - The first bootstrap discovery run is in progress; its findings and any fixes are not yet in the Sheet.
 
@@ -59,4 +56,4 @@ Next steps
 - Create the Adzuna and Reed keys and set them in the Routine's environment.
 - Set up the daily Routine and the weekly deep-sweep Routine as above.
 - Add the snapshot step and the reply filter to the skill.
-- Decide the monitor rename and the Target List merge.
+- Decide the monitor rename.
