@@ -105,16 +105,6 @@
   "unv"
  ],
  [
-  "Warden AI",
-  "Senior Applied Scientist / Data Scientist seen in search; Workable API rate-limited (429) on every attempt",
-  "unv"
- ],
- [
-  "Wise (Lead DS, Causal Inference)",
-  "radar verified open 9 Oct with published base £90.5k–£127k; SmartRecruiters API gated; https://jobs.smartrecruiters.com/wise/744000147966645",
-  "unv"
- ],
- [
   "Uncapped",
   "Data Scientist seen in search; Workable API rate-limited (429)",
   "unv"
@@ -178,5 +168,15 @@
   "Anthropic (London)",
   "Live London roles are Research Eng/Scientist, not DS.",
   "profile"
+ ],
+ [
+  "Discovered employers not yet resolved (114)",
+  "Found by the discovery sweep (LinkedIn / Built In) with a London DS title, but their own posting could not be located by the capped search; kept in discovered_unresolved_employers.json and resolved weekly (or in one run with a Brave API key). Includes: ASOS.com, AVEVA, AXIS (AXIS Capital), Abtrace, Acuity Analytics, Amazon, Annapurna, Apple, BAE Systems, BNY, Bauer Media Group, Betsson Group, Blenheim Chalcot, Blue Light Card, British Airways, C3 AI, CEERISK Consulting Ltd, Carwow…",
+  "unv"
+ ],
+ [
+  "Wise (Senior DS Lead, AML Risk)",
+  "UNVERIFIED this run — LinkedIn rate-limited (429) on re-check; last verified 9 Oct. Wise's SmartRecruiters board shows 3 other live London DS roles.",
+  "unv"
  ]
 ]
