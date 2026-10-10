@@ -4,12 +4,15 @@
   "airbnb",
   "akunacapital",
   "amplitude",
+  "anaplan",
   "anthropic",
+  "artefact",
   "blacklane",
   "braze",
   "capco",
   "capitalontap",
   "catonetworks",
+  "clearscoretechnologylimited",
   "cleo",
   "cloudflare",
   "coinbase",
@@ -69,6 +72,7 @@
   "trustpilot",
   "typeform",
   "unity3d",
+  "valtech",
   "virtu",
   "wehrtyou",
   "wheely",
@@ -137,6 +141,7 @@
  ],
  "smartrecruiters": [
   "Checkoutcom1",
+  "Deloitte6",
   "GenomicsEngland",
   "IQVIA",
   "PublicisGroupe",
@@ -166,7 +171,9 @@
   "IRC": "https://theirc.wd1.myworkdayjobs.com/wday/cxs/theirc/External_Careers/jobs",
   "PayPal": "https://paypal.wd1.myworkdayjobs.com/wday/cxs/paypal/jobs/jobs",
   "Western Union": "https://westernunion.wd5.myworkdayjobs.com/wday/cxs/westernunion/WesternUnionJobs/jobs",
-  "ICF": "https://icf.wd5.myworkdayjobs.com/wday/cxs/icf/ICFExternal_Career_Site/jobs"
+  "ICF": "https://icf.wd5.myworkdayjobs.com/wday/cxs/icf/ICFExternal_Career_Site/jobs",
+  "Elsevier": "https://relx.wd3.myworkdayjobs.com/wday/cxs/relx/ElsevierJobs/jobs",
+  "Hastings Direct": "https://hastingsdirect.wd3.myworkdayjobs.com/wday/cxs/hastingsdirect/linkedin/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -251,7 +258,12 @@
   "wayve": "Wayve",
   "zego": "Zego",
   "omaze": "Omaze",
-  "moonpig": "Moonpig"
+  "moonpig": "Moonpig",
+  "anaplan": "Anaplan",
+  "artefact": "Artefact",
+  "clearscoretechnologylimited": "ClearScore",
+  "valtech": "Valtech",
+  "Deloitte6": "Deloitte"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",

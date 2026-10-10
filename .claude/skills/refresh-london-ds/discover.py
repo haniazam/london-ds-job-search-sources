@@ -158,6 +158,8 @@ norm = lambda n: re.sub(r"[^a-z0-9]", "", re.sub(r"\s*\(.*?\)", "", (n or "").lo
 known = {norm(v): k for k, v in REG.get("display_names", {}).items()} | {norm(k): k for k in REG["workday"]}
 for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee"):
     for t in REG.get(k, []): known.setdefault(norm(t), t)
+for n in list(REG.get("employer_sites", {}).keys()) + ["Amazon", "Google", "TikTok", "Spotify", "Microsoft", "Point72", "Bloomberg", "G-Research", "Bauer Media Group"]:
+    if not n.startswith("_"): known.setdefault(norm(n), n)                        # employers enumerated outside the token lists
 HOSTS = ("site:job-boards.greenhouse.io OR site:boards.greenhouse.io OR site:job-boards.eu.greenhouse.io OR site:jobs.ashbyhq.com OR "
          "site:jobs.lever.co OR site:apply.workable.com OR site:jobs.smartrecruiters.com OR site:myworkdayjobs.com OR site:pinpointhq.com OR site:teamtailor.com")
 def search_token(company):
@@ -175,9 +177,11 @@ def search_token(company):
         if s == 200:
             urls = [urllib.parse.unquote(re.search(r"uddg=([^&]+)", u).group(1)) if "uddg=" in u else u for u in re.findall(r'<a[^>]+class="result__a"[^>]+href="([^"]+)"', b)]
         time.sleep(15)
+    key = norm(company); stem = key[:6] if len(key) >= 6 else key
     for u in urls:
         k, t = token_of(u)
-        if k and t: return k, t, u
+        if k and t and (stem in norm(u) or norm(t) in key or key in norm(t)):   # the URL must corroborate the employer, else it's a false match
+            return k, t, u
     return None, None, None
 new_tokens = {}; posts = []; unresolved = []; covered = 0; searched = 0
 CAP = int(os.environ.get("RESOLVE_CAP", "25"))
