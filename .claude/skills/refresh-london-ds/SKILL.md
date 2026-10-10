@@ -76,7 +76,7 @@ display-name match, (2) a scripted web search over the ATS hosts — Brave Searc
 2,000/month; the robust option — the key is a **Network secret** on the Claude Code environment
 that injects the `X-Subscription-Token` header for `api.search.brave.com` under `/res/v1/`, or the
 `BRAVE_API_KEY` variable when running elsewhere; the script always tries Brave first and treats
-401/422 as "no key"), else DuckDuckGo HTML at ~15 s
+401/422 as "no key"), else DuckDuckGo HTML (blocked at the egress of Claude Code cloud containers — there, Brave is the only option) at ~15 s
 pacing capped by `RESOLVE_CAP` (default 25 employers per run) — or (3) it lands in
 `discovered_unresolved_employers.json`, which the weekly sweep resolves by hand with WebSearch
 (the assistant, not the script). `discover.py --resolve-only` re-runs resolution on the last
