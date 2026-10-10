@@ -166,14 +166,18 @@ def search_token(company):
     """Tier 2: find the employer's ATS board via a web search restricted to ATS hosts."""
     q = f'"{company}" "data scientist" ({HOSTS})'
     urls = []
-    bk = os.environ.get("BRAVE_API_KEY")
-    if bk:
-        s, b, _ = get("https://api.search.brave.com/res/v1/web/search?count=10&q=" + urllib.parse.quote(q), h={"X-Subscription-Token": bk, "Accept": "application/json"}, tries=1)
-        if s == 200:
-            try: urls = [r.get("url", "") for r in json.loads(b).get("web", {}).get("results", [])]
-            except Exception: urls = []
+    # Brave Search: the key arrives either as BRAVE_API_KEY in the environment or injected by the
+    # session's Network-secret proxy (header X-Subscription-Token on api.search.brave.com), so the
+    # call is always attempted; anything but 200 (no key, 401, 429) falls back to DuckDuckGo.
+    bk = os.environ.get("BRAVE_API_KEY"); hdr = {"Accept": "application/json"}
+    if bk: hdr["X-Subscription-Token"] = bk
+    s, b, _ = get("https://api.search.brave.com/res/v1/web/search?count=10&q=" + urllib.parse.quote(q), h=hdr, tries=1)
+    if s == 200:
+        try: urls = [r.get("url", "") for r in json.loads(b).get("web", {}).get("results", [])]
+        except Exception: urls = []
         time.sleep(1.1)                                                         # Brave free tier: 1 request/second
     else:
+        if bk or s not in (401, 422): print(f"  [brave] HTTP {s} — falling back to DuckDuckGo", file=sys.stderr)   # 401/422 = no key configured
         s, b, _ = get("https://html.duckduckgo.com/html/?q=" + urllib.parse.quote(q), tries=1)
         if s == 200:
             urls = [urllib.parse.unquote(re.search(r"uddg=([^&]+)", u).group(1)) if "uddg=" in u else u for u in re.findall(r'<a[^>]+class="result__a"[^>]+href="([^"]+)"', b)]

@@ -72,8 +72,11 @@ month, deeper paging) the first time or after a gap; the daily run uses the past
 LinkedIn rate-limits (429): the script paces and backs off; a 429 run is incomplete, not
 empty — rerun later. LinkedIn's guest job pages gate the apply link behind sign-in, so a
 LinkedIn lead is an employer name + title, never a URL: it is resolved by (1) a registry
-display-name match, (2) a scripted web search over the ATS hosts — Brave Search API with
-`BRAVE_API_KEY` (free tier 2,000/month; the robust option), else DuckDuckGo HTML at ~15 s
+display-name match, (2) a scripted web search over the ATS hosts — Brave Search API (free tier
+2,000/month; the robust option — the key is a **Network secret** on the Claude Code environment
+that injects the `X-Subscription-Token` header for `api.search.brave.com` under `/res/v1/`, or the
+`BRAVE_API_KEY` variable when running elsewhere; the script always tries Brave first and treats
+401/422 as "no key"), else DuckDuckGo HTML at ~15 s
 pacing capped by `RESOLVE_CAP` (default 25 employers per run) — or (3) it lands in
 `discovered_unresolved_employers.json`, which the weekly sweep resolves by hand with WebSearch
 (the assistant, not the script). `discover.py --resolve-only` re-runs resolution on the last
