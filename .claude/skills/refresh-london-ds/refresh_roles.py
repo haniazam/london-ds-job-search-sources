@@ -27,7 +27,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
 LON = re.compile(r"london|united kingdom|\buk\b|england", re.I)
 SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
-EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student", re.I)
+EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student|fixed.?term|\bFTC\b|\bcontract\b", re.I)
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
 
@@ -367,6 +367,15 @@ if os.path.exists(DISC):
         if re.search(r"data scien", title) and not re.search(r"no longer|not found|closed|expired|jobs search|\d,\d{3}\+ ", title):
             active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1
     print(f"[discovered] {hits} employer-site posts verified live", file=sys.stderr)
+
+# ---------------- hand-added posts on sites without an API (data/manual_posts.json), verified each run ----------------
+try:
+    from manual_posts import verified_rows
+    for r in verified_rows():
+        if r["Apply URL (unique active post)"].split("?")[0] not in {a[4].split("?")[0] for a in active}:
+            active.append((r["Company"], r["Role"], r["Level"], r["Location"], r["Apply URL (unique active post)"]))
+except Exception as e:
+    print(f"[manual] skipped: {type(e).__name__} {e}", file=sys.stderr)
 
 # ---------------- companies known to have NO active London DS (documented) ----------------
 NO_ROLE = [
