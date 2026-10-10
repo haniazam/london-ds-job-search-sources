@@ -6,13 +6,13 @@ Who this is for
 - Hani Azam, running a London Data Science job search, who wants the board and its Sheet recreated and maintained without the repo, the skill or the shell — or automated with them.
 
 What exists
-- Board: https://claude.ai/artifact/UcMLHVF7Zfh5y67a77Skp3 (v12) — every verified-live London DS role, Target List format: rule-based 0–10 score, tiers, fit and stability, pipeline status per role, next action, cards or table, tagged set-aside list. Lato, light and dark.
-- Sheet (source of truth): https://docs.google.com/spreadsheets/d/1tr7h-veYlLIQtewkBw8OY-Zz_7l-4cNNNjs8AO7BoSg — 129 roles at 64 employers as of 11 Oct 2026, plus 36 no-role or unverified rows.
+- Board: https://claude.ai/artifact/UcMLHVF7Zfh5y67a77Skp3 (v13) — every verified-live London DS role, Target List format: rule-based 0–10 score, tiers, fit and stability, pipeline status per role, next action, cards or table, tagged set-aside list. Lato, light and dark.
+- Sheet (source of truth): https://docs.google.com/spreadsheets/d/1tr7h-veYlLIQtewkBw8OY-Zz_7l-4cNNNjs8AO7BoSg — 128 roles at 64 employers as of 11 Oct 2026, plus 36 no-role or unverified rows.
 - Repo: haniazam/london-ds-job-search-sources, branch claude/optimistic-ramanujan-80by3 (main at f2acc05). Skill: .claude/skills/refresh-london-ds — discover.py, refresh_roles.py, pay_enrich.py, build_board.py (+ board_template.html), manual_posts.py, role_taxonomy.py, wlb_stability.py, boards.json, pay_overrides.json, SKILL.md. Data: data/wlb_stability.json, data/set_aside.json, data/manual_posts.json, data/target_list_2026-10.json.
 
 The rules
 - Scope: Standard DS titles = the core role is Data Scientist, or Data Science Manager / Lead / Head / Director. Specialism words (Economist, Machine Learning, Research, Applied) never exclude; only a different core discipline does (Research Scientist, ML Engineer, Applied Scientist, Quant, Analyst, Engineer, Economist-as-the-job). Tested in role_taxonomy.py.
-- Location: London or London-eligible (Remote-UK, or a multi-location post listing London). Regular and Senior both included. Intern, graduate, apprentice, placement excluded. Agency and recruiter posts excluded.
+- Location: London or London-eligible (Remote-UK, or a multi-location post listing London). Regular and Senior both included. Intern, graduate, apprentice, placement, fixed-term, fractional and part-time excluded. Agency and recruiter posts excluded.
 - Every row is a unique live posting verified on the employer's own board or API. Closed and unverified roles move to the set-aside section with a reason; nothing is deleted.
 - Sheet columns, in order: Company, Role, Role Type, Level, Approx London TC, Location, Apply URL, Status, Notes. Active rows first grouped by company, then a divider row, then the set-aside rows.
 - Comp is three-tier and always labelled: posted (employer's range) › sourced (Levels.fyi / Glassdoor) › market est. (ITJobsWatch London median for the title, −15% to +25%). Never present a market band as company data.
@@ -54,7 +54,7 @@ Open items
 - 114 discovered employers not yet resolved to their own posting (discovered_unresolved_employers.json) — a Brave API key resolves them in one run.
 - The word "monitor" means three things (pipeline default, bottom tier, set-aside tag); rename proposed: pipeline default → Not started, bottom tier → Low priority.
 - Adzuna, Reed and Brave keys not yet created; discovery runs without them at reduced coverage and slow resolution.
-- Scope made explicit on 11 Oct: fixed-term contracts (FTC) are excluded, like intern/graduate roles.
+- Scope made explicit on 11 Oct: fixed-term contracts (FTC), fractional and part-time roles are excluded, like intern/graduate roles. Junior titles stay in (Regular/Mid) until you say otherwise.
 
 Next steps
 - Create the Brave, Adzuna and Reed keys and set them in the Routine's environment; run discover.py --resolve-only once with RESOLVE_CAP=150 to drain the 114 unresolved employers.

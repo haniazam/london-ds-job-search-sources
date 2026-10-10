@@ -22,10 +22,9 @@ def get(u,t=25):
 def strip(h): return html.unescape(re.sub(r"<[^>]+>"," ",h or ""))
 NUM=r"(\d{2,3})(?:[,.](\d{3}))?\s?(k|K)?"
 def tok(n,th,k):
-    v=int(n+(th or "")); 
+    v=int(n+(th or ""))
     if k and not th: v*=1000
-    if v<1000: v*=1000
-    return v
+    return v  # a bare "£520" (no k, no thousands) stays 520 and fails the range checks — it is not £520k
 RANGE=re.compile(r"(?:£|GBP\s?)\s?"+NUM+r"\s*(?:-|–|—|to|and)\s*(?:£|GBP\s?)?\s?"+NUM,re.I)
 UPTO=re.compile(r"(?:up to|upto|maximum of)\s*(?:£|GBP\s?)\s?"+NUM,re.I)
 FROM=re.compile(r"(?:from|starting at|minimum of)\s*(?:£|GBP\s?)\s?"+NUM,re.I)
@@ -151,7 +150,10 @@ with open(OUT,"w",newline="",encoding="utf-8") as f:
         if not comp:
             for o in OVR:
                 if o["company"].lower()==r["company"].lower() and re.search(o["title_regex"],r["title"]):
-                    comp=f"£{o['lo']}k–£{o['hi']}k ({o['label']})"; break
+                    if o.get("lo") and o.get("hi"): comp=f"£{o['lo']}k–£{o['hi']}k ({o['label']})"
+                    elif o.get("lo"): comp=f"~£{o['lo']}k+ ({o['label']})"
+                    else: comp=f"up to £{o['hi']}k ({o['label']})"
+                    break
         if not comp:
             k=band_key(r["title"]); med=(bands.get(k) or {}).get("median") or FALLBACK[k]
             comp=f"£{int(med*0.85)//1000}k–£{int(med*1.25)//1000}k (market est.; ITJobsWatch London median £{med//1000}k for {k})"

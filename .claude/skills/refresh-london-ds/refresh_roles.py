@@ -27,7 +27,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
 LON = re.compile(r"london|united kingdom|\buk\b|england", re.I)
 SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
-EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student|fixed.?term|\bFTC\b|\bcontract\b", re.I)
+EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student|fixed.?term|\bFTC\b|\bcontract\b|fractional|part.?time", re.I)
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
 
@@ -414,7 +414,14 @@ PRETTY = {"openai": "OpenAI", "deepmind": "Google DeepMind", "monzo": "Monzo",
           "lendable": "Lendable", "multiverse": "Multiverse"}
 PRETTY.update(REG.get("display_names", {}))
 RECRUITERS = set(REG.get("recruiters_exclude", []))
-active = [(PRETTY.get(c, c), role, lv, loc, url) for (c, role, lv, loc, url) in active
+def clean_title(t):
+    """Normalise ATS titles: drop office/location parentheticals and repeated comma segments."""
+    t = re.sub(r"\s*\((?=[^)]*(?:office|location|based|hybrid|remote))[^)]*\)", "", t, flags=re.I)
+    parts, seen = [], set()
+    for seg in [x.strip() for x in t.split(",")]:
+        if seg and seg.lower() not in seen: seen.add(seg.lower()); parts.append(seg)
+    return ", ".join(parts).strip(" -–")
+active = [(PRETTY.get(c, c), clean_title(role), lv, loc, url) for (c, role, lv, loc, url) in active
           if c not in RECRUITERS and url]
 order = ["OpenAI", "Google DeepMind", "Google", "Microsoft", "Spotify", "Monzo",
          "Man Group", "Point72", "Qube RT", "G-Research", "Bloomberg", "Amazon",
