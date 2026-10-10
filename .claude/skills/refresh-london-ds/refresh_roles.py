@@ -16,6 +16,8 @@ if Playwright is missing — it just skips the browser companies).
 See SKILL.md for endpoints, gotchas and the upload step (assistant action).
 """
 import csv, json, os, re, sys, time, urllib.request
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from role_taxonomy import classify as role_type, COLLECT as DS   # core-role classifier (see role_taxonomy.py)
 
 # Board registry: every ATS token lives in boards.json next to this script (see SKILL.md
 # "Discovery" for how tokens are harvested). Edit the JSON, not the lists below.
@@ -23,19 +25,11 @@ REG = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "b
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
-DS = re.compile(r"data scien|applied scien|data analyst|decision scien|machine learning|"
-                r"\bml scien|research scien|economist|\bquant", re.I)
 LON = re.compile(r"london|united kingdom|\buk\b|england", re.I)
 SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
 EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student", re.I)
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
-# "Standard DS" = a Data Scientist / Data Science title that is not research, ML-eng, applied,
-# quant, analyst, engineer or economist. The Sheet and board list Standard DS only; the CSV
-# keeps the whole DS family with this column so the filter is mechanical, never a hand-merge.
-STD = re.compile(r"data scien", re.I)
-NOTSTD = re.compile(r"research|machine learning|\bml\b|quant|applied|analyst|engineer|economist", re.I)
-def role_type(t): return "Standard DS" if STD.search(t) and not NOTSTD.search(t) else "Other DS-family"
 
 def get(url, t=20, post=None):
     data = json.dumps(post).encode() if post is not None else None

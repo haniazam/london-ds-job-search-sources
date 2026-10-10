@@ -89,6 +89,21 @@ As of the 2026-10-09 sweep the registry holds ~70 Greenhouse, 25 Ashby, 10 Lever
 7 SmartRecruiters, 6 Pinpoint, 7 Workday boards; the sweep found ~75 live London DS posts at
 ~32 employers that the old fixed list had never looked at.
 
+## Role-type rule: classify by core role, never by keyword (role_taxonomy.py)
+"Standard DS" means the title's CORE ROLE is in the Data Scientist family — Data Scientist
+with any prefix/suffix, Data Science Manager/Lead/Head/Director in any word order,
+Decision/Product/Analytics Scientist, or a Scientist title with a product-DS signal
+(experimentation, measurement, causal, product analytics, growth). A specialism modifier
+NEVER excludes: "Senior Data Scientist (Economist)", "Data Scientist, Machine Learning",
+"Research Data Scientist", "Staff Scientist, Experimentation", "Director, Data Science" are
+all in. A title is "Other DS-family" only when its core IS another discipline (Research
+Scientist/Engineer, ML/AI Engineer or Scientist, Applied Scientist, Quant
+Researcher/Trader/Developer, Data/Analytics Engineer, Analyst, Economist, Statistician).
+The old keyword blacklist (any of research|machine learning|ml|applied|analyst|engineer|
+economist|quant anywhere in the title) silently dropped exactly the senior product-DS
+titles the search exists for. `python3 role_taxonomy.py` runs its tests; when a real
+title is misclassified, add it to TESTS and fix the pattern — never special-case a company.
+
 ## Sheet build rule (learned the hard way on 2026-10-09)
 The Sheet is built FROM the script's CSV — `refresh_roles.py` → `pay_enrich.py` → filter
 `Role Type == Standard DS` → write the Sheet in place. Never hand-merge "the rows I audited"

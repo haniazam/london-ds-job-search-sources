@@ -5,6 +5,9 @@ Output conventions for the two living deliverables in the Google Drive folder
 The `refresh-london-ds` skill regenerates both; keep them in these formats.
 
 ## Scope / selection preferences
+- **Role type**: the Sheet/board list **Standard DS** = the title's *core role* is in the Data Scientist
+  family (see `.claude/skills/refresh-london-ds/role_taxonomy.py`). Specialism modifiers (Economist,
+  Machine Learning, Research, Analytics…) never exclude; only a different core discipline does.
 - **London (or London-eligible)** Data-Science-family roles only. London-eligible =
   London / Remote-UK / "London or Stockholm" / multi-location lists that include London.
 - **Include BOTH regular/mid AND senior roles.** Do not restrict to senior.
