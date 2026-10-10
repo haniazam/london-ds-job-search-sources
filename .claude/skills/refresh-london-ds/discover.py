@@ -9,7 +9,16 @@ employer's own posting:
     refresh_roles.py enumerates that employer from now on (the registry grows itself);
   - a lead on an employer's own site is verified by GET + <title> and written to
     discovered_posts.json, which refresh_roles.py includes as rows;
-  - anything unresolved stays in discovered_leads.json, labelled, never silently dropped.
+  - anything unresolved stays in discovered_leads.json, labelled, never silently dropped, and is
+    aggregated per employer in discovered_unresolved_employers.json for the weekly manual sweep.
+
+Resolution tiers for a lead that carries no employer URL (LinkedIn's guest pages gate the apply
+link behind sign-in, so the page is never fetched):
+  1. the employer is already in boards.json (display-name or alias match) -> covered by the registry;
+  2. a scripted web search restricted to the ATS hosts — Brave Search API when BRAVE_API_KEY is
+     set (2,000 queries/month free), else DuckDuckGo's HTML endpoint at ~15 s pacing with a
+     per-run cap (RESOLVE_CAP, default 25; Senior+ Standard DS first) — yields the board token;
+  3. otherwise the employer is listed as an unresolved lead; the weekly sweep resolves it by hand.
 
 Sources (no key needed):   LinkedIn guest job search (newest first; covers every employer that
                            posts on LinkedIn), Workable's cross-employer feed, Built In London.
@@ -24,6 +33,7 @@ from role_taxonomy import classify, COLLECT
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
       "Accept": "application/json, text/html;q=0.9", "Accept-Language": "en-GB,en;q=0.9"}
 BOOT = "--bootstrap" in sys.argv
+RESOLVE_ONLY = "--resolve-only" in sys.argv
 def get(u, t=25, h=None, tries=3, pause=6):
     for i in range(tries):
         try:
@@ -52,9 +62,13 @@ def add(src, co, title, loc, url, posted=""):
     if not (co and title and url): return
     cands.append({"source": src, "company": strip(co).strip(), "title": re.sub(r"\s+", " ", strip(title)).strip(), "location": strip(loc).strip(), "url": url.split("?")[0], "posted": posted})
 
+if RESOLVE_ONLY:
+    cands = []
+else:
+  pass
 # ---- 1. LinkedIn guest search: newest first; two title forms; paced (429s are common) ----
 tpr = "r2592000" if BOOT else "r604800"; pages = 20 if BOOT else 6
-for q in ("Data Scientist", "Data Science"):
+for q in ([] if RESOLVE_ONLY else ("Data Scientist", "Data Science")):
     for p in range(pages):
         u = (f"https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords={urllib.parse.quote(q)}"
              f"&location=London%2C%20England%2C%20United%20Kingdom&f_TPR={tpr}&sortBy=DD&start={p*10}")
@@ -72,7 +86,7 @@ for q in ("Data Scientist", "Data Science"):
 
 # ---- 2. Workable cross-employer feed (the employer's own live state) ----
 tok = ""; 
-for p in range(8 if BOOT else 3):
+for p in range(0 if RESOLVE_ONLY else (8 if BOOT else 3)):
     u = "https://jobs.workable.com/api/v1/jobs?query=data%20scientist&location=London" + (f"&pageToken={tok}" if tok else "")
     s, b, _ = get(u)
     if s != 200: print(f"[workable-feed] page {p}: HTTP {s}", file=sys.stderr); break
@@ -84,7 +98,7 @@ for p in range(8 if BOOT else 3):
     if not tok: break
 
 # ---- 3. Built In London (lead source: employer + title; the job page's JSON-LD names the employer) ----
-for p in range(1, (4 if BOOT else 2) + 1):
+for p in range(1, (0 if RESOLVE_ONLY else (4 if BOOT else 2)) + 1):
     s, b, _ = get(f"https://builtinlondon.uk/jobs?search=data+scientist&city=London&page={p}")
     if s != 200: break
     links = sorted(set(re.findall(r'href="(/job/[^"]+)"', b)))
@@ -102,7 +116,7 @@ for p in range(1, (4 if BOOT else 2) + 1):
 
 # ---- 4. Adzuna / Reed (official APIs, free keys; UK-wide incl. non-tech employers) ----
 aid, akey = os.environ.get("ADZUNA_APP_ID"), os.environ.get("ADZUNA_APP_KEY")
-if aid and akey:
+if aid and akey and not RESOLVE_ONLY:
     for p in range(1, (6 if BOOT else 3) + 1):
         s, b, _ = get(f"https://api.adzuna.com/v1/api/jobs/gb/search/{p}?app_id={aid}&app_key={akey}&what=data%20scientist&where=London&distance=15&results_per_page=50&max_days_old={30 if BOOT else 7}&content-type=application/json")
         if s != 200: print(f"[adzuna] page {p}: HTTP {s}", file=sys.stderr); break
@@ -110,7 +124,7 @@ if aid and akey:
             add("adzuna", (r.get("company") or {}).get("display_name", ""), r.get("title", ""), (r.get("location") or {}).get("display_name", ""), r.get("redirect_url", ""), r.get("created", ""))
 else: print("[adzuna] skipped — set ADZUNA_APP_ID and ADZUNA_APP_KEY for UK-wide coverage", file=sys.stderr)
 rkey = os.environ.get("REED_API_KEY")
-if rkey:
+if rkey and not RESOLVE_ONLY:
     import base64
     s, b, _ = get("https://www.reed.co.uk/api/1.0/search?keywords=data%20scientist&locationName=London&distanceFromLocation=15&resultsToTake=100", h={"Authorization": "Basic " + base64.b64encode((rkey + ":").encode()).decode()})
     if s == 200:
@@ -120,8 +134,13 @@ else: print("[reed] skipped — set REED_API_KEY for UK-wide coverage", file=sys
 
 # ---- normalise, classify, dedupe, agency filter ----
 seen = set(); leads = []
+if RESOLVE_ONLY:
+    leads = json.load(open(os.path.join(HERE, "discovered_leads.json")))
+    for l in leads: l.pop("resolved", None); l.pop("employer_url", None)
+    cands = []
 for c in cands:
     key = (c["company"].lower(), c["title"].lower())
+    if any(key == (l["company"].lower(), l["title"].lower()) for l in leads): continue
     if key in seen or not COLLECT.search(c["title"]) or EXC.search(c["title"]) or not LON.search(c["location"] or "London"): continue
     seen.add(key); c["role_type"] = classify(c["title"]); c["agency"] = bool(AGENCY.search(c["company"])); leads.append(c)
 print(f"[discover] {len(cands)} raw -> {len(leads)} unique DS-family leads ({sum(1 for l in leads if l['agency'])} agency, "
@@ -135,22 +154,51 @@ def token_of(url):
     m = WD.search(url)
     if m: return "workday", f"https://{m.group(1)}.{m.group(2)}.myworkdayjobs.com/wday/cxs/{m.group(1)}/{m.group(3)}/jobs"
     return None, None
-new_tokens = {}; posts = []; unresolved = []
-for l in leads:
-    if l["agency"]: continue
-    url = l["url"]
-    if "linkedin.com/jobs/view" in url:                                  # LinkedIn lead -> the employer's apply URL on the job page
-        s, b, _ = get(url, tries=2, pause=8)
-        m = re.search(r'applyUrl["\']?\s*[:=]\s*["\']([^"\']+)', b) or re.search(r'<code id="applyUrl">\s*<!--"?([^"]+?)"?-->', b)
-        if m: url = html.unescape(m.group(1)); url = urllib.parse.unquote(re.sub(r"^.*?url=", "", url)) if "linkedin.com/" in url and "url=" in url else url
-        l["employer_url"] = url if "linkedin.com" not in url else ""
-        time.sleep(1.5)
-    elif "jobs.workable.com/view" in url: l["employer_url"] = url          # Workable's own feed: live by construction
+norm = lambda n: re.sub(r"[^a-z0-9]", "", re.sub(r"\s*\(.*?\)", "", (n or "").lower()))
+known = {norm(v): k for k, v in REG.get("display_names", {}).items()} | {norm(k): k for k in REG["workday"]}
+for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee"):
+    for t in REG.get(k, []): known.setdefault(norm(t), t)
+HOSTS = ("site:job-boards.greenhouse.io OR site:boards.greenhouse.io OR site:job-boards.eu.greenhouse.io OR site:jobs.ashbyhq.com OR "
+         "site:jobs.lever.co OR site:apply.workable.com OR site:jobs.smartrecruiters.com OR site:myworkdayjobs.com OR site:pinpointhq.com OR site:teamtailor.com")
+def search_token(company):
+    """Tier 2: find the employer's ATS board via a web search restricted to ATS hosts."""
+    q = f'"{company}" "data scientist" ({HOSTS})'
+    urls = []
+    bk = os.environ.get("BRAVE_API_KEY")
+    if bk:
+        s, b, _ = get("https://api.search.brave.com/res/v1/web/search?count=10&q=" + urllib.parse.quote(q), h={"X-Subscription-Token": bk, "Accept": "application/json"}, tries=1)
+        if s == 200:
+            try: urls = [r.get("url", "") for r in json.loads(b).get("web", {}).get("results", [])]
+            except Exception: urls = []
+    else:
+        s, b, _ = get("https://html.duckduckgo.com/html/?q=" + urllib.parse.quote(q), tries=1)
+        if s == 200:
+            urls = [urllib.parse.unquote(re.search(r"uddg=([^&]+)", u).group(1)) if "uddg=" in u else u for u in re.findall(r'<a[^>]+class="result__a"[^>]+href="([^"]+)"', b)]
+        time.sleep(15)
+    for u in urls:
+        k, t = token_of(u)
+        if k and t: return k, t, u
+    return None, None, None
+new_tokens = {}; posts = []; unresolved = []; covered = 0; searched = 0
+CAP = int(os.environ.get("RESOLVE_CAP", "25"))
+pri = lambda l: (0 if (l["role_type"] == "Standard DS" and re.search(r"senior|staff|lead|principal|head|director|manager", l["title"], re.I)) else 1, l["company"])
+cache = {}
+for l in sorted([x for x in leads if not x["agency"]], key=pri):
+    url = l["url"]; eu = ""
+    if "jobs.workable.com/view" in url: eu = url                          # Workable's own feed: live by construction
     elif "adzuna" in url or "reed.co.uk" in url:
-        s, b, final = get(url, tries=1); l["employer_url"] = final if final and not re.search(r"adzuna|reed\.co\.uk", final) else ""
-    else: l["employer_url"] = url
-    eu = l.get("employer_url") or ""
+        s, b, final = get(url, tries=1); eu = final if final and not re.search(r"adzuna|reed\.co\.uk", final) else ""
+    elif "linkedin.com/jobs/view" not in url and "builtinlondon.uk" not in url: eu = url
+    l["employer_url"] = eu
     k, t = token_of(eu) if eu else (None, None)
+    if not k:                                                                  # tier 1: already in the registry?
+        kt = known.get(norm(l["company"]))
+        if kt: l["resolved"] = f"registry:{kt}"; covered += 1; continue
+    if not k and not eu:                                                       # tier 2: search for the board (capped, paced)
+        c = cache.get(norm(l["company"]))
+        if c is None and searched < CAP:
+            c = search_token(l["company"]); cache[norm(l["company"])] = c; searched += 1
+        if c and c[0]: k, t, eu = c; l["employer_url"] = eu
     if k and t:
         bucket = have.get(k, set()) if k != "workday" else have_wd
         l["resolved"] = f"ats:{k}:{t}"
@@ -159,6 +207,11 @@ for l in leads:
         l["resolved"] = "employer-site"; posts.append({"company": l["company"], "title": l["title"], "location": l["location"] or "London", "url": eu, "source": l["source"]})
     else:
         l["resolved"] = "unresolved"; unresolved.append(l)
+by_emp = {}
+for l in unresolved: by_emp.setdefault(l["company"], []).append(l["title"])
+json.dump([{"company": c, "titles": sorted(set(ts)), "source": "linkedin/builtin"} for c, ts in sorted(by_emp.items())],
+          open(os.path.join(HERE, "discovered_unresolved_employers.json"), "w"), indent=1)
+print(f"[resolve] registry-covered {covered} · searched {searched} (cap {CAP}) · unresolved employers {len(by_emp)}", file=sys.stderr)
 
 # ---- grow the registry; hand employer-site posts to refresh_roles.py ----
 added = 0

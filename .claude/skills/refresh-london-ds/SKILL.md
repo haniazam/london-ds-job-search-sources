@@ -70,7 +70,14 @@ employer-site post is verified by GET + `<title>` and included via `discovered_p
 anything unresolved is kept, labelled, in `discovered_leads.json`. Use `--bootstrap` (past
 month, deeper paging) the first time or after a gap; the daily run uses the past week.
 LinkedIn rate-limits (429): the script paces and backs off; a 429 run is incomplete, not
-empty — rerun later. The manual harvest below remains the weekly deep sweep.
+empty — rerun later. LinkedIn's guest job pages gate the apply link behind sign-in, so a
+LinkedIn lead is an employer name + title, never a URL: it is resolved by (1) a registry
+display-name match, (2) a scripted web search over the ATS hosts — Brave Search API with
+`BRAVE_API_KEY` (free tier 2,000/month; the robust option), else DuckDuckGo HTML at ~15 s
+pacing capped by `RESOLVE_CAP` (default 25 employers per run) — or (3) it lands in
+`discovered_unresolved_employers.json`, which the weekly sweep resolves by hand with WebSearch
+(the assistant, not the script). `discover.py --resolve-only` re-runs resolution on the last
+leads without re-querying the sources. The manual harvest below remains the weekly deep sweep.
 
 ## Discovery — manual deep sweep (weekly)
 The script only enumerates boards listed in `boards.json`; a company not in the registry is

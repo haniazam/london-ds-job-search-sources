@@ -4,3 +4,4 @@ __pycache__/
 # refresh-skill run outputs (regenerated every run)
 .claude/skills/refresh-london-ds/discovered_leads.json
 .claude/skills/refresh-london-ds/discovered_posts.json
+.claude/skills/refresh-london-ds/discovered_unresolved_employers.json
