@@ -11,7 +11,7 @@ The `refresh-london-ds` skill regenerates both; keep them in these formats.
 - **London (or London-eligible)** Data-Science-family roles only. London-eligible =
   London / Remote-UK / "London or Stockholm" / multi-location lists that include London.
 - **Include BOTH regular/mid AND senior roles.** Do not restrict to senior.
-- **Exclude intern / graduate / apprentice / placement** roles, and **fixed-term contracts** (FTC).
+- **Exclude intern / graduate / apprentice / placement** roles, **fixed-term contracts** (FTC), and **fractional / part-time** posts.
 - Postings on sites with no API (LinkedIn, employer career sites, Teamtailor) live in `data/manual_posts.json`
   and are re-verified by title on every refresh — never hand-merged into the Sheet.
 - Every listed role must be a **unique, active individual job post** (resolves to a
