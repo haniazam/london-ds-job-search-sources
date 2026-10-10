@@ -48,7 +48,7 @@ def get(u, t=25, h=None, tries=3, pause=6):
 strip = lambda s: html.unescape(re.sub(r"<[^>]+>", " ", s or ""))
 LON = re.compile(r"london|united kingdom|\buk\b|england|remote.*(uk|united kingdom)", re.I)
 EXC = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student", re.I)
-AGENCY = re.compile(r"recruit|talent|staffing|resourcing|headhunt|search partners|selection|consultancy ltd|\bjobs\b|hiring|harnham|understanding recruitment|nicoll curtin|experis|\bhays\b|robert walters|michael page|la fosse|oliver bernard|client server|\btiro\b|xcede|datatech|intellect group|interex|sphere digital|rise technical|spectrum it|manning services|oscar technology|avanti|kimaru|jobgether|degree 6|qurious|stott and may|burns sheehan|lorien|akkodis|computer futures|huxley|real staffing|randstad|reed\b|adecco|hudson|morgan mckinley|spencer ogden|signify technology|allegis|teksystems|iopa|revolent|opus|cognitive group|montash|\bexec\b|associates|people first|the people", re.I)
+AGENCY = re.compile(r"recruit|talent|staffing|resourcing|headhunt|search partners|selection|consultancy ltd|\bjobs\b|hiring|harnham|understanding recruitment|nicoll curtin|experis|\bhays\b|robert walters|michael page|la fosse|oliver bernard|client server|\btiro\b|xcede|datatech|intellect group|interex|sphere digital|rise technical|spectrum it|manning services|oscar technology|avanti|kimaru|jobgether|degree 6|qurious|stott and may|burns sheehan|lorien|akkodis|computer futures|huxley|real staffing|randstad|reed\b|adecco|hudson|morgan mckinley|spencer ogden|signify technology|allegis|teksystems|iopa|revolent|opus|cognitive group|montash|\bexec\b|associates|people first|the people|mccabe & barton|oho group|speak to kit|annapurna|deeprec|neartech|radley james|searchworks|searchability|mthree|q1 technologies", re.I)
 TOKEN = [("greenhouse", re.compile(r"greenhouse\.io/([A-Za-z0-9_-]+)/jobs")), ("ashby", re.compile(r"ashbyhq\.com/([^/?#]+)/")),
          ("lever", re.compile(r"lever\.co/([^/?#]+)/")), ("workable", re.compile(r"apply\.workable\.com/([^/?#]+)/j/")),
          ("smartrecruiters", re.compile(r"smartrecruiters\.com/([^/?#]+)/\d")), ("pinpoint", re.compile(r"https?://([^./]+)\.pinpointhq\.com")),
@@ -158,6 +158,8 @@ norm = lambda n: re.sub(r"[^a-z0-9]", "", re.sub(r"\s*\(.*?\)", "", (n or "").lo
 known = {norm(v): k for k, v in REG.get("display_names", {}).items()} | {norm(k): k for k in REG["workday"]}
 for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee"):
     for t in REG.get(k, []): known.setdefault(norm(t), t)
+for a, c in REG.get("aliases", {}).items():
+    if not a.startswith("_"): known.setdefault(norm(a), c)                       # same organisation under another lead name
 for n in list(REG.get("employer_sites", {}).keys()) + ["Amazon", "Google", "TikTok", "Spotify", "Microsoft", "Point72", "Bloomberg", "G-Research", "Bauer Media Group"]:
     if not n.startswith("_"): known.setdefault(norm(n), n)                        # employers enumerated outside the token lists
 HOSTS = ("site:job-boards.greenhouse.io OR site:boards.greenhouse.io OR site:job-boards.eu.greenhouse.io OR site:jobs.ashbyhq.com OR "
