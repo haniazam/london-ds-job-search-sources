@@ -58,7 +58,21 @@ shell scripts).
 - **Exclude** intern / graduate / apprentice programmes.
 - Keep roles deduped by URL.
 
-## Discovery — keeping the company universe exhaustive (run every refresh)
+## Discovery — the universe is every employer that fits, not a target list (discover.py, every refresh)
+`python3 discover.py` runs BEFORE `refresh_roles.py`. It pulls London DS postings from
+cross-employer sources — LinkedIn's guest job search (newest first; covers every employer that
+posts there), Workable's cross-employer feed, Built In London, and with free keys in the
+environment Adzuna (`ADZUNA_APP_ID`, `ADZUNA_APP_KEY`) and Reed (`REED_API_KEY`) for UK-wide
+coverage including non-tech employers — classifies titles with role_taxonomy, drops agencies,
+and resolves every lead to the employer's own posting. A lead on a supported ATS yields a board
+token that is appended to `boards.json` automatically, so the registry grows itself; an
+employer-site post is verified by GET + `<title>` and included via `discovered_posts.json`;
+anything unresolved is kept, labelled, in `discovered_leads.json`. Use `--bootstrap` (past
+month, deeper paging) the first time or after a gap; the daily run uses the past week.
+LinkedIn rate-limits (429): the script paces and backs off; a 429 run is incomplete, not
+empty — rerun later. The manual harvest below remains the weekly deep sweep.
+
+## Discovery — manual deep sweep (weekly)
 The script only enumerates boards listed in `boards.json`; a company not in the registry is
 never seen. So each refresh starts with a **harvest** step (assistant action — WebSearch is
 model-only) that widens the registry before the script runs:

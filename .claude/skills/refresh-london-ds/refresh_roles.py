@@ -349,6 +349,25 @@ try:
 except Exception as e:
     print("[google] failed:", type(e).__name__, file=sys.stderr)
 
+# ---------------- employer-site posts found by discover.py (verified by GET + <title>) ----------------
+DISC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "discovered_posts.json")
+if os.path.exists(DISC):
+    seen_urls = {a[4].split("?")[0] for a in active}
+    hits = 0
+    for p in json.load(open(DISC)):
+        u = p["url"]
+        if u.split("?")[0] in seen_urls or "jobs.workable.com/view" in u and False: continue
+        if "jobs.workable.com/view" in u:                       # Workable's own feed: published state is the proof
+            active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1; continue
+        try:
+            page = get(u, 30)
+        except Exception as e:
+            print(f"[discovered] {p['company']}: {type(e).__name__}", file=sys.stderr); continue
+        tm = re.search(r"<title>(.*?)</title>", page, re.S); title = (tm.group(1) if tm else "").lower()
+        if re.search(r"data scien", title) and not re.search(r"no longer|not found|closed|expired|jobs search|\d,\d{3}\+ ", title):
+            active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1
+    print(f"[discovered] {hits} employer-site posts verified live", file=sys.stderr)
+
 # ---------------- companies known to have NO active London DS (documented) ----------------
 NO_ROLE = [
     ("Wayve", "Moved to Ashby (token wayve) — 0 London DS on the board this run"),
