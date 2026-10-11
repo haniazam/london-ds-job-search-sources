@@ -38,12 +38,17 @@ missing = [v for k, v in prev_active.items() if k not in seen]
 # a board the run could not read (429 / gated) makes its rows unverified, never closed: carry them forward
 unv_path = "/tmp/ldn_ds_unverified.json"; unv = json.load(open(unv_path)) if os.path.exists(unv_path) else {}
 def unreadable(url):
-    return ("workable" in url and "workable" in unv) or any(f"/{t}" in url or f"//{t}." in url for ts in unv.values() for t in ts)
+    """The platform key whose board the run could not read, or None."""
+    if "workable" in url and "workable" in unv: return "workable"
+    return next((k for k, ts in unv.items() for t in ts if f"/{t}" in url or f"//{t}." in url), None)
+REASON = {"spa": "JS site; Playwright absent in this run"}
 closed, carried = [], []
 for v in missing:
-    if unreadable(v[6]):
+    k = unreadable(v[6])
+    if k:
         row = list(v); row[7] = "Unverified"
-        row[8] = f"not re-verified on {DATE} (board API rate-limited); last verified {prev_date}; " + re.sub(r"^NEW \(refresh [^)]*\); ", "", row[8])
+        prior = re.sub(r"^(not re-verified on [^;]*; last verified [^;]*; )+", "", re.sub(r"^NEW \(refresh [^)]*\); ", "", row[8]))
+        row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {prev_date}; " + prior
         out.append(row); carried.append(row)
     else: closed.append(v)
 out.sort(key=lambda r: (r[0].lower(), r[3] != "Senior+", r[1].lower()))

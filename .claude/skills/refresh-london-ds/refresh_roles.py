@@ -251,6 +251,8 @@ except ImportError:
     HAVE_PW = False
     print("[spa] Playwright not installed — skipping JS sites. "
           "Run: pip install playwright && python -m playwright install chromium", file=sys.stderr)
+    # the Sheet must carry these sites' rows forward as unverified, never close them (build_sheet_rows.py reads this)
+    UNVERIFIED["spa"] = ["www.lifeatspotify", "www.gresearch", "bloomberg.avature", "jobs.careers.microsoft", "careers.point72", "careers.tiktok"]
 
 def spa_refresh():
     out = []

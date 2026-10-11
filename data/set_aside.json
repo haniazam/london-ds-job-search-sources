@@ -35,11 +35,6 @@
   "mon"
  ],
  [
-  "Apple",
-  "LinkedIn post expired; no live post found — re-check jobs.apple.com",
-  "closed"
- ],
- [
   "Houseful",
   "LinkedIn post expired; no live post found",
   "closed"
@@ -165,8 +160,8 @@
   "profile"
  ],
  [
-  "Discovered employers not yet resolved (43)",
-  "Found by the discovery sweep with a London DS title but not tied to a readable board after the 11 Oct Brave-backed run and slug probing: enterprise ATS employers (Apple, UBS, BNY, JPMorgan, NatWest, McKinsey, BAE, L.E.K.), own-career-site employers (Fitch, Stantec, SEGA, IBM, Sagacity) and a few recruiters. Kept in discovered_unresolved_employers.json for the weekly manual sweep.",
+  "Discovered employers not yet resolved (25)",
+  "Found by the discovery sweep with a London DS title but not tied to a readable board after the 11 Oct runs (Brave search, slug probing, and the new Oracle HCM / SuccessFactors / Apple enumerators): sites that block scripts (McKinsey/QuantumBlack, BAE Systems, NatWest), employers with no board anywhere (British Airways, PureGym, Welltower, Zepz, Compare the Market) and closed postings. Kept in discovered_unresolved_employers.json for the weekly sweep.",
   "unv"
  ]
 ]
