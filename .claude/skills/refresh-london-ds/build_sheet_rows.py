@@ -47,7 +47,7 @@ for v in missing:
     k = unreadable(v[6])
     if k:
         row = list(v); row[7] = "Unverified"
-        prior = re.sub(r"^(not re-verified on [^;]*; last verified [^;]*; )+", "", re.sub(r"^NEW \(refresh [^)]*\); ", "", row[8]))
+        prior = re.sub(r"^(not re-verified on \S+ \([^)]*\); last verified [^;]*; )+", "", re.sub(r"^NEW \(refresh [^)]*\); ", "", row[8]))
         row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {prev_date}; " + prior
         out.append(row); carried.append(row)
     else: closed.append(v)
