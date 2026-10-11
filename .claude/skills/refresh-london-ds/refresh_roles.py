@@ -15,7 +15,7 @@ if Playwright is missing — it just skips the browser companies).
 
 See SKILL.md for endpoints, gotchas and the upload step (assistant action).
 """
-import csv, json, os, re, sys, time, urllib.request
+import csv, html, json, os, re, sys, time, urllib.parse, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from role_taxonomy import classify as role_type, COLLECT as DS   # core-role classifier (see role_taxonomy.py)
 
@@ -25,8 +25,8 @@ REG = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "b
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
-LON = re.compile(r"london|united kingdom|\buk\b|england", re.I)
-SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
+LON = re.compile(r"london|canary wharf|united kingdom|\buk\b|england", re.I)   # Workday sites label offices (Barclays: "Canary Wharf, 1 Churchill Place")
+SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished|vice president|\bvp\b|\bavp\b|executive director", re.I)
 EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student|fixed.?term|\bFTC\b|\bcontract\b|fractional|part.?time", re.I)
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
@@ -116,22 +116,25 @@ for name, url in WORKDAY.items():
         print(f"[workday] {name}: {type(e).__name__}", file=sys.stderr)
 
 # ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
+UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 for acct in REG.get("workable", []):
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             d = json.loads(get(f"https://apply.workable.com/api/v1/widget/accounts/{acct}?details=false")); break
         except Exception as e:
             d = None
-            if "429" in str(e): time.sleep(10); continue
+            if "429" in str(e): time.sleep(20 * (attempt + 1)); continue
             print(f"[workable] {acct}: {type(e).__name__}", file=sys.stderr); break
-    if not d: continue
+    if not d:
+        print(f"[workable] {acct}: rate-limited (429) — rows carried forward as unverified", file=sys.stderr)
+        UNVERIFIED.setdefault("workable", []).append(acct); continue
     hits = 0
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = f"{j.get('city','')}, {j.get('country','')} {'remote' if j.get('remote') else ''}"
         if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
             hits += 1; active.append((acct, t, level(t), loc.strip(), j.get("url") or j.get("shortlink")))
     print(f"[workable] {acct}: {len(d.get('jobs', []))} jobs, {hits} London DS", file=sys.stderr)
-    time.sleep(3)
+    time.sleep(6)
 
 # ---------------- SmartRecruiters (public postings API; some companies gate it -> 0) ----------------
 for cid in REG.get("smartrecruiters", []):
@@ -188,6 +191,58 @@ for co in REG.get("teamtailor", []):
             hits += 1; active.append((co, t, level(t), loc, j.get("url")))
     print(f"[teamtailor] {co}: {len(d.get('items', []))} jobs, {hits} London DS", file=sys.stderr)
 
+# ---------------- Oracle HCM Cloud (public recruitingCEJobRequisitions finder; JPMorgan, BNY) ----------------
+NEAR = re.compile(r"london|remote", re.I)          # these sites list every UK office; "United Kingdom" alone is not London-eligible
+for name, site in REG.get("oraclehcm", {}).items():
+    if name.startswith("_"): continue
+    host, num = site["host"], site.get("site", "CX_1001"); hits = 0; total = 0; offset = 0
+    try:
+        while True:
+            q = urllib.parse.quote(f'findReqs;siteNumber={num},keyword="data scientist",limit=100,offset={offset},sortBy=POSTING_DATES_DESC')
+            d = json.loads(get(f"https://{host}/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=requisitionList.secondaryLocations&finder={q}", 30))
+            it = (d.get("items") or [{}])[0]; reqs = it.get("requisitionList", []); total = it.get("TotalJobsCount", len(reqs))
+            for j in reqs:
+                t = j.get("Title", ""); loc = "; ".join([j.get("PrimaryLocation", "")] + [x.get("Name", "") for x in j.get("secondaryLocations", []) if isinstance(x, dict)])
+                if DS.search(t) and NEAR.search(loc) and not EXCLUDE.search(t):
+                    hits += 1; active.append((name, t, level(t), loc.title(), f"https://{host}/hcmUI/CandidateExperience/en/sites/{num}/job/{j.get('Id')}"))
+            offset += len(reqs)
+            if not reqs or offset >= total or offset >= 500: break
+        print(f"[oraclehcm] {name}: {total} requisitions, {hits} London DS", file=sys.stderr)
+    except Exception as e:
+        print(f"[oraclehcm] {name}: {type(e).__name__}", file=sys.stderr)
+
+# ---------------- SAP SuccessFactors career sites (server-rendered /search/ page; Fitch) ----------------
+for name, base in REG.get("successfactors", {}).items():
+    if name.startswith("_"): continue
+    try:
+        page = get(f"{base.rstrip('/')}/search/?q=data+scientist", 30)
+    except Exception as e:
+        print(f"[successfactors] {name}: {type(e).__name__}", file=sys.stderr); continue
+    rows = re.findall(r'<a class="jobTitle-link" href="([^"]+)">([^<]+)</a>.*?<span class="jobLocation">\s*([^<]+?)\s*</span>', page, re.S); hits = 0
+    for path, t, loc in rows:
+        t = html.unescape(t).strip(); loc = html.unescape(loc).strip()
+        if DS.search(t) and NEAR.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((name, t, level(t), loc, base.rstrip("/") + html.unescape(path)))
+    print(f"[successfactors] {name}: {len(rows)} results, {hits} London DS", file=sys.stderr)
+
+# ---------------- Apple (jobs.apple.com search API, GBR filter) ----------------
+if "apple" in REG:
+    try:
+        hits = 0; pg = 1; total = 0
+        while True:
+            d = json.loads(get("https://jobs.apple.com/api/v1/search", 30, post={"query": REG["apple"].get("query", "data scientist"), "filters": {"locations": ["postLocation-GBR"]}, "page": pg, "locale": "en-gb",
+                                                                              "sort": "newest", "format": {"longDate": "MMMM D, YYYY", "mediumDate": "MMM D, YYYY"}})).get("res", {})
+            rs = d.get("searchResults", []); total = d.get("totalRecords", 0)
+            for j in rs:
+                t = j.get("postingTitle", ""); loc = ", ".join(l.get("name", "") for l in j.get("locations", []))
+                if DS.search(t) and NEAR.search(loc) and not EXCLUDE.search(t):
+                    hits += 1; active.append(("Apple", t, level(t), loc, f"https://jobs.apple.com/en-gb/details/{j.get('positionId')}/{j.get('transformedPostingTitle')}"))
+            if len(rs) < 20 or pg >= 5: break
+            pg += 1
+        print(f"[apple] {total} GBR results, {hits} London DS", file=sys.stderr)
+    except Exception as e:
+        print(f"[apple] {type(e).__name__}", file=sys.stderr)
+
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
     from playwright.sync_api import sync_playwright
@@ -196,6 +251,8 @@ except ImportError:
     HAVE_PW = False
     print("[spa] Playwright not installed — skipping JS sites. "
           "Run: pip install playwright && python -m playwright install chromium", file=sys.stderr)
+    # the Sheet must carry these sites' rows forward as unverified, never close them (build_sheet_rows.py reads this)
+    UNVERIFIED["spa"] = ["www.lifeatspotify", "www.gresearch", "bloomberg.avature", "jobs.careers.microsoft", "careers.point72", "careers.tiktok"]
 
 def spa_refresh():
     out = []
@@ -371,7 +428,7 @@ if os.path.exists(DISC):
     hits = 0
     for p in json.load(open(DISC)):
         u = p["url"]
-        if u.split("?")[0] in seen_urls or "jobs.workable.com/view" in u and False: continue
+        if u.split("?")[0] in seen_urls or EXCLUDE.search(p["title"]): continue   # same scope rule as the API boards
         if "jobs.workable.com/view" in u:                       # Workable's own feed: published state is the proof
             active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1; continue
         try:
@@ -387,6 +444,7 @@ if os.path.exists(DISC):
 try:
     from manual_posts import verified_rows
     for r in verified_rows():
+        if EXCLUDE.search(r["Role"]): continue
         if r["Apply URL (unique active post)"].split("?")[0] not in {a[4].split("?")[0] for a in active}:
             active.append((r["Company"], r["Role"], r["Level"], r["Location"], r["Apply URL (unique active post)"]))
 except Exception as e:
@@ -418,7 +476,11 @@ for c, reason in NO_ROLE:
     if c.lower() not in have:
         norole.append((c, reason))
 
+# ---------------- scope: a specific non-London UK city on its own is out ----------------
+from refresh_roles_scope import london_ok
+active = [a for a in active if london_ok(a[3])]
 # ---------------- write CSV ----------------
+json.dump(UNVERIFIED, open("/tmp/ldn_ds_unverified.json", "w"))
 # Proper display names (per CLAUDE.md) instead of raw ATS tokens.
 PRETTY = {"openai": "OpenAI", "deepmind": "Google DeepMind", "monzo": "Monzo",
           "mangroup": "Man Group", "gocardless": "GoCardless", "dunnhumby": "dunnhumby",

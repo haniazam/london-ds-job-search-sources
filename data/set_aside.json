@@ -35,16 +35,6 @@
   "mon"
  ],
  [
-  "Apple",
-  "LinkedIn post expired; no live post found — re-check jobs.apple.com",
-  "closed"
- ],
- [
-  "CoMind",
-  "LinkedIn post expired; no live post found",
-  "closed"
- ],
- [
   "Houseful",
   "LinkedIn post expired; no live post found",
   "closed"
@@ -170,13 +160,8 @@
   "profile"
  ],
  [
-  "Discovered employers not yet resolved (114)",
-  "Found by the discovery sweep (LinkedIn / Built In) with a London DS title, but their own posting could not be located by the capped search; kept in discovered_unresolved_employers.json and resolved weekly (or in one run with a Brave API key). Includes: ASOS.com, AVEVA, AXIS (AXIS Capital), Abtrace, Acuity Analytics, Amazon, Annapurna, Apple, BAE Systems, BNY, Bauer Media Group, Betsson Group, Blenheim Chalcot, Blue Light Card, British Airways, C3 AI, CEERISK Consulting Ltd, Carwow…",
-  "unv"
- ],
- [
-  "Wise (Senior DS Lead, AML Risk)",
-  "UNVERIFIED this run — LinkedIn rate-limited (429) on re-check; last verified 9 Oct. Wise's SmartRecruiters board shows 3 other live London DS roles.",
+  "Discovered employers not yet resolved (25)",
+  "Found by the discovery sweep with a London DS title but not tied to a readable board after the 11 Oct runs (Brave search, slug probing, and the new Oracle HCM / SuccessFactors / Apple enumerators): sites that block scripts (McKinsey/QuantumBlack, BAE Systems, NatWest), employers with no board anywhere (British Airways, PureGym, Welltower, Zepz, Compare the Market) and closed postings. Kept in discovered_unresolved_employers.json for the weekly sweep.",
   "unv"
  ]
 ]

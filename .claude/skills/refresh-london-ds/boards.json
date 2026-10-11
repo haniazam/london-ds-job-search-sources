@@ -73,6 +73,7 @@
   "thetradedesk",
   "tide",
   "towerresearchcapital",
+  "trgscreen",
   "tripadvisor",
   "tripledotstudios",
   "truelayer",
@@ -220,7 +221,9 @@
   "Sky": "https://sky.wd3.myworkdayjobs.com/wday/cxs/sky/sky_careers/jobs",
   "AXIS (AXIS Capital)": "https://axiscapital.wd1.myworkdayjobs.com/wday/cxs/axiscapital/axiscareers/jobs",
   "DraftKings Inc.": "https://draftkings.wd1.myworkdayjobs.com/wday/cxs/draftkings/DraftKings/jobs",
-  "Paymentsense": "https://paymentsense.wd3.myworkdayjobs.com/wday/cxs/paymentsense/Dojo_Careers/jobs"
+  "Paymentsense": "https://paymentsense.wd3.myworkdayjobs.com/wday/cxs/paymentsense/Dojo_Careers/jobs",
+  "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
+  "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -348,7 +351,8 @@
   "yonder": "Yonder",
   "CognizantTechnologies2": "Cognizant",
   "bluelightcard": "Blue Light Card",
-  "mypos": "myPOS"
+  "mypos": "myPOS",
+  "trgscreen": "TRG Screen"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -374,11 +378,36 @@
   "ASOS.com": "ASOS",
   "Coalition, Inc.": "Coalition",
   "Qube Research & Technologies": "Qube RT",
-  "Relay Technologies": "Relay"
+  "Relay Technologies": "Relay",
+  "Prime Video & Amazon MGM Studios": "Amazon",
+  "JPMorganChase": "JPMorgan Chase",
+  "JPMorgan Chase & Co.": "JPMorgan Chase",
+  "BNY Mellon": "BNY",
+  "Fitch Solutions": "Fitch Group",
+  "Fitch Ratings": "Fitch Group"
  },
  "teamtailor": [
   "bluelightcard",
   "mypos",
   "yonder"
- ]
+ ],
+ "oraclehcm": {
+  "_doc": "Oracle HCM Cloud career sites: host + siteNumber; refresh_roles.py queries the public recruitingCEJobRequisitions finder (keyword, paged).",
+  "JPMorgan Chase": {
+   "host": "jpmc.fa.oraclecloud.com",
+   "site": "CX_1001"
+  },
+  "BNY": {
+   "host": "eofe.fa.us2.oraclecloud.com",
+   "site": "CX_1001"
+  }
+ },
+ "successfactors": {
+  "_doc": "SAP SuccessFactors career sites (base URL); refresh_roles.py parses the server-rendered /search/?q= page.",
+  "Fitch Group": "https://careers.fitch.group"
+ },
+ "apple": {
+  "_doc": "jobs.apple.com search API with the GBR location filter.",
+  "query": "data scientist"
+ }
 }

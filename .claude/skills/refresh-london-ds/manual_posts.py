@@ -12,7 +12,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from role_taxonomy import classify
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE))); PATH = os.path.join(ROOT, "data", "manual_posts.json")
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36", "Accept-Language": "en-GB,en;q=0.9"}
-SEN = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
+SEN = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished|vice president|\bvp\b|\bavp\b|executive director", re.I)
 DEAD = re.compile(r"no longer|not found|closed|expired|jobs search|\d,\d{3}\+ |\bjobs in (the )?united states", re.I)
 def verified_rows(pause=3.0):
     rows = []

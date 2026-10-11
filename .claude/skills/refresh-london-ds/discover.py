@@ -48,7 +48,7 @@ def get(u, t=25, h=None, tries=3, pause=6):
 strip = lambda s: html.unescape(re.sub(r"<[^>]+>", " ", s or ""))
 LON = re.compile(r"london|united kingdom|\buk\b|england|remote.*(uk|united kingdom)", re.I)
 EXC = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student", re.I)
-AGENCY = re.compile(r"recruit|talent|staffing|resourcing|headhunt|search partners|selection|consultancy ltd|\bjobs\b|hiring|harnham|understanding recruitment|nicoll curtin|experis|\bhays\b|robert walters|michael page|la fosse|oliver bernard|client server|\btiro\b|xcede|datatech|intellect group|interex|sphere digital|rise technical|spectrum it|manning services|oscar technology|avanti|kimaru|jobgether|degree 6|qurious|stott and may|burns sheehan|lorien|akkodis|computer futures|huxley|real staffing|randstad|reed\b|adecco|hudson|morgan mckinley|spencer ogden|signify technology|allegis|teksystems|iopa|revolent|opus|cognitive group|montash|\bexec\b|associates|people first|the people|mccabe & barton|oho group|speak to kit|annapurna|deeprec|neartech|radley james|searchworks|searchability|mthree|q1 technologies", re.I)
+AGENCY = re.compile(r"recruit|talent|staffing|resourcing|headhunt|search partners|selection|consultancy ltd|\bjobs\b|hiring|harnham|understanding recruitment|nicoll curtin|experis|\bhays\b|robert walters|michael page|la fosse|oliver bernard|client server|\btiro\b|xcede|datatech|intellect group|interex|sphere digital|rise technical|spectrum it|manning services|oscar technology|avanti|kimaru|jobgether|degree 6|qurious|stott and may|burns sheehan|lorien|akkodis|computer futures|huxley|real staffing|randstad|reed\b|adecco|hudson|morgan mckinley|spencer ogden|signify technology|allegis|teksystems|iopa|revolent|opus|cognitive group|montash|\bexec\b|associates|people first|the people|mccabe & barton|oho group|speak to kit|annapurna|deeprec|neartech|radley james|searchworks|searchability|mthree|q1 technologies|x4 alpha|x4 group", re.I)
 TOKEN = [("greenhouse", re.compile(r"greenhouse\.io/([A-Za-z0-9_-]+)/jobs")), ("ashby", re.compile(r"ashbyhq\.com/([^/?#]+)/")),
          ("lever", re.compile(r"lever\.co/([^/?#]+)/")), ("workable", re.compile(r"apply\.workable\.com/([^/?#]+)/j/")),
          ("smartrecruiters", re.compile(r"smartrecruiters\.com/([^/?#]+)/\d")), ("pinpoint", re.compile(r"https?://([^./]+)\.pinpointhq\.com")),
@@ -160,8 +160,12 @@ for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoi
     for t in REG.get(k, []): known.setdefault(norm(t), t)
 for a, c in REG.get("aliases", {}).items():
     if not a.startswith("_"): known.setdefault(norm(a), c)                       # same organisation under another lead name
-for n in list(REG.get("employer_sites", {}).keys()) + ["Amazon", "Google", "TikTok", "Spotify", "Microsoft", "Point72", "Bloomberg", "G-Research", "Bauer Media Group"]:
+for n in list(REG.get("employer_sites", {}).keys()) + list(REG.get("oraclehcm", {}).keys()) + list(REG.get("successfactors", {}).keys()) + (["Apple"] if "apple" in REG else []) + ["Amazon", "Google", "TikTok", "Spotify", "Microsoft", "Point72", "Bloomberg", "G-Research", "Bauer Media Group"]:
     if not n.startswith("_"): known.setdefault(norm(n), n)                        # employers enumerated outside the token lists
+try:                                                                            # hand-added posts (data/manual_posts.json) are covered too
+    for p in json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(HERE))), "data", "manual_posts.json")))["posts"]:
+        known.setdefault(norm(p["company"]), f"manual:{p['company']}")
+except Exception: pass
 STOP = {"the", "and", "of", "ltd", "limited", "plc", "inc", "llc", "llp", "group", "holdings", "company", "co", "uk", "global",
         "international", "technologies", "technology", "tech", "solutions", "services", "systems", "labs", "lab", "ai", "io", "com"}
 def name_words(company):
@@ -178,6 +182,7 @@ def corroborate(company, token):
     if token.startswith("http"):                                               # Workday: judge the tenant slug only, never the whole URL
         m = WD.search(token); tenant = norm(m.group(1)) if m else tok
     if tenant == key or (len(tenant) >= 4 and key.startswith(tenant)): return True
+    if len(key) <= 5: return False                                             # 'bp', 'IBM', 'Meta', 'Chubb', 'SMG': only the exact slug counts
     if not tenant.startswith(words[0]): return False
     if len(words) == 1: return True
     return any(w in tenant for w in words[1:]) or len(tenant) <= len(words[0]) + 4
@@ -282,7 +287,7 @@ def search_token(company):
     return None, None, None
 new_tokens = {}; posts = []; unresolved = []; covered = 0; searched = 0
 CAP = int(os.environ.get("RESOLVE_CAP", "25"))
-pri = lambda l: (0 if (l["role_type"] == "Standard DS" and re.search(r"senior|staff|lead|principal|head|director|manager", l["title"], re.I)) else 1, l["company"])
+pri = lambda l: (0 if (l["role_type"] == "Standard DS" and re.search(r"senior|staff|lead|principal|head|director|manager|vice president|\bvp\b|executive director", l["title"], re.I)) else 1, l["company"])
 cache = {}; pcache = {}; probed = 0; PROBE_CAP = int(os.environ.get("PROBE_CAP", "150"))
 for l in sorted([x for x in leads if not x["agency"]], key=pri):
     url = l["url"]; eu = ""

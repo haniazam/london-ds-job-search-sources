@@ -136,8 +136,13 @@ def band_key(t):
     if "head of" in t: return "head of data science"
     if re.search(r"principal|staff",t): return "principal data scientist"
     if "lead" in t or "manager" in t: return "lead data scientist"
+    if re.search(r"director|head of|\bvp\b|chief",t): return "head of data science"
     if re.search(r"senior|\bsr\b",t): return "senior data scientist"
     return "data scientist"
+try:
+    _mp=json.load(open(os.path.join(HERE,"..","..","..","data","manual_posts.json")))
+    MANUAL_COMP={p["url"].split("?")[0]:p["comp"] for p in _mp.get("posts",[]) if p.get("comp")}
+except Exception: MANUAL_COMP={}
 OUT=SRC.replace(".csv","_pay.csv")
 with open(OUT,"w",newline="",encoding="utf-8") as f:
     w=csv.writer(f); first=rows[0]["_rec"] if rows else {}
@@ -147,6 +152,9 @@ with open(OUT,"w",newline="",encoding="utf-8") as f:
         if p2 and p2.get("lo") and p2.get("hi") and p2["lo"]!=p2["hi"]: comp=f"£{p2['lo']//1000}k–£{p2['hi']//1000}k (posted)"
         elif p2 and (p2.get("lo") or p2.get("hi")):
             v=(p2.get("lo") or p2.get("hi"))//1000; comp=(f"up to £{v}k" if "up to" in p2.get("how","") else f"from £{v}k")+" (posted)"
+        if not comp:                                                   # hand-added posts carry their own sourced figure
+            mc=MANUAL_COMP.get(r["_rec"].get("Apply URL (unique active post)","").split("?")[0])
+            if mc: comp=mc if "(" in mc else mc+" (sourced)"
         if not comp:
             for o in OVR:
                 if o["company"].lower()==r["company"].lower() and re.search(o["title_regex"],r["title"]):

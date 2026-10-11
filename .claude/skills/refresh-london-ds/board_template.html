@@ -91,7 +91,7 @@ details.none summary::-webkit-details-marker{display:none}
 details.none summary::before{content:"";width:7px;height:7px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(-45deg);transition:transform .15s}
 details.none[open] summary::before{transform:rotate(45deg)}
 details.none summary small{font-weight:400;color:var(--muted)}
-.none ul{list-style:none;margin:0;padding:0 0 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px 20px}
+.none ul{list-style:none;margin:0;padding:0 0 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:8px 20px}
 .none li{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}
 .none li b{font-weight:600}
 .none li span{color:var(--muted)}
@@ -122,7 +122,7 @@ details.none summary small{font-weight:400;color:var(--muted)}
 .tier{grid-column:1/-1;display:flex;align-items:center;gap:12px;margin-top:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .tier::after{content:"";flex:1;height:1px;background:var(--line)}
 .tier b{font-weight:700}.tier.t1 b{color:var(--ok)}.tier.t2 b{color:var(--warn)}.tier.t3 b{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:14px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:15px 16px 13px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .card.applied{border-color:var(--accent)}
 .top{display:flex;gap:12px;align-items:flex-start}
@@ -158,13 +158,41 @@ td.num{font-variant-numeric:tabular-nums;text-align:center;font-weight:700}
 td .status{margin-left:0}
 .sectitle{font-family:var(--display);font-weight:700;font-size:22px;margin:30px 0 4px;letter-spacing:-.005em}
 .sectnote{color:var(--muted);margin:0 0 12px;max-width:72ch;font-size:14px}
-.aside{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;list-style:none;margin:0;padding:0}
+.aside{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:10px;list-style:none;margin:0;padding:0}
 .aside li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:11px 13px;min-width:0}
 .aside li b{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .aside li b i{font-style:normal;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);white-space:nowrap}
 .aside li b i.mon{color:var(--accent)}.aside li b i.closed,.aside li b i.caution{color:var(--bad,#b42318)}.aside li b i.unv{color:var(--warn)}
 .aside li p{font-size:13px;color:var(--muted);margin:5px 0 0;line-height:1.4}
 .lbl{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-left:4px}
+.adv{display:contents}
+.more{display:none}
+.search input{font-size:max(16px,1em)}
+@media (max-width:640px){
+  body{font-size:15.5px}
+  .wrap{padding-block:16px 44px}
+  .hd{margin-bottom:12px;gap:12px}
+  .hd .sub{font-size:13.5px;line-height:1.4}
+  .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px;width:100%}
+  .stat b{font-size:24px}
+  .bar{padding:8px 10px;gap:8px;margin-bottom:14px}
+  .bar .more{display:inline-flex}
+  .bar:not(.open) .adv{display:none}
+  .lbl{flex-basis:100%;margin:2px 0 -4px 2px}
+  .seg{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .seg button,.chip,.btn{height:40px}
+  .seg button{padding:0 11px;font-size:13px}
+  .count{margin-left:0;flex-basis:100%;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .card{padding:13px 14px 12px;border-radius:12px}
+  .cco{font-size:15.5px}
+  .facts{font-size:13px}
+  .links a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px}
+  .status{height:36px}
+  .sectitle{font-size:19px;margin-top:24px}
+  .sectnote{font-size:13px}
+  .legend{font-size:12px;gap:6px 14px}
+  .ft{font-size:12.5px}
+}
 </style>
 <div class="wrap">
   <header class="hd">
@@ -180,9 +208,11 @@ td .status{margin-left:0}
     </div>
   </header>
 
-  <div class="bar" role="region" aria-label="Filters">
+  <div class="bar" id="bar" role="region" aria-label="Filters">
     <div class="seg" id="segView" role="group" aria-label="View"><button type="button" data-v="cards" aria-pressed="true">Cards</button><button type="button" data-v="table" aria-pressed="false">Table</button></div>
     <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search company or role" autocomplete="off"></label>
+    <button type="button" class="chip more" id="more" aria-expanded="false" aria-controls="bar">Filters</button>
+    <div class="adv">
     <span class="lbl">Fit</span>
     <div class="seg" id="segFit" role="group" aria-label="Filter by fit"><button type="button" data-v="all" aria-pressed="true">All</button><button type="button" data-v="Strong" aria-pressed="false">Strong</button><button type="button" data-v="Stretch" aria-pressed="false">Stretch</button><button type="button" data-v="Level gap" aria-pressed="false">Level gap</button></div>
     <span class="lbl">Status</span>
@@ -190,6 +220,7 @@ td .status{margin-left:0}
     <button type="button" class="chip" id="f-pay" aria-pressed="false">Posted or sourced pay only</button>
     <span class="lbl">Sort</span>
     <div class="seg" id="segSort" role="group" aria-label="Sort"><button type="button" data-v="score" aria-pressed="true">Score</button><button type="button" data-v="comp" aria-pressed="false">Comp</button><button type="button" data-v="wlb" aria-pressed="false">WLB</button></div>
+    </div>
     <div class="count"><span id="count"></span><a id="resetStatus" role="button" tabindex="0" style="cursor:pointer;text-decoration:none;font-weight:700">Reset statuses</a></div>
   </div>
 
@@ -212,6 +243,7 @@ td .status{margin-left:0}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 const ROLES=__ROLES__;
+ROLES.forEach(r=>{if(r.role==null)r.role=r.t});
 const ASIDE=__ASIDE__;
 const STATUS=[["apply","To apply"],["applied","Applied"],["interview","Interviewing"],["offer","Offer"],["rejected","Rejected"],["monitor","Monitoring"]];
 const TAG={mon:"Monitor",closed:"Closed",unv:"Unverified",scope:"Out of scope",profile:"Profile mismatch",caution:"Caution",floor:"Below floor"};
@@ -248,11 +280,11 @@ function cards(rows){
       <div class="top"><div class="scorebox ${scoreCls(r.score)}" title="fit ${r.parts.fit} + comp ${r.parts.comp} + London ${r.parts.loc} + verified 1">${r.score}</div>
         <div class="tt"><div class="cco">${esc(r.co)}${r.new?' <span class="badge">New</span>':""}</div><div class="crole">${esc(r.role)}</div></div></div>
       <div class="facts"><span class="c">${compTxt(r)}</span><span class="prov ${r.prov}" style="font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${PROV[r.prov]}</span><span class="dot">·</span>${wlbTxt(r)}</div>
-      <div class="chips"><span class="pill ${fitCls(r.fit)}">${esc(r.fit)}</span><span class="pill ${stabCls(r.stab)}">${esc(r.stab)}</span><span class="pill dim">${esc(r.loc)}</span>${statusSel(r)}</div>
+      <div class="chips"><span class="pill ${fitCls(r.fit)}">${esc(r.fit)}</span><span class="pill ${stabCls(r.stab)}">${esc(r.stab)}</span>${r.loc?`<span class="pill dim">${esc(r.loc)}</span>`:""}${statusSel(r)}</div>
       <div class="next"><b>Next</b> · ${esc(r.next)}</div>
       <div class="links"><a class="pri" href="${esc(r.url)}" target="_blank" rel="noopener">Apply ↗</a></div>
       <details><summary>Detail</summary><div class="detail">
-        <div><span class="k">Evidence</span><p>Verified via ${esc(r.via)} · posting location: ${esc(r.loc)} · comp: ${PROV[r.prov].toLowerCase()}${r.comp&&r.comp.includes("(")?" — "+esc(r.comp.slice(r.comp.indexOf("(")+1,-1)):""}</p></div>
+        <div><span class="k">Evidence</span><p>Verified via ${esc(r.via)} · posting location: ${esc(r.loc||"London")} · comp: ${PROV[r.prov].toLowerCase()}${r.comp&&r.comp.includes("(")?" — "+esc(r.comp.slice(r.comp.indexOf("(")+1,-1)):""}</p></div>
         ${r.jd?`<div><span class="k">Role</span><p>${esc(r.jd)}</p></div>`:""}${r.quals?`<div><span class="k">Qualifications</span><p>${esc(r.quals)}</p></div>`:""}${r.fitCav?`<div><span class="k">Fit</span><p>${esc(r.fitCav)}</p></div>`:""}
         <div><span class="k">Work–life balance</span><p>${esc(r.wlbCav)}</p></div>
         <div><span class="k">Stability</span><p>${esc(r.layoff)}</p></div>
@@ -267,7 +299,7 @@ function table(rows){
     <td><div class="cco" style="font-size:14px">${esc(r.co)}</div><div class="crole" style="font-size:12.5px">${esc(r.role)}</div></td>
     <td style="white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums">${compTxt(r)}<div class="prov ${r.prov}" style="font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${PROV[r.prov]}</div></td>
     <td><span class="pill ${fitCls(r.fit)}">${esc(r.fit)}</span></td><td class="num">${r.wlb==null?'<span class="wlb na">n/a</span>':r.wlb.toFixed(1)}</td>
-    <td><span class="pill ${stabCls(r.stab)}">${esc(r.stab)}</span></td><td style="font-size:12.5px;color:var(--muted)">${esc(r.loc)}</td><td>${statusSel(r)}</td>
+    <td><span class="pill ${stabCls(r.stab)}">${esc(r.stab)}</span></td><td style="font-size:12.5px;color:var(--muted)">${esc(r.loc||"London")}</td><td>${statusSel(r)}</td>
     <td><a href="${esc(r.url)}" target="_blank" rel="noopener" style="font-weight:700;text-decoration:none">Apply ↗</a></td></tr>`).join("")}</tbody></table>`;
 }
 function render(){
@@ -286,6 +318,9 @@ function seg(id,k){$(id).addEventListener("click",e=>{const b=e.target.closest("
 seg("segView","view");seg("segFit","fit");seg("segSt","st");seg("segSort","sort");
 $("f-pay").addEventListener("click",()=>{state.pay=!state.pay;$("f-pay").setAttribute("aria-pressed",state.pay);render()});
 $("q").addEventListener("input",e=>{state.q=e.target.value;render()});
+$("more").addEventListener("click",()=>{const o=!$("bar").classList.toggle("open");$("more").setAttribute("aria-expanded",!o);$("more").textContent=o?"Filters":"Hide filters"});
+const markMore=()=>$("more").setAttribute("aria-pressed",state.fit!=="all"||state.st!=="all"||state.pay||state.sort!=="score");
+document.getElementById("bar").addEventListener("click",markMore);
 $("resetStatus").addEventListener("click",()=>{statuses={};try{localStorage.removeItem("ldsb-status")}catch(e){}render();toast("Statuses reset")});
 $("resetStatus").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("resetStatus").click()}});
 render();
