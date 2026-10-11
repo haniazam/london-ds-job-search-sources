@@ -4,7 +4,7 @@
   "title_regex": "^Senior",
   "lo": 95,
   "hi": 115,
-  "label": "sourced: Levels.fyi Deliveroo L5 ~$145k TC + Indeed \u00a395.7k",
+  "label": "sourced: Levels.fyi Deliveroo L5 ~$145k TC + Indeed £95.7k",
   "date": "2026-10-09"
  },
  {
@@ -12,7 +12,7 @@
   "title_regex": "Manager",
   "lo": 105,
   "hi": 145,
-  "label": "sourced: Levels.fyi Tripadvisor DS Manager UK median \u00a3106k, thin sample",
+  "label": "sourced: Levels.fyi Tripadvisor DS Manager UK median £106k, thin sample",
   "date": "2026-10-09"
  },
  {
@@ -44,7 +44,7 @@
   "title_regex": "Senior Staff",
   "lo": 280,
   "hi": null,
-  "label": "L7 est.; Levels.fyi L6 London sourced median \u00a3237k",
+  "label": "L7 est.; Levels.fyi L6 London sourced median £237k",
   "date": "2026-10-09"
  },
  {
@@ -52,7 +52,7 @@
   "title_regex": "Manager",
   "lo": 200,
   "hi": 330,
-  "label": "est.; Levels.fyi L6 London sourced median \u00a3237k",
+  "label": "est.; Levels.fyi L6 London sourced median £237k",
   "date": "2026-10-09"
  },
  {
@@ -60,7 +60,7 @@
   "title_regex": ".",
   "lo": 110,
   "hi": 200,
-  "label": "sourced: Levels.fyi Qube DS London median ~\u00a3121k, top \u00a3200k",
+  "label": "sourced: Levels.fyi Qube DS London median ~£121k, top £200k",
   "date": "2026-10-09"
  },
  {
@@ -70,5 +70,45 @@
   "hi": 148,
   "label": "posted",
   "date": "2026-10-09"
+ },
+ {
+  "company": "JPMorgan Chase",
+  "title_regex": "Vice President",
+  "lo": 120,
+  "hi": 165,
+  "label": "sourced: Levels.fyi JPMorgan VP Data Scientist, Greater London median TC £141k",
+  "date": "2026-10-11"
+ },
+ {
+  "company": "JPMorgan Chase",
+  "title_regex": "Senior Associate",
+  "lo": 105,
+  "hi": 145,
+  "label": "sourced: Levels.fyi JPMorgan Senior Associate Data Scientist, Greater London avg TC £130k",
+  "date": "2026-10-11"
+ },
+ {
+  "company": "Citi",
+  "title_regex": "^Data Scientist",
+  "lo": 77,
+  "hi": 130,
+  "label": "sourced: Levels.fyi Citi Data Scientist UK, C12 £77k to C13 London median £130k",
+  "date": "2026-10-11"
+ },
+ {
+  "company": "UBS",
+  "title_regex": ".",
+  "lo": 55,
+  "hi": 113,
+  "label": "sourced: Glassdoor UK UBS Data Scientist to £99k (90th pct); Levels.fyi London top £113k",
+  "date": "2026-10-11"
+ },
+ {
+  "company": "BNY",
+  "title_regex": "Senior Specialist",
+  "lo": 44,
+  "hi": 83,
+  "label": "sourced: Glassdoor range shown on this BNY London posting",
+  "date": "2026-10-11"
  }
 ]
