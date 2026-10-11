@@ -117,17 +117,23 @@ for name, url in WORKDAY.items():
 
 # ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
 UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
+wk_strikes = 0    # consecutive accounts lost to 429 -> after 2, one un-slept attempt each (bounds the pass at ~2 min, not ~40)
 for acct in REG.get("workable", []):
-    for attempt in range(3):
+    tries = 1 if wk_strikes >= 2 else 3
+    for attempt in range(tries):
         try:
             d = json.loads(get(f"https://apply.workable.com/api/v1/widget/accounts/{acct}?details=false")); break
         except Exception as e:
             d = None
-            if "429" in str(e): time.sleep(20 * (attempt + 1)); continue
+            if "429" in str(e):
+                if attempt < tries - 1: time.sleep(15 * (attempt + 1))
+                continue
             print(f"[workable] {acct}: {type(e).__name__}", file=sys.stderr); break
     if not d:
+        wk_strikes += 1
         print(f"[workable] {acct}: rate-limited (429) — rows carried forward as unverified", file=sys.stderr)
         UNVERIFIED.setdefault("workable", []).append(acct); continue
+    wk_strikes = 0
     hits = 0
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = f"{j.get('city','')}, {j.get('country','')} {'remote' if j.get('remote') else ''}"
