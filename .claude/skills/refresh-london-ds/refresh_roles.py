@@ -25,8 +25,8 @@ REG = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "b
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
-LON = re.compile(r"london|united kingdom|\buk\b|england", re.I)
-SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
+LON = re.compile(r"london|canary wharf|united kingdom|\buk\b|england", re.I)   # Workday sites label offices (Barclays: "Canary Wharf, 1 Churchill Place")
+SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished|vice president|\bvp\b|\bavp\b|executive director", re.I)
 EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student|fixed.?term|\bFTC\b|\bcontract\b|fractional|part.?time", re.I)
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"

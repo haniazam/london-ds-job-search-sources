@@ -1,7 +1,7 @@
 """Scope regexes shared by refresh_roles.py and build_sheet_rows.py (kept importable without running the refresh)."""
 import re
 EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student|fixed.?term|\bFTC\b|\bcontract\b|fractional|part.?time", re.I)
-SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\b|distinguished", re.I)
+SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\b|distinguished|vice president|\bvp\b|\bavp\b|executive director", re.I)
 BRIEF = re.compile(r"product|experiment|causal|measurement|growth|staff|principal|lead", re.I)   # senior + one of these = fits the brief
 def via_of(u):
     """How a posting was verified, from its URL host (shown in the Sheet's Notes and on the board)."""

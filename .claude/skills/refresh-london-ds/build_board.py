@@ -18,7 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 SRC = sys.argv[1] if len(sys.argv) > 1 else "/tmp/ldn_ds_active_pay.csv"
 OUT = sys.argv[2] if len(sys.argv) > 2 else "/tmp/london-ds-board.html"
 from refresh_roles_scope import BRIEF, via_of, EXCLUDE, london_ok, norm_loc
-SEN = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
+SEN = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished|vice president|\bvp\b|\bavp\b|executive director", re.I)
 def comp_parse(c):
     c = c or ""; m = re.search(r"£(\d+)k\s*[–-]\s*£(\d+)k", c); mp = re.search(r"£(\d+)k\+", c); mu = re.search(r"up to £(\d+)k", c); mf = re.search(r"from £(\d+)k", c)
     lo, hi = (int(m.group(1)), int(m.group(2))) if m else (int(mp.group(1)), None) if mp else (None, int(mu.group(1))) if mu else (int(mf.group(1)), None) if mf else (None, None)

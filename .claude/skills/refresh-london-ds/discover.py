@@ -182,6 +182,7 @@ def corroborate(company, token):
     if token.startswith("http"):                                               # Workday: judge the tenant slug only, never the whole URL
         m = WD.search(token); tenant = norm(m.group(1)) if m else tok
     if tenant == key or (len(tenant) >= 4 and key.startswith(tenant)): return True
+    if len(key) <= 5: return False                                             # 'bp', 'IBM', 'Meta', 'Chubb', 'SMG': only the exact slug counts
     if not tenant.startswith(words[0]): return False
     if len(words) == 1: return True
     return any(w in tenant for w in words[1:]) or len(tenant) <= len(words[0]) + 4
@@ -286,7 +287,7 @@ def search_token(company):
     return None, None, None
 new_tokens = {}; posts = []; unresolved = []; covered = 0; searched = 0
 CAP = int(os.environ.get("RESOLVE_CAP", "25"))
-pri = lambda l: (0 if (l["role_type"] == "Standard DS" and re.search(r"senior|staff|lead|principal|head|director|manager", l["title"], re.I)) else 1, l["company"])
+pri = lambda l: (0 if (l["role_type"] == "Standard DS" and re.search(r"senior|staff|lead|principal|head|director|manager|vice president|\bvp\b|executive director", l["title"], re.I)) else 1, l["company"])
 cache = {}; pcache = {}; probed = 0; PROBE_CAP = int(os.environ.get("PROBE_CAP", "150"))
 for l in sorted([x for x in leads if not x["agency"]], key=pri):
     url = l["url"]; eu = ""

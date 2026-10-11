@@ -159,3 +159,13 @@ HCLTech Hungary — the single-word corroboration rule still lets a tenant that 
 Employers in `data/manual_posts.json` now count as registry-covered in tier 1, so Haven, SEGA, Stantec, Sagacity, Raylo and
 UBS leave the unresolved list on the next run. Remaining unresolved: 25, all in the "not fixable from the container" or
 "posting closed" groups above.
+
+### 11 Oct 2026 — follow-ups
+
+- `corroborate()`: an employer name of five characters or fewer now needs the exact slug (bp, IBM, Meta, Chubb, SMG
+  stop re-registering Brookfield, IBM iX, Georgetown, Chubb Fire & Security, Intel on every bootstrap).
+- Level: bank grades count as Senior+ — vice president / VP / AVP / executive director — in every seniority regex and in
+  CLAUDE.md (JPMorgan's "Applied AI ML Data Scientist, Vice President" was Regular/Mid).
+- Barclays registered (workday `barclays.wd3/External_Career_Site_Barclays`); its London posts are labelled "Canary Wharf",
+  now treated as London. HSBC (`hsbc.wd3`) and Lloyds (`lloydsbankinggroup.wd3`) have Workday tenants but no public site
+  name answers; their careers sites (mycareer.hsbc.com, lloydsbankinggroup.com) are not Workday-fronted, so they stay unresolved.
