@@ -8,7 +8,7 @@ Who this is for
 What exists
 - Board: https://claude.ai/artifact/UcMLHVF7Zfh5y67a77Skp3 (v13) — every verified-live London DS role, Target List format: rule-based 0–10 score, tiers, fit and stability, pipeline status per role, next action, cards or table, tagged set-aside list. Lato, light and dark.
 - Sheet (source of truth): https://docs.google.com/spreadsheets/d/1tr7h-veYlLIQtewkBw8OY-Zz_7l-4cNNNjs8AO7BoSg — 128 roles at 64 employers as of 11 Oct 2026, plus 36 no-role or unverified rows.
-- Repo: haniazam/london-ds-job-search-sources, branch claude/optimistic-ramanujan-80by3 (main at f2acc05). Skill: .claude/skills/refresh-london-ds — discover.py, refresh_roles.py, pay_enrich.py, build_board.py (+ board_template.html), manual_posts.py, role_taxonomy.py, wlb_stability.py, boards.json, pay_overrides.json, SKILL.md. Data: data/wlb_stability.json, data/set_aside.json, data/manual_posts.json, data/target_list_2026-10.json.
+- Repo: haniazam/london-ds-job-search-sources, branch claude/optimistic-ramanujan-80by3 (main at 63fc372, PR #6 merged 11 Oct). Skill: .claude/skills/refresh-london-ds — discover.py, refresh_roles.py, pay_enrich.py, build_board.py (+ board_template.html), manual_posts.py, role_taxonomy.py, wlb_stability.py, boards.json, pay_overrides.json, SKILL.md. Data: data/wlb_stability.json, data/set_aside.json, data/manual_posts.json, data/target_list_2026-10.json.
 
 The rules
 - Scope: Standard DS titles = the core role is Data Scientist, or Data Science Manager / Lead / Head / Director. Specialism words (Economist, Machine Learning, Research, Applied) never exclude; only a different core discipline does (Research Scientist, ML Engineer, Applied Scientist, Quant, Analyst, Engineer, Economist-as-the-job). Tested in role_taxonomy.py.
