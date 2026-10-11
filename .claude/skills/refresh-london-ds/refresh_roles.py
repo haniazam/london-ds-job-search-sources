@@ -15,7 +15,7 @@ if Playwright is missing — it just skips the browser companies).
 
 See SKILL.md for endpoints, gotchas and the upload step (assistant action).
 """
-import csv, json, os, re, sys, time, urllib.request
+import csv, html, json, os, re, sys, time, urllib.parse, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from role_taxonomy import classify as role_type, COLLECT as DS   # core-role classifier (see role_taxonomy.py)
 
@@ -187,6 +187,58 @@ for co in REG.get("teamtailor", []):
         if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
             hits += 1; active.append((co, t, level(t), loc, j.get("url")))
     print(f"[teamtailor] {co}: {len(d.get('items', []))} jobs, {hits} London DS", file=sys.stderr)
+
+# ---------------- Oracle HCM Cloud (public recruitingCEJobRequisitions finder; JPMorgan, BNY) ----------------
+NEAR = re.compile(r"london|remote", re.I)          # these sites list every UK office; "United Kingdom" alone is not London-eligible
+for name, site in REG.get("oraclehcm", {}).items():
+    if name.startswith("_"): continue
+    host, num = site["host"], site.get("site", "CX_1001"); hits = 0; total = 0; offset = 0
+    try:
+        while True:
+            q = urllib.parse.quote(f'findReqs;siteNumber={num},keyword="data scientist",limit=100,offset={offset},sortBy=POSTING_DATES_DESC')
+            d = json.loads(get(f"https://{host}/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=requisitionList.secondaryLocations&finder={q}", 30))
+            it = (d.get("items") or [{}])[0]; reqs = it.get("requisitionList", []); total = it.get("TotalJobsCount", len(reqs))
+            for j in reqs:
+                t = j.get("Title", ""); loc = "; ".join([j.get("PrimaryLocation", "")] + [x.get("Name", "") for x in j.get("secondaryLocations", []) if isinstance(x, dict)])
+                if DS.search(t) and NEAR.search(loc) and not EXCLUDE.search(t):
+                    hits += 1; active.append((name, t, level(t), loc.title(), f"https://{host}/hcmUI/CandidateExperience/en/sites/{num}/job/{j.get('Id')}"))
+            offset += len(reqs)
+            if not reqs or offset >= total or offset >= 500: break
+        print(f"[oraclehcm] {name}: {total} requisitions, {hits} London DS", file=sys.stderr)
+    except Exception as e:
+        print(f"[oraclehcm] {name}: {type(e).__name__}", file=sys.stderr)
+
+# ---------------- SAP SuccessFactors career sites (server-rendered /search/ page; Fitch) ----------------
+for name, base in REG.get("successfactors", {}).items():
+    if name.startswith("_"): continue
+    try:
+        page = get(f"{base.rstrip('/')}/search/?q=data+scientist", 30)
+    except Exception as e:
+        print(f"[successfactors] {name}: {type(e).__name__}", file=sys.stderr); continue
+    rows = re.findall(r'<a class="jobTitle-link" href="([^"]+)">([^<]+)</a>.*?<span class="jobLocation">\s*([^<]+?)\s*</span>', page, re.S); hits = 0
+    for path, t, loc in rows:
+        t = html.unescape(t).strip(); loc = html.unescape(loc).strip()
+        if DS.search(t) and NEAR.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((name, t, level(t), loc, base.rstrip("/") + html.unescape(path)))
+    print(f"[successfactors] {name}: {len(rows)} results, {hits} London DS", file=sys.stderr)
+
+# ---------------- Apple (jobs.apple.com search API, GBR filter) ----------------
+if "apple" in REG:
+    try:
+        hits = 0; pg = 1; total = 0
+        while True:
+            d = json.loads(get("https://jobs.apple.com/api/v1/search", 30, post={"query": REG["apple"].get("query", "data scientist"), "filters": {"locations": ["postLocation-GBR"]}, "page": pg, "locale": "en-gb",
+                                                                              "sort": "newest", "format": {"longDate": "MMMM D, YYYY", "mediumDate": "MMM D, YYYY"}})).get("res", {})
+            rs = d.get("searchResults", []); total = d.get("totalRecords", 0)
+            for j in rs:
+                t = j.get("postingTitle", ""); loc = ", ".join(l.get("name", "") for l in j.get("locations", []))
+                if DS.search(t) and NEAR.search(loc) and not EXCLUDE.search(t):
+                    hits += 1; active.append(("Apple", t, level(t), loc, f"https://jobs.apple.com/en-gb/details/{j.get('positionId')}/{j.get('transformedPostingTitle')}"))
+            if len(rs) < 20 or pg >= 5: break
+            pg += 1
+        print(f"[apple] {total} GBR results, {hits} London DS", file=sys.stderr)
+    except Exception as e:
+        print(f"[apple] {type(e).__name__}", file=sys.stderr)
 
 # ---------------- JS sites via Playwright (optional) ----------------
 try:

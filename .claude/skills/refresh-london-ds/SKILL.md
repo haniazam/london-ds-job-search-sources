@@ -34,8 +34,8 @@ shell scripts).
 ## Steps
 1. `python3 .claude/skills/refresh-london-ds/refresh_roles.py`
    → writes `/tmp/ldn_ds_active.csv` (active roles + no-role companies, with Level).
-   Pure-ATS companies (Greenhouse/Lever/Ashby/Amazon/Workday) are enumerated via
-   urllib; the JS sites (Spotify, TikTok, Microsoft, Point72, Google, Bloomberg,
+   Pure-ATS companies (Greenhouse/Lever/Ashby/Amazon/Workday/Oracle HCM/SuccessFactors/Apple)
+   are enumerated via urllib; the JS sites (Spotify, TikTok, Microsoft, Point72, Google, Bloomberg,
    Faculty, Revolut, Citadel, G-Research) are refreshed with Playwright.
 2. `python3 .claude/skills/refresh-london-ds/build_jd_doc.py`
    → writes `/tmp/ldn_ds_jds.txt` (plain text, ~75 KB, no markdown).
@@ -171,6 +171,19 @@ company data — the label is the point.
   — has `description`, `basic_qualifications`, `preferred_qualifications`.
 - **Workday CXS** (POST `.../wday/cxs/<t>/<site>/jobs`): nvidia, salesforce,
   mastercard (0 London DS as of last run).
+- **Oracle HCM Cloud** (`boards.json` → `oraclehcm`, host + siteNumber): JPMorgan Chase
+  (`jpmc.fa.oraclecloud.com`, CX_1001), BNY (`eofe.fa.us2.oraclecloud.com`, CX_1001). Public GET
+  `/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&finder=findReqs;siteNumber=<n>,keyword="data scientist",limit=100,offset=<o>`
+  → `items[0].requisitionList[]` (`Title`, `PrimaryLocation`, `Id`); job URL
+  `/hcmUI/CandidateExperience/en/sites/<n>/job/<Id>`. Lists every UK office, so only
+  `london|remote` locations count (Bournemouth/Glasgow are not London-eligible).
+- **SAP SuccessFactors career sites** (`boards.json` → `successfactors`, base URL): Fitch Group
+  (`careers.fitch.group`). Server-rendered `/search/?q=data+scientist`; parse
+  `a.jobTitle-link` + `span.jobLocation`. Same `london|remote` rule.
+- **Apple** (`boards.json` → `apple`): POST `jobs.apple.com/api/v1/search`
+  `{"query":"data scientist","filters":{"locations":["postLocation-GBR"]},"page":n,"locale":"en-gb","sort":"newest","format":{...}}`
+  → `res.searchResults[]` (`postingTitle`, `positionId`, `transformedPostingTitle`, `locations[].name`);
+  job URL `jobs.apple.com/en-gb/details/<positionId>/<transformedPostingTitle>`. 20 per page.
 - **Microsoft**: Eightfold `apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&num=50`
   — returns positions under `data`; only render in-browser (urllib gets 503).
 - **Spotify**: `api.lifeatspotify.com/wp-json/animal/v1/job/search`; the record
@@ -207,8 +220,8 @@ company data — the label is the point.
 ## Known dead / blocked / not-queryable (re-check, don't trust blindly)
 - **McKinsey/QuantumBlack**: Akamai 503 from datacenter IPs — cannot verify.
 - **Snap**: Contentful-backed SPA, no queryable endpoint.
-- **Atlassian / Apple / ServiceNow / Mastercard / American Express**: bespoke
-  ATS; Atlassian's `atlassian.com/endpoint/careers/listings` works in-browser
+- **Atlassian / ServiceNow / Mastercard / American Express**: bespoke
+  ATS (Apple is now enumerated — see the taxonomy above); Atlassian's `atlassian.com/endpoint/careers/listings` works in-browser
   (179 listings, 0 London DS last run).
 - **Citadel Securities**: only a perennial "Data Scientist" talent-pool EOI
   (Miami/global), not a live London role.

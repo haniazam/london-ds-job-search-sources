@@ -133,3 +133,17 @@ Dropped before commit (12, all false or dead matches the name-corroboration chec
 Meta→Georgetown Workday, Chubb→Chubb Fire & Security, Costa Coffee→Coca-Cola Workday (no Costa DS post), IBM→IBM iX
 (Paris tenant), Tesco→`TescoBengaluru`, HCLTech→`HCLTechHungary`, trg.→`TRGInc`, mthree (recruiter), Acuity
 Analytics→`acuity-insights` (different company), Qogita Ashby (API 404) and Klarna Teamtailor (404) — both stale search hits.
+
+### 11 Oct 2026 — fixes for the remaining unresolved employers
+
+- `discover.py`: the employer-corroboration check now compares the board **slug** only (Workday: the tenant),
+  on stems of at least four characters — the old "anywhere in the URL" test is what produced SMG→Intel,
+  Meta→Georgetown, bp→Brookfield. X4 Alpha added to the recruiter filter; alias Prime Video & Amazon MGM Studios → Amazon.
+- `refresh_roles.py`: three new enumerators — **Oracle HCM Cloud** (JPMorgan Chase, BNY), **SAP SuccessFactors**
+  (Fitch Group) and **Apple** (jobs.apple.com search API). First run: JPMorgan 5 London DS-family rows, BNY 1,
+  Fitch 3, Apple 3. Lead-name aliases added (JPMorganChase, BNY Mellon, Fitch Solutions/Ratings).
+- `data/manual_posts.json`: Haven (remote-first UK), SEGA Europe, Stantec, Sagacity, Raylo, UBS (Data Scientist,
+  Investment Bank — LinkedIn post; jobs.ubs.com is a JS-only Taleo shell). All six title-verified live today.
+- Not fixable from the container: McKinsey / QuantumBlack (connection dropped — Akamai), BAE Systems (Taleo-backed
+  site renders client-side; the indexed London posts 404), L.E.K. (no ATS found), NatWest (site 403s scripts and the
+  LinkedIn mirror says Manchester), Compare the Market (no DS post on the BGL board), Perspectum (Oxford).

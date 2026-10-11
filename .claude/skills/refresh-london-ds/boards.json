@@ -374,11 +374,36 @@
   "ASOS.com": "ASOS",
   "Coalition, Inc.": "Coalition",
   "Qube Research & Technologies": "Qube RT",
-  "Relay Technologies": "Relay"
+  "Relay Technologies": "Relay",
+  "Prime Video & Amazon MGM Studios": "Amazon",
+  "JPMorganChase": "JPMorgan Chase",
+  "JPMorgan Chase & Co.": "JPMorgan Chase",
+  "BNY Mellon": "BNY",
+  "Fitch Solutions": "Fitch Group",
+  "Fitch Ratings": "Fitch Group"
  },
  "teamtailor": [
   "bluelightcard",
   "mypos",
   "yonder"
- ]
+ ],
+ "oraclehcm": {
+  "_doc": "Oracle HCM Cloud career sites: host + siteNumber; refresh_roles.py queries the public recruitingCEJobRequisitions finder (keyword, paged).",
+  "JPMorgan Chase": {
+   "host": "jpmc.fa.oraclecloud.com",
+   "site": "CX_1001"
+  },
+  "BNY": {
+   "host": "eofe.fa.us2.oraclecloud.com",
+   "site": "CX_1001"
+  }
+ },
+ "successfactors": {
+  "_doc": "SAP SuccessFactors career sites (base URL); refresh_roles.py parses the server-rendered /search/?q= page.",
+  "Fitch Group": "https://careers.fitch.group"
+ },
+ "apple": {
+  "_doc": "jobs.apple.com search API with the GBR location filter.",
+  "query": "data scientist"
+ }
 }
