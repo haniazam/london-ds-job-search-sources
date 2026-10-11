@@ -17,11 +17,18 @@ COLS = ["Company", "Role", "Role Type", "Level", "Approx London TC", "Location",
 rows = [r for r in csv.DictReader(open(SRC, encoding="utf-8")) if r.get("Role Type") == "Standard DS" and not EXCLUDE.search(r["Role"]) and london_ok(r["Location"])]
 for r in rows: r["Location"] = norm_loc(r["Location"])
 key = lambda u: (u or "").split("?")[0].rstrip("/")
-prev_rows = json.load(open(PREV)) if PREV else []
-prev_active = {key(r[6]): r for r in prev_rows if len(r) >= 9 and r[6].startswith("http")}
-prev_date = None
+prev_rows, prev_date = [], None
 if PREV:
+    prev_rows = json.load(open(PREV))
     prev_date = datetime.date.fromtimestamp(os.path.getmtime(PREV)).isoformat()      # when the previous rows were generated
+else:                                                                               # default baseline: newest snapshot strictly before DATE
+    SNAP = os.path.join(ROOT, "data", "snapshots")
+    snaps = sorted(f for f in (os.listdir(SNAP) if os.path.isdir(SNAP) else []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}\.csv", f) and f[:10] < DATE)
+    if snaps:
+        prev_rows = [r for r in csv.reader(open(os.path.join(SNAP, snaps[-1]), encoding="utf-8"))][1:]
+        prev_date = snaps[-1][:10]
+        print(f"[sheet] no previous rows given; diffing against data/snapshots/{snaps[-1]}", file=sys.stderr)
+prev_active = {key(r[6]): r for r in prev_rows if len(r) >= 9 and r[6].startswith("http")}
 seen, out = set(), []
 for r in sorted(rows, key=lambda r: (r["Company"].lower(), r["Level"] != "Senior+", r["Role"].lower())):
     u = key(r["Apply URL (unique active post)"])
