@@ -191,6 +191,13 @@ PROBE = {   # public list endpoints by platform: (url template, key whose presen
     "workable": ("https://apply.workable.com/api/v1/widget/accounts/{t}", "jobs", "name"),
 }
 _probe_cache = {}; _workable_blocked = False
+SAMPLE_TITLES = {"head of dei - belfast", "head of dei - us", "head of dei - uk", "marketing manager", "customer service rep"}
+def is_demo(items):
+    """Pinpoint trial tenants (any slug someone once signed up) ship the same five sample jobs — Head of DEI ×3, Marketing
+    Manager, Customer Service Rep in Belfast/Washington/London/Paris/New York — so a guessed slug can 'exist' with a London
+    job and still not be the employer. Three or more sample titles means a demo board, not a real one."""
+    titles = {str(j.get("title", "")).strip().lower() for j in items if isinstance(j, dict)}
+    return len(titles & SAMPLE_TITLES) >= 3
 def _locs(k, d):
     """Flatten the locations a probed board lists, so a UK presence can be checked."""
     out = []
@@ -221,6 +228,9 @@ def board_live(k, t, company=None, strict=False):
     if s_ == 200:
         try:
             d = json.loads(b); ok = (key is None and isinstance(d, list)) or (key is not None and key in d)
+            if ok:
+                items = d if key is None else d.get(key, [])
+                if is_demo(items): ok = False                                  # the platform's sample tenant, not the employer
             if ok and company:
                 nm = (d.get(namef) if (namef and isinstance(d, dict)) else None)
                 name_ok = (not namef) or (nm and norm(nm) and (norm(nm) in norm(company) or norm(company) in norm(nm)))
@@ -233,8 +243,9 @@ def probe_token(company):
     """Tier 1.5: guess the board slug from the employer's name and ask each ATS's public API directly — no search engine.
     Found most of the boards in the 10 Oct hand sweep in under two minutes."""
     words = name_words(company); key = norm(company)
+    raw = re.findall(r"[a-z0-9]+", re.sub(r"\s*\(.*?\)", "", (company or "").lower()))   # every word, generic ones included ('made-tech')
     slugs = []
-    for c in [key, "-".join(words), words[0] if words else "", "".join(words[:2]), "-".join(words[:2])]:
+    for c in [key, "-".join(raw), "-".join(words), "".join(words), "-".join(raw[:2]), "".join(raw[:2]), words[0] if words else ""]:
         if c and len(c) >= 3 and c not in slugs: slugs.append(c)
     for k in ("greenhouse", "ashby", "lever", "smartrecruiters", "pinpoint", "teamtailor", "workable"):
         for sl in slugs:
