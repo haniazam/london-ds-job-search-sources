@@ -116,22 +116,25 @@ for name, url in WORKDAY.items():
         print(f"[workday] {name}: {type(e).__name__}", file=sys.stderr)
 
 # ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
+UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 for acct in REG.get("workable", []):
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             d = json.loads(get(f"https://apply.workable.com/api/v1/widget/accounts/{acct}?details=false")); break
         except Exception as e:
             d = None
-            if "429" in str(e): time.sleep(10); continue
+            if "429" in str(e): time.sleep(20 * (attempt + 1)); continue
             print(f"[workable] {acct}: {type(e).__name__}", file=sys.stderr); break
-    if not d: continue
+    if not d:
+        print(f"[workable] {acct}: rate-limited (429) — rows carried forward as unverified", file=sys.stderr)
+        UNVERIFIED.setdefault("workable", []).append(acct); continue
     hits = 0
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = f"{j.get('city','')}, {j.get('country','')} {'remote' if j.get('remote') else ''}"
         if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
             hits += 1; active.append((acct, t, level(t), loc.strip(), j.get("url") or j.get("shortlink")))
     print(f"[workable] {acct}: {len(d.get('jobs', []))} jobs, {hits} London DS", file=sys.stderr)
-    time.sleep(3)
+    time.sleep(6)
 
 # ---------------- SmartRecruiters (public postings API; some companies gate it -> 0) ----------------
 for cid in REG.get("smartrecruiters", []):
@@ -423,7 +426,7 @@ if os.path.exists(DISC):
     hits = 0
     for p in json.load(open(DISC)):
         u = p["url"]
-        if u.split("?")[0] in seen_urls or "jobs.workable.com/view" in u and False: continue
+        if u.split("?")[0] in seen_urls or EXCLUDE.search(p["title"]): continue   # same scope rule as the API boards
         if "jobs.workable.com/view" in u:                       # Workable's own feed: published state is the proof
             active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1; continue
         try:
@@ -439,6 +442,7 @@ if os.path.exists(DISC):
 try:
     from manual_posts import verified_rows
     for r in verified_rows():
+        if EXCLUDE.search(r["Role"]): continue
         if r["Apply URL (unique active post)"].split("?")[0] not in {a[4].split("?")[0] for a in active}:
             active.append((r["Company"], r["Role"], r["Level"], r["Location"], r["Apply URL (unique active post)"]))
 except Exception as e:
@@ -470,7 +474,11 @@ for c, reason in NO_ROLE:
     if c.lower() not in have:
         norole.append((c, reason))
 
+# ---------------- scope: a specific non-London UK city on its own is out ----------------
+from refresh_roles_scope import london_ok
+active = [a for a in active if london_ok(a[3])]
 # ---------------- write CSV ----------------
+json.dump(UNVERIFIED, open("/tmp/ldn_ds_unverified.json", "w"))
 # Proper display names (per CLAUDE.md) instead of raw ATS tokens.
 PRETTY = {"openai": "OpenAI", "deepmind": "Google DeepMind", "monzo": "Monzo",
           "mangroup": "Man Group", "gocardless": "GoCardless", "dunnhumby": "dunnhumby",

@@ -17,7 +17,7 @@ from role_taxonomy import classify
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 SRC = sys.argv[1] if len(sys.argv) > 1 else "/tmp/ldn_ds_active_pay.csv"
 OUT = sys.argv[2] if len(sys.argv) > 2 else "/tmp/london-ds-board.html"
-BRIEF = re.compile(r"product|experiment|causal|measurement|growth|staff|principal|lead", re.I)
+from refresh_roles_scope import BRIEF, via_of, EXCLUDE, london_ok, norm_loc
 SEN = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
 def comp_parse(c):
     c = c or ""; m = re.search(r"£(\d+)k\s*[–-]\s*£(\d+)k", c); mp = re.search(r"£(\d+)k\+", c); mu = re.search(r"up to £(\d+)k", c); mf = re.search(r"from £(\d+)k", c)
@@ -29,28 +29,24 @@ def loctype(loc):
     if re.search(r"remote", loc, re.I) and not re.search(r"london", loc, re.I): return "Remote-UK"
     if re.search(r"london", loc, re.I) and re.search(r";|/|\+|,\s*[A-Z]|Dublin|Barcelona|Cardiff|remote", loc, re.I) and loc.strip().lower() not in ("london", "london, united kingdom", "london, england", "london, uk", "london office"): return "London (+ other locations)"
     return "London" if re.search(r"london", loc, re.I) else "UK (London-eligible)"
-def via_of(u):
-    for k, v in (("greenhouse.io", "Greenhouse API"), ("ocadogroup", "Greenhouse API"), ("coinbase.com", "Greenhouse API"), ("ashbyhq.com", "Ashby API"), ("lever.co", "Lever API"),
-                 ("jobs.workable.com", "Workable feed"), ("workable.com", "Workable API"), ("smartrecruiters", "SmartRecruiters API"), ("pinpointhq", "Pinpoint API"),
-                 ("myworkdayjobs", "Workday API"), ("teamtailor", "Teamtailor post (title verified)"), ("amazon.jobs", "amazon.jobs API"), ("google.com", "google.com post (title verified)"),
-                 ("linkedin.com", "LinkedIn (title verified)"), ("tiktok.com", "careers.tiktok.com (title verified)"), ("lifeatspotify", "lifeatspotify.com (title verified)")):
-        if k in u: return v
-    return "employer site (title verified)"
 wlb_tab = load_wlb(); rows = []
 with open(SRC, newline="", encoding="utf-8") as f:
     for r in csv.DictReader(f):
         url = r.get("Apply URL (unique active post)", "")
         if not url.startswith("http"): continue
         if (r.get("Role Type") or classify(r["Role"])) != "Standard DS": continue   # older CSVs lack the column
+        if EXCLUDE.search(r["Role"]): continue                                       # scope rule (FTC, fractional, intern…)
+        if not london_ok(r.get("Location", "")): continue                              # a non-London UK city on its own is out
+        r["Location"] = norm_loc(r.get("Location", "")); ver = 0 if (r.get("Status") or "Active").startswith("Unverified") else 1
         title = r["Role"].strip(); lv = "Senior+" if SEN.search(title) else "Regular/Mid"; lo, hi, prov = comp_parse(r.get("Approx London TC", ""))
         loc = loctype(r.get("Location", "")); brief = lv == "Senior+" and bool(BRIEF.search(title))
         fit = 4 if brief else 2 if lv == "Senior+" else 1; ceil = hi if hi is not None else (lo or 0)
         comp = (4 if prov in "ps" else 3) if ceil >= 150 else 2 if ceil >= 120 else 1 if ceil >= 100 else 0
-        score = fit + comp + (1 if loc == "London" else 0) + 1
+        score = fit + comp + (1 if loc == "London" else 0) + ver
         w = lookup(r["Company"], wlb_tab) or {}
         rows.append({"co": r["Company"], "t": title, "lv": "sr" if lv == "Senior+" else "mid", "lo": lo, "hi": hi, "prov": prov, "loc": None if loc == "London" else loc,
                      "via": via_of(url), "url": r["Apply URL (unique active post)"], "new": "NEW" in (r.get("Notes", "") or ""), "brief": brief,
-                     "score": score, "parts": {"fit": fit, "comp": comp, "loc": 1 if loc == "London" else 0, "ver": 1},
+                     "score": score, "parts": {"fit": fit, "comp": comp, "loc": 1 if loc == "London" else 0, "ver": ver},
                      "fit": "Strong" if brief else "Stretch" if lv == "Senior+" else "Level gap",
                      "wlb": w.get("wlb"), "stab": w.get("stability", "Not researched"), "wlbCav": w.get("wlb_note", "Not researched."), "layoff": w.get("stability_evidence", "Not researched."),
                      "jd": None, "quals": None, "fitCav": None, "def": "apply" if score >= 7 else "monitor",
