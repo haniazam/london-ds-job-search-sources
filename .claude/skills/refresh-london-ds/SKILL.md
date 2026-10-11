@@ -58,6 +58,105 @@ shell scripts).
 - **Exclude** intern / graduate / apprentice programmes.
 - Keep roles deduped by URL.
 
+## Discovery — the universe is every employer that fits, not a target list (discover.py, every refresh)
+`python3 discover.py` runs BEFORE `refresh_roles.py`. It pulls London DS postings from
+cross-employer sources — LinkedIn's guest job search (newest first; covers every employer that
+posts there), Workable's cross-employer feed, Built In London, and with free keys in the
+environment Adzuna (`ADZUNA_APP_ID`, `ADZUNA_APP_KEY`) and Reed (`REED_API_KEY`) for UK-wide
+coverage including non-tech employers — classifies titles with role_taxonomy, drops agencies,
+and resolves every lead to the employer's own posting. A lead on a supported ATS yields a board
+token that is appended to `boards.json` automatically, so the registry grows itself; an
+employer-site post is verified by GET + `<title>` and included via `discovered_posts.json`;
+anything unresolved is kept, labelled, in `discovered_leads.json`. Use `--bootstrap` (past
+month, deeper paging) the first time or after a gap; the daily run uses the past week.
+LinkedIn rate-limits (429): the script paces and backs off; a 429 run is incomplete, not
+empty — rerun later. LinkedIn's guest job pages gate the apply link behind sign-in, so a
+LinkedIn lead is an employer name + title, never a URL: it is resolved by (1) a registry
+display-name match, (2) a scripted web search over the ATS hosts — Brave Search API (free tier
+2,000/month; the robust option — the key is a **Network secret** on the Claude Code environment
+that injects the `X-Subscription-Token` header for `api.search.brave.com` under `/res/v1/`, or the
+`BRAVE_API_KEY` variable when running elsewhere; the script always tries Brave first and treats
+401/422 as "no key"), else DuckDuckGo HTML (blocked at the egress of Claude Code cloud containers — there, Brave is the only option) at ~15 s
+pacing capped by `RESOLVE_CAP` (default 25 employers per run) — or (3) it lands in
+`discovered_unresolved_employers.json`, which the weekly sweep resolves by hand with WebSearch
+(the assistant, not the script). `discover.py --resolve-only` re-runs resolution on the last
+leads without re-querying the sources. The manual harvest below remains the weekly deep sweep.
+
+## Discovery — manual deep sweep (weekly)
+The script only enumerates boards listed in `boards.json`; a company not in the registry is
+never seen. So each refresh starts with a **harvest** step (assistant action — WebSearch is
+model-only) that widens the registry before the script runs:
+
+1. **Site-scoped searches** over each ATS host, two title forms each ("Data Scientist" and
+   "Data Science", plus Senior/Lead/Staff/Principal/Head variants) and the London-eligible
+   location forms ("London", "Remote (UK)", "United Kingdom"):
+   `site:job-boards.greenhouse.io`, `site:boards.greenhouse.io`, `site:job-boards.eu.greenhouse.io`,
+   `site:jobs.ashbyhq.com`, `site:jobs.lever.co`, `site:apply.workable.com`,
+   `site:jobs.smartrecruiters.com`, `site:myworkdayjobs.com`, `site:pinpointhq.com`,
+   `site:teamtailor.com`, `site:recruitee.com`. The **board token in each result URL** is the
+   harvest (greenhouse.io/<token>/, ashbyhq.com/<org>/, lever.co/<org>/, workable.com/<acct>/,
+   smartrecruiters.com/<Company>/, <tenant>.<wdN>.myworkdayjobs.com/.../<Site>/,
+   <acct>.pinpointhq.com). A result may be stale — the token is what matters; the API decides
+   liveness.
+2. **Known-employer probe**: guess tokens for London DS employers by name (fintechs, quant
+   funds, scale-ups); a wrong guess just 404s. Keep every reachable board even at 0 London DS.
+3. Add new tokens to `boards.json` (+ `display_names`). Never list recruiters/agencies as
+   employers — put them in `recruiters_exclude` (Jobgether, Degree 6, Qurious, KIMARU…).
+4. Run `refresh_roles.py`; it enumerates the whole registry and filters London + DS title.
+
+Gotchas: Workable rate-limits (429) aggressively — the script paces calls; a 429 run leaves
+that board unverified, not empty. SmartRecruiters' public API is gated per company (IQVIA,
+Checkout.com, Trainline return 0 even with live posts) — verify those by GET on the posting
+URL (server-rendered; dead posts change the <title>). JobDataLake MCP, when connected, is a
+faster first pass (`search_jobs`, countries=GB, location=London) but it was down on 2026-10-09.
+As of the 2026-10-09 sweep the registry holds ~70 Greenhouse, 25 Ashby, 10 Lever, 10 Workable,
+7 SmartRecruiters, 6 Pinpoint, 7 Workday boards, plus Teamtailor boards via their public /jobs.json feed (added 11 Oct); the sweep found ~75 live London DS posts at
+~32 employers that the old fixed list had never looked at.
+
+## Role-type rule: classify by core role, never by keyword (role_taxonomy.py)
+"Standard DS" means the title's CORE ROLE is in the Data Scientist family — Data Scientist
+with any prefix/suffix, Data Science Manager/Lead/Head/Director in any word order,
+Decision/Product/Analytics Scientist, or a Scientist title with a product-DS signal
+(experimentation, measurement, causal, product analytics, growth). A specialism modifier
+NEVER excludes: "Senior Data Scientist (Economist)", "Data Scientist, Machine Learning",
+"Research Data Scientist", "Staff Scientist, Experimentation", "Director, Data Science" are
+all in. A title is "Other DS-family" only when its core IS another discipline (Research
+Scientist/Engineer, ML/AI Engineer or Scientist, Applied Scientist, Quant
+Researcher/Trader/Developer, Data/Analytics Engineer, Analyst, Economist, Statistician).
+The old keyword blacklist (any of research|machine learning|ml|applied|analyst|engineer|
+economist|quant anywhere in the title) silently dropped exactly the senior product-DS
+titles the search exists for. `python3 role_taxonomy.py` runs its tests; when a real
+title is misclassified, add it to TESTS and fix the pattern — never special-case a company.
+
+## Sheet build rule (learned the hard way on 2026-10-09)
+The Sheet is built FROM the script's CSV — `refresh_roles.py` → `pay_enrich.py` → filter
+`Role Type == Standard DS` → write the Sheet in place. Never hand-merge "the rows I audited"
+with "the new companies I found": that dropped 12 live Standard-DS roles at 8 registry
+companies (Monzo ×5 incl. a £124k–£165k Staff post, Spotify, TikTok, GoCardless) because the
+original-registry output never reached the Sheet. Every refresh also diffs against the
+external lists in `boards.json` (`external_lists`, e.g. the ChatGPT Job Search Radar at
+`/api/state`): a role there but not here is dead, out of scope, or a missing board token —
+classify each, never ignore. Employer sites with no ATS API are in `employer_sites`; verify
+those by GET + `<title>`.
+
+## WLB and stability (researched, never inferred) — wlb_stability.py + data/wlb_stability.json
+WLB is a Glassdoor/Levels.fyi score out of 5 (DS cohort where the sample allows), thresholds
+> 4.5 strong / 4.0–4.5 moderate / < 4.0 weak, null = not researched. Stability is
+Growing / Stable / Caution from 2024–26 layoff reporting with an evidence sentence and date
+(rules in the module docstring). The board merges these per company via `wlb_stability.lookup`;
+a company not in the file shows "not researched". Refresh by research only. The curated Target
+List's full role notes are archived in data/target_list_2026-10.json.
+
+## Comp coverage (run `pay_enrich.py` after `refresh_roles.py`)
+`pay_enrich.py /tmp/ldn_ds_active.csv` writes `/tmp/ldn_ds_active_pay.csv` with an
+"Approx London TC" column that is never blank and always labelled: **posted** (the
+employer's range, from structured ATS pay fields or a £-range regex on the text; ~15% of
+London posts disclose) → **sourced** (company figure in `pay_overrides.json`, each with
+source + date; add one whenever a Levels.fyi/Glassdoor London figure for that employer is
+found) → **market est.** (ITJobsWatch London median for the title, -15%/+25%, fetched
+live). The Sheet's comp column is this output. Never present a market band as if it were
+company data — the label is the point.
+
 ## Company taxonomy (as of 2026-06)
 - **Greenhouse boards** (`boards-api.greenhouse.io/v1/boards/<token>/jobs`):
   deepmind, monzo, gocardless, dunnhumby, quberesearchandtechnologies, ocadogroup, coreweave, isomorphiclabs, wise,

@@ -1,0 +1,74 @@
+[
+ {
+  "company": "Deliveroo",
+  "title_regex": "^Senior",
+  "lo": 95,
+  "hi": 115,
+  "label": "sourced: Levels.fyi Deliveroo L5 ~$145k TC + Indeed \u00a395.7k",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "Tripadvisor",
+  "title_regex": "Manager",
+  "lo": 105,
+  "hi": 145,
+  "label": "sourced: Levels.fyi Tripadvisor DS Manager UK median \u00a3106k, thin sample",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "Capco",
+  "title_regex": "^Senior Data Scientist",
+  "lo": 55,
+  "hi": 62,
+  "label": "Glassdoor est. for this Capco London posting",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "Trainline",
+  "title_regex": "^Senior Data Scientist",
+  "lo": 70,
+  "hi": 85,
+  "label": "posted on aggregator for this Trainline listing (+benefits)",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "Coinbase",
+  "title_regex": ".",
+  "lo": 122,
+  "hi": 136,
+  "label": "posted base (pay-transparency) via aggregator",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "Google",
+  "title_regex": "Senior Staff",
+  "lo": 280,
+  "hi": null,
+  "label": "L7 est.; Levels.fyi L6 London sourced median \u00a3237k",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "Google",
+  "title_regex": "Manager",
+  "lo": 200,
+  "hi": 330,
+  "label": "est.; Levels.fyi L6 London sourced median \u00a3237k",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "Qube RT",
+  "title_regex": ".",
+  "lo": 110,
+  "hi": 200,
+  "label": "sourced: Levels.fyi Qube DS London median ~\u00a3121k, top \u00a3200k",
+  "date": "2026-10-09"
+ },
+ {
+  "company": "GoCardless",
+  "title_regex": ".",
+  "lo": 99,
+  "hi": 148,
+  "label": "posted",
+  "date": "2026-10-09"
+ }
+]

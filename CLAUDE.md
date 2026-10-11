@@ -5,16 +5,22 @@ Output conventions for the two living deliverables in the Google Drive folder
 The `refresh-london-ds` skill regenerates both; keep them in these formats.
 
 ## Scope / selection preferences
+- **Role type**: the Sheet/board list **Standard DS** = the title's *core role* is in the Data Scientist
+  family (see `.claude/skills/refresh-london-ds/role_taxonomy.py`). Specialism modifiers (Economist,
+  Machine Learning, Research, Analytics…) never exclude; only a different core discipline does.
 - **London (or London-eligible)** Data-Science-family roles only. London-eligible =
   London / Remote-UK / "London or Stockholm" / multi-location lists that include London.
 - **Include BOTH regular/mid AND senior roles.** Do not restrict to senior.
-- **Exclude intern / graduate / apprentice / placement** roles.
+- **Exclude intern / graduate / apprentice / placement** roles, **fixed-term contracts** (FTC), and **fractional / part-time** posts.
+- Postings on sites with no API (LinkedIn, employer career sites) live in `data/manual_posts.json`
+  and are re-verified by title on every refresh — never hand-merged into the Sheet.
 - Every listed role must be a **unique, active individual job post** (resolves to a
   live posting), never a careers landing/search page or a perennial talent-pool / EOI.
 - Dedupe by URL. Re-verify links each refresh — IDs go 404 often.
 
 ## Consolidated spreadsheet (CSV → Google Sheet)
-- Columns, in order: `Company, Role, Level, Location, Apply URL (unique active post), Status, Notes`.
+- Columns, in order: `Company, Role, Role Type, Level, Approx London TC, Location, Apply URL (unique active post), Status, Notes`.
+  `Approx London TC` is the three-tier labelled comp from `pay_enrich.py` (posted › sourced › market est.) — never blank, never unlabelled.
 - `Level` = `Senior+` (title has senior/staff/lead/principal/head/director/manager/sr/distinguished)
   or `Regular/Mid` otherwise.
 - **Active roles first**, one row per URL, grouped by company; use proper display

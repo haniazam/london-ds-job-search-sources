@@ -15,15 +15,19 @@ if Playwright is missing — it just skips the browser companies).
 
 See SKILL.md for endpoints, gotchas and the upload step (assistant action).
 """
-import csv, json, re, sys, urllib.request
+import csv, json, os, re, sys, time, urllib.request
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from role_taxonomy import classify as role_type, COLLECT as DS   # core-role classifier (see role_taxonomy.py)
+
+# Board registry: every ATS token lives in boards.json next to this script (see SKILL.md
+# "Discovery" for how tokens are harvested). Edit the JSON, not the lists below.
+REG = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "boards.json")))
 
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                     "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
-DS = re.compile(r"data scien|applied scien|data analyst|decision scien|machine learning|"
-                r"\bml scien|research scien|economist|\bquant", re.I)
 LON = re.compile(r"london|united kingdom|\buk\b|england", re.I)
 SENIOR = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished", re.I)
-EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student", re.I)
+EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|working student|fixed.?term|\bFTC\b|\bcontract\b|fractional|part.?time", re.I)
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
 
@@ -39,16 +43,7 @@ active = []   # (company, role, level, location, url)
 norole = []   # (company, reason)
 
 # ---------------- Greenhouse ----------------
-GREENHOUSE = ["deepmind", "monzo", "mangroup", "gocardless", "dunnhumby",
-              "quberesearchandtechnologies", "datadog", "thetradedesk",
-              # NOTE: "wayve" removed — Wayve left Greenhouse (board 404); see NO_ROLE.
-              # Token is "ocadogroup" (not "ocado"); these were missing and caused
-              # live London DS roles to be dropped from the sheet:
-              "ocadogroup", "coreweave", "isomorphiclabs", "wise",
-              # big-tech boards that historically return 0 London DS (catch new):
-              "databricks", "cloudflare", "braze", "amplitude", "figma",
-              "mongodb", "elasticsearch", "unity3d", "catonetworks", "polyai",
-              "truelayer", "anthropic", "hubspotjobs", "stripe"]
+GREENHOUSE = REG["greenhouse"]
 for tok in GREENHOUSE:
     try:
         d = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{tok}/jobs?content=false"))
@@ -64,18 +59,20 @@ for tok in GREENHOUSE:
     print(f"[gh] {tok}: {len(d.get('jobs',[]))} jobs, {len(hits)} London DS", file=sys.stderr)
 
 # ---------------- Ashby ----------------
-for org in ["openai", "lendable", "multiverse"]:
+for org in REG["ashby"]:
     try:
         d = json.loads(get(f"https://api.ashbyhq.com/posting-api/job-board/{org}?includeCompensation=true"))
         for j in d.get("jobs", []):
             t = j.get("title", ""); loc = j.get("location", "")
-            if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
-                active.append((org, t, level(t), loc, j.get("jobUrl")))
+            sec = [x.get("location", "") for x in j.get("secondaryLocations", [])]
+            if DS.search(t) and (LON.search(loc) or any(LON.search(x) for x in sec)) and not EXCLUDE.search(t):
+                shown = loc if LON.search(loc) else f"{loc} (+London)"
+                active.append((org, t, level(t), shown, j.get("jobUrl")))
     except Exception as e:
         print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr)
 
 # ---------------- Lever ----------------
-for org in ["palantir"]:
+for org in REG["lever"]:
     try:
         d = json.loads(get(f"https://api.lever.co/v0/postings/{org}?mode=json"))
         for j in d:
@@ -105,11 +102,7 @@ for q in ["data scientist", "applied scientist"]:
         print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr)
 
 # ---------------- Workday CXS (mostly 0 London DS; re-check) ----------------
-WORKDAY = {
-    "NVIDIA": "https://nvidia.wd5.myworkdayjobs.com/wday/cxs/nvidia/NVIDIAExternalCareerSite/jobs",
-    "Salesforce": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/External_Career_Site/jobs",
-    "Mastercard": "https://mastercard.wd1.myworkdayjobs.com/wday/cxs/mastercard/CorporateCareers/jobs",
-}
+WORKDAY = REG["workday"]
 for name, url in WORKDAY.items():
     try:
         d = json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": 0,
@@ -121,6 +114,79 @@ for name, url in WORKDAY.items():
                 active.append((name, t, level(t), loc, f"{host}/en-US/{site}{j.get('externalPath', '')}"))
     except Exception as e:
         print(f"[workday] {name}: {type(e).__name__}", file=sys.stderr)
+
+# ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
+for acct in REG.get("workable", []):
+    for attempt in range(2):
+        try:
+            d = json.loads(get(f"https://apply.workable.com/api/v1/widget/accounts/{acct}?details=false")); break
+        except Exception as e:
+            d = None
+            if "429" in str(e): time.sleep(10); continue
+            print(f"[workable] {acct}: {type(e).__name__}", file=sys.stderr); break
+    if not d: continue
+    hits = 0
+    for j in d.get("jobs", []):
+        t = j.get("title", ""); loc = f"{j.get('city','')}, {j.get('country','')} {'remote' if j.get('remote') else ''}"
+        if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((acct, t, level(t), loc.strip(), j.get("url") or j.get("shortlink")))
+    print(f"[workable] {acct}: {len(d.get('jobs', []))} jobs, {hits} London DS", file=sys.stderr)
+    time.sleep(3)
+
+# ---------------- SmartRecruiters (public postings API; some companies gate it -> 0) ----------------
+for cid in REG.get("smartrecruiters", []):
+    try:
+        d = json.loads(get(f"https://api.smartrecruiters.com/v1/companies/{cid}/postings?limit=100"))
+    except Exception as e:
+        print(f"[smartrecruiters] {cid}: {type(e).__name__}", file=sys.stderr); continue
+    hits = 0
+    for j in d.get("content", []):
+        t = j.get("name", ""); L = j.get("location") or {}
+        loc = f"{L.get('city','')}, {L.get('country','')} {'remote' if L.get('remote') else ''}"
+        if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((cid, t, level(t), loc.strip(), f"https://jobs.smartrecruiters.com/{cid}/{j.get('id')}"))
+    print(f"[smartrecruiters] {cid}: {len(d.get('content', []))} postings, {hits} London DS", file=sys.stderr)
+
+# ---------------- Pinpoint (postings.json) ----------------
+for acct in REG.get("pinpoint", []):
+    try:
+        d = json.loads(get(f"https://{acct}.pinpointhq.com/postings.json"))
+    except Exception as e:
+        print(f"[pinpoint] {acct}: {type(e).__name__}", file=sys.stderr); continue
+    items = d.get("data", d) if isinstance(d, dict) else d; hits = 0
+    for j in items:
+        t = j.get("title", ""); loc = json.dumps(j.get("location", "")) + " " + json.dumps(j.get("workplace_type", ""))
+        if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((acct, t, level(t), "London", j.get("url") or f"https://{acct}.pinpointhq.com/postings/{j.get('id')}"))
+    print(f"[pinpoint] {acct}: {len(items)} postings, {hits} London DS", file=sys.stderr)
+
+# ---------------- Recruitee (offers API) ----------------
+for co in REG.get("recruitee", []):
+    try:
+        d = json.loads(get(f"https://{co}.recruitee.com/api/offers/"))
+    except Exception as e:
+        print(f"[recruitee] {co}: {type(e).__name__}", file=sys.stderr); continue
+    hits = 0
+    for j in d.get("offers", []):
+        t = j.get("title", ""); loc = f"{j.get('city','')} {j.get('country','')} {j.get('location','')}"
+        if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((co, t, level(t), loc.strip(), j.get("careers_url")))
+    print(f"[recruitee] {co}: {len(d.get('offers', []))} offers, {hits} London DS", file=sys.stderr)
+
+# ---------------- Teamtailor (public JSON Feed at /jobs.json; locations in the schema.org jobposting) ----------------
+for co in REG.get("teamtailor", []):
+    try:
+        d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
+    except Exception as e:
+        print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
+    hits = 0
+    for j in d.get("items", []):
+        t = j.get("title", "")
+        places = (j.get("_jobposting") or {}).get("jobLocation") or []
+        loc = ", ".join(sorted({(pl.get("address") or {}).get("addressLocality", "") for pl in places} - {""})) or "Remote"
+        if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((co, t, level(t), loc, j.get("url")))
+    print(f"[teamtailor] {co}: {len(d.get('items', []))} jobs, {hits} London DS", file=sys.stderr)
 
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
@@ -298,9 +364,37 @@ try:
 except Exception as e:
     print("[google] failed:", type(e).__name__, file=sys.stderr)
 
+# ---------------- employer-site posts found by discover.py (verified by GET + <title>) ----------------
+DISC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "discovered_posts.json")
+if os.path.exists(DISC):
+    seen_urls = {a[4].split("?")[0] for a in active}
+    hits = 0
+    for p in json.load(open(DISC)):
+        u = p["url"]
+        if u.split("?")[0] in seen_urls or "jobs.workable.com/view" in u and False: continue
+        if "jobs.workable.com/view" in u:                       # Workable's own feed: published state is the proof
+            active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1; continue
+        try:
+            page = get(u, 30)
+        except Exception as e:
+            print(f"[discovered] {p['company']}: {type(e).__name__}", file=sys.stderr); continue
+        tm = re.search(r"<title>(.*?)</title>", page, re.S); title = (tm.group(1) if tm else "").lower()
+        if re.search(r"data scien", title) and not re.search(r"no longer|not found|closed|expired|jobs search|\d,\d{3}\+ ", title):
+            active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1
+    print(f"[discovered] {hits} employer-site posts verified live", file=sys.stderr)
+
+# ---------------- hand-added posts on sites without an API (data/manual_posts.json), verified each run ----------------
+try:
+    from manual_posts import verified_rows
+    for r in verified_rows():
+        if r["Apply URL (unique active post)"].split("?")[0] not in {a[4].split("?")[0] for a in active}:
+            active.append((r["Company"], r["Role"], r["Level"], r["Location"], r["Apply URL (unique active post)"]))
+except Exception as e:
+    print(f"[manual] skipped: {type(e).__name__} {e}", file=sys.stderr)
+
 # ---------------- companies known to have NO active London DS (documented) ----------------
 NO_ROLE = [
-    ("Wayve", "Left Greenhouse (board 404); no DS roles on wayve.firststage.co"),
+    ("Wayve", "Moved to Ashby (token wayve) — 0 London DS on the board this run"),
     ("Point72", "London DS post removed; current DS roles are HK/Singapore/NY only"),
     ("OpenAI", "0 London DS on Ashby board (both prior posts closed) — re-check"),
     ("Revolut", "DS roles exist but EU/remote, not London"),
@@ -333,7 +427,17 @@ PRETTY = {"openai": "OpenAI", "deepmind": "Google DeepMind", "monzo": "Monzo",
           "anthropic": "Anthropic", "hubspotjobs": "HubSpot", "ocadogroup": "Ocado",
           "coreweave": "CoreWeave", "isomorphiclabs": "Isomorphic Labs", "wise": "Wise",
           "lendable": "Lendable", "multiverse": "Multiverse"}
-active = [(PRETTY.get(c, c), role, lv, loc, url) for (c, role, lv, loc, url) in active]
+PRETTY.update(REG.get("display_names", {}))
+RECRUITERS = set(REG.get("recruiters_exclude", []))
+def clean_title(t):
+    """Normalise ATS titles: drop office/location parentheticals and repeated comma segments."""
+    t = re.sub(r"\s*\((?=[^)]*(?:office|location|based|hybrid|remote))[^)]*\)", "", t, flags=re.I)
+    parts, seen = [], set()
+    for seg in [x.strip() for x in t.split(",")]:
+        if seg and seg.lower() not in seen: seen.add(seg.lower()); parts.append(seg)
+    return ", ".join(parts).strip(" -–")
+active = [(PRETTY.get(c, c), clean_title(role), lv, loc, url) for (c, role, lv, loc, url) in active
+          if c not in RECRUITERS and url]
 order = ["OpenAI", "Google DeepMind", "Google", "Microsoft", "Spotify", "Monzo",
          "Man Group", "Point72", "Qube RT", "G-Research", "Bloomberg", "Amazon",
          "The Trade Desk", "TikTok", "Datadog", "GoCardless", "dunnhumby", "Faculty AI",
@@ -343,16 +447,17 @@ def okey(r):
     return (order.index(c) if c in order else 99, 0 if r[2] == "Senior+" else 1, r[1])
 active.sort(key=okey)
 reg = sum(1 for r in active if r[2] == "Regular/Mid")
+std = sum(1 for r in active if role_type(r[1]) == "Standard DS")
 with open("/tmp/ldn_ds_active.csv", "w", newline="") as f:
     w = csv.writer(f)
-    w.writerow(["Company", "Role", "Level", "Location", "Apply URL (unique active post)", "Status", "Notes"])
+    w.writerow(["Company", "Role", "Role Type", "Level", "Location", "Apply URL (unique active post)", "Status", "Notes"])
     for c, role, lv, loc, url in active:
-        w.writerow([c, role, lv, loc, url, "Active", ""])
-    w.writerow(["", "", "", "", "", "", ""])
-    w.writerow(["— COMPANIES WITH NO ACTIVE LONDON DS ROLE —", "", "", "", "", "", ""])
+        w.writerow([c, role, role_type(role), lv, loc, url, "Active", ""])
+    w.writerow([""] * 8)
+    w.writerow(["— COMPANIES WITH NO ACTIVE LONDON DS ROLE —"] + [""] * 7)
     for c, reason in norole:
-        w.writerow([c, "—", "—", "—", "", "No active London DS role", reason])
-print(f"\nWROTE /tmp/ldn_ds_active.csv : {len(active)} active roles "
+        w.writerow([c, "—", "—", "—", "—", "", "No active London DS role", reason])
+print(f"\nWROTE /tmp/ldn_ds_active.csv : {len(active)} active roles ({std} Standard DS) "
       f"({reg} regular/mid, {len(active)-reg} senior+) across "
       f"{len({a[0] for a in active})} companies; {len(norole)} no-role companies.")
 print("NEXT: build_jd_doc.py, then assistant uploads both files to Drive folder "

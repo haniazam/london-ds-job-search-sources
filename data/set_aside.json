@@ -1,0 +1,182 @@
+[
+ [
+  "OpenAI",
+  "Both prior posts closed; 0 London DS across 816 jobs on its Ashby board",
+  "closed"
+ ],
+ [
+  "Point72",
+  "London post removed; current DS roles are Hong Kong, Singapore and New York only",
+  "closed"
+ ],
+ [
+  "Isomorphic Labs",
+  "0 London DS on Greenhouse (29 jobs)",
+  "mon"
+ ],
+ [
+  "Multiverse",
+  "Senior DS post closed; 0 DS on its Ashby board",
+  "closed"
+ ],
+ [
+  "CoreWeave",
+  "0 London DS on Greenhouse (311 jobs)",
+  "mon"
+ ],
+ [
+  "Bloomberg",
+  "No DS in its London search",
+  "mon"
+ ],
+ [
+  "Mastercard",
+  "No London DS on Workday",
+  "mon"
+ ],
+ [
+  "Apple",
+  "LinkedIn post expired; no live post found — re-check jobs.apple.com",
+  "closed"
+ ],
+ [
+  "CoMind",
+  "LinkedIn post expired; no live post found",
+  "closed"
+ ],
+ [
+  "Houseful",
+  "LinkedIn post expired; no live post found",
+  "closed"
+ ],
+ [
+  "PayPal",
+  "Staff DS R0136894 on Workday now returns a generic page; both earlier LinkedIn posts expired",
+  "closed"
+ ],
+ [
+  "Expedia",
+  "Both radar posts (DS III Hotels.com, Senior DS Product Analytics) return HTTP 410 — closed",
+  "closed"
+ ],
+ [
+  "Ripple",
+  "Senior DS post returns 404 — closed",
+  "closed"
+ ],
+ [
+  "Western Union",
+  "Senior DS Growth & Measurement (Workday) returns a generic page — closed",
+  "closed"
+ ],
+ [
+  "ICF",
+  "Senior DS (Workday) returns a generic page — closed",
+  "closed"
+ ],
+ [
+  "Mention Me",
+  "Senior/Lead DS (Workable) — radar marks closed; Workable rate-limited",
+  "closed"
+ ],
+ [
+  "Omaze",
+  "0 London DS on its Ashby board; radar's Built In lead is an aggregator page",
+  "mon"
+ ],
+ [
+  "Moonpig",
+  "Lead Product Analyst only (not a DS title); 0 DS on Lever",
+  "profile"
+ ],
+ [
+  "Goodnotes",
+  "Senior DS, Stealth AI is a 12-month fixed-term contract — excluded by scope",
+  "scope"
+ ],
+ [
+  "Checkout.com",
+  "Senior DS, Commercial Analytics seen in search; SmartRecruiters API gated and page renders blank",
+  "unv"
+ ],
+ [
+  "IQVIA",
+  "Senior DS seen in search; SmartRecruiters API gated and page renders blank",
+  "unv"
+ ],
+ [
+  "Uncapped",
+  "Data Scientist seen in search; Workable API rate-limited (429)",
+  "unv"
+ ],
+ [
+  "Day30",
+  "Lead Data Scientist seen in search; Workable API rate-limited (429)",
+  "unv"
+ ],
+ [
+  "Clarity AI",
+  "Senior DS (NLP), London or Madrid; Workable API rate-limited (429)",
+  "unv"
+ ],
+ [
+  "Adzact",
+  "Senior DS seen in search; Workable API rate-limited (429)",
+  "unv"
+ ],
+ [
+  "XTX Markets",
+  "No live London DS or Quant Research req — DS is a role bucket only.",
+  "mon"
+ ],
+ [
+  "Citadel Securities",
+  "EOI talent pool only; no live London DS req.",
+  "mon"
+ ],
+ [
+  "Google DeepMind",
+  "Live London roles are Research Scientist/Engineer — a major pivot from product DS.",
+  "profile"
+ ],
+ [
+  "The Trade Desk",
+  "~15% workforce cut (~575) in Sept 2026; no live London DS req.",
+  "caution"
+ ],
+ [
+  "Man Group",
+  "Live Macro/Discretionary quant roles are domain-mismatched.",
+  "profile"
+ ],
+ [
+  "Starling Bank",
+  "DS UK £77–107k (Levels.fyi) — below floor.",
+  "floor"
+ ],
+ [
+  "Quant funds (Jane St, Two Sigma, Jump, DRW, Optiver)",
+  "Comp clears £150k but Quant Researcher/Dev hires: heavy maths/CS, MSc/PhD.",
+  "profile"
+ ],
+ [
+  "BCG GAMMA / BCG X",
+  "JDs typically require a Master's or above.",
+  "profile"
+ ],
+ [
+  "Anthropic (London)",
+  "Live London roles are Research Eng/Scientist, not DS.",
+  "profile"
+ ],
+ [
+  "Discovered employers not yet resolved (114)",
+  "Found by the discovery sweep (LinkedIn / Built In) with a London DS title, but their own posting could not be located by the capped search; kept in discovered_unresolved_employers.json and resolved weekly (or in one run with a Brave API key). Includes: ASOS.com, AVEVA, AXIS (AXIS Capital), Abtrace, Acuity Analytics, Amazon, Annapurna, Apple, BAE Systems, BNY, Bauer Media Group, Betsson Group, Blenheim Chalcot, Blue Light Card, British Airways, C3 AI, CEERISK Consulting Ltd, Carwow…",
+  "unv"
+ ],
+ [
+  "Wise (Senior DS Lead, AML Risk)",
+  "UNVERIFIED this run — LinkedIn rate-limited (429) on re-check; last verified 9 Oct. Wise's SmartRecruiters board shows 3 other live London DS roles.",
+  "unv"
+ ]
+]
