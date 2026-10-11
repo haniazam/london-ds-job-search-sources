@@ -51,13 +51,13 @@ How to refresh daily
 
 Open items
 - Unverified, not dropped: Checkout.com and IQVIA (SmartRecruiters gated), Uncapped, Day30, Clarity AI, Adzact (Workable rate-limited), Wise Senior DS Lead AML Risk (LinkedIn 429 on the 11 Oct re-check). Warden AI and Wise Lead DS Causal Inference are now verified and listed.
-- 114 discovered employers not yet resolved to their own posting (discovered_unresolved_employers.json) — a Brave API key resolves them in one run.
+- 43 discovered employers still unresolved after the 11 Oct Brave-backed resolver run; 48 boards were added that day (37 by a hand sweep, 11 by the script — see docs/resolver-sweep-2026-10-10.md). The remainder are enterprise-ATS employers (Apple, UBS, BNY, JPMorgan, NatWest, McKinsey), own-career-site employers, or recruiters.
 - The word "monitor" means three things (pipeline default, bottom tier, set-aside tag); rename proposed: pipeline default → Not started, bottom tier → Low priority.
-- Adzuna, Reed and Brave keys not yet created; discovery runs without them at reduced coverage and slow resolution.
+- Brave is set as a Network secret and works; Adzuna and Reed keys not yet created, so discovery runs at reduced coverage.
 - Scope made explicit on 11 Oct: fixed-term contracts (FTC), fractional and part-time roles are excluded, like intern/graduate roles. Junior titles stay in (Regular/Mid) until you say otherwise.
 
 Next steps
-- Create the Brave, Adzuna and Reed keys and set them in the Routine's environment; run discover.py --resolve-only once with RESOLVE_CAP=150 to drain the 114 unresolved employers.
+- Create the Adzuna and Reed keys as Network secrets the same way as Brave. Worth adding to discover.py: a slug-probe tier (ATS public APIs by guessed slug) before the web search, a tighter Workday tenant check (12 false matches were pruned by hand on 11 Oct), and a Teamtailor enumerator (Blue Light Card, Yonder).
 - Set up the daily Routine and the weekly deep-sweep Routine as above.
 - Add the snapshot step and the reply filter to the skill.
 - Decide the monitor rename.
