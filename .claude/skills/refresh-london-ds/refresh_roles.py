@@ -173,6 +173,21 @@ for co in REG.get("recruitee", []):
             hits += 1; active.append((co, t, level(t), loc.strip(), j.get("careers_url")))
     print(f"[recruitee] {co}: {len(d.get('offers', []))} offers, {hits} London DS", file=sys.stderr)
 
+# ---------------- Teamtailor (public JSON Feed at /jobs.json; locations in the schema.org jobposting) ----------------
+for co in REG.get("teamtailor", []):
+    try:
+        d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
+    except Exception as e:
+        print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
+    hits = 0
+    for j in d.get("items", []):
+        t = j.get("title", "")
+        places = (j.get("_jobposting") or {}).get("jobLocation") or []
+        loc = ", ".join(sorted({(pl.get("address") or {}).get("addressLocality", "") for pl in places} - {""})) or "Remote"
+        if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
+            hits += 1; active.append((co, t, level(t), loc, j.get("url")))
+    print(f"[teamtailor] {co}: {len(d.get('items', []))} jobs, {hits} London DS", file=sys.stderr)
+
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
     from playwright.sync_api import sync_playwright

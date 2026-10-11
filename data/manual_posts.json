@@ -1,13 +1,54 @@
 {
- "_doc": "Individual postings on sites the refresh has no API handler for (LinkedIn, employer career sites, Teamtailor). Each is re-verified on every refresh by GET + <title> (a dead post returns 200 with a generic title). Add a post here only with its unique posting URL; remove it when the refresh reports it closed.",
+ "_doc": "Individual postings on sites the refresh has no API handler for (LinkedIn, employer career sites). Each is re-verified on every refresh by GET + <title> (a dead post returns 200 with a generic title). Add a post here only with its unique posting URL; remove it when the refresh reports it closed.",
  "posts": [
-  {"company": "LSEG", "title": "Director, Data Science (AI)", "location": "London", "url": "https://uk.linkedin.com/jobs/view/director-data-science-ai-at-lseg-4370694844", "comp": "~£120k–£160k (est.)"},
-  {"company": "QuantumBlack (McKinsey)", "title": "Data Scientist - Scientific AI", "location": "London", "url": "https://uk.linkedin.com/jobs/view/data-scientist-scientific-ai-at-mckinsey-company-4417348103", "comp": "~£90k–£150k (est.)"},
-  {"company": "QuantumBlack (McKinsey)", "title": "Data Scientist I - QuantumBlack, AI by McKinsey", "location": "London", "url": "https://uk.linkedin.com/jobs/view/data-scientist-i-quantumblack-ai-by-mckinsey-at-quantumblack-ai-by-mckinsey-4318542313", "comp": "~£90k–£150k (est.)"},
-  {"company": "Wise", "title": "Senior Data Science Lead - AML Risk", "location": "London", "url": "https://uk.linkedin.com/jobs/view/data-science-lead-aml-risk-at-wise-4382212311", "comp": "~£120k–£180k (est.)"},
-  {"company": "Bauer Media", "title": "Senior Data Scientist", "location": "London", "url": "https://jobs.bauermedia.com/job/London-Senior-Data-Scientist-NW1-2PL/1365030955/", "comp": ""},
-  {"company": "Disney", "title": "Senior Data Scientist", "location": "London", "url": "https://www.disneycareers.com/en/job/london/senior-data-scientist/391/100292216832", "comp": ""},
-  {"company": "Yonder", "title": "Data Scientist", "location": "London", "url": "https://yonder.teamtailor.com/jobs/8481608-data-scientist", "comp": "£94k–£111k (posted)"},
-  {"company": "TikTok", "title": "Data Scientist - TikTok PGC (London)", "location": "London", "url": "https://careers.tiktok.com/position/7630970989129517317/detail", "comp": "~£80k–£130k (est.)"}
+  {
+   "company": "LSEG",
+   "title": "Director, Data Science (AI)",
+   "location": "London",
+   "url": "https://uk.linkedin.com/jobs/view/director-data-science-ai-at-lseg-4370694844",
+   "comp": "~£120k–£160k (est.)"
+  },
+  {
+   "company": "QuantumBlack (McKinsey)",
+   "title": "Data Scientist - Scientific AI",
+   "location": "London",
+   "url": "https://uk.linkedin.com/jobs/view/data-scientist-scientific-ai-at-mckinsey-company-4417348103",
+   "comp": "~£90k–£150k (est.)"
+  },
+  {
+   "company": "QuantumBlack (McKinsey)",
+   "title": "Data Scientist I - QuantumBlack, AI by McKinsey",
+   "location": "London",
+   "url": "https://uk.linkedin.com/jobs/view/data-scientist-i-quantumblack-ai-by-mckinsey-at-quantumblack-ai-by-mckinsey-4318542313",
+   "comp": "~£90k–£150k (est.)"
+  },
+  {
+   "company": "Wise",
+   "title": "Senior Data Science Lead - AML Risk",
+   "location": "London",
+   "url": "https://uk.linkedin.com/jobs/view/data-science-lead-aml-risk-at-wise-4382212311",
+   "comp": "~£120k–£180k (est.)"
+  },
+  {
+   "company": "Bauer Media",
+   "title": "Senior Data Scientist",
+   "location": "London",
+   "url": "https://jobs.bauermedia.com/job/London-Senior-Data-Scientist-NW1-2PL/1365030955/",
+   "comp": ""
+  },
+  {
+   "company": "Disney",
+   "title": "Senior Data Scientist",
+   "location": "London",
+   "url": "https://www.disneycareers.com/en/job/london/senior-data-scientist/391/100292216832",
+   "comp": ""
+  },
+  {
+   "company": "TikTok",
+   "title": "Data Scientist - TikTok PGC (London)",
+   "location": "London",
+   "url": "https://careers.tiktok.com/position/7630970989129517317/detail",
+   "comp": "~£80k–£130k (est.)"
+  }
  ]
 }

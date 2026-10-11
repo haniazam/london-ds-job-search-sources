@@ -346,7 +346,8 @@
   "jack-jill-external-ats": "Jack & Jill",
   "twelve": "Twelve",
   "yonder": "Yonder",
-  "CognizantTechnologies2": "Cognizant"
+  "CognizantTechnologies2": "Cognizant",
+  "bluelightcard": "Blue Light Card"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -375,6 +376,7 @@
   "Relay Technologies": "Relay"
  },
  "teamtailor": [
-  "yonder"
+  "yonder",
+  "bluelightcard"
  ]
 }

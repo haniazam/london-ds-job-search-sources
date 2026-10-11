@@ -55,7 +55,7 @@ TOKEN = [("greenhouse", re.compile(r"greenhouse\.io/([A-Za-z0-9_-]+)/jobs")), ("
          ("teamtailor", re.compile(r"https?://([^./]+)\.teamtailor\.com"))]
 WD = re.compile(r"https?://([a-z0-9]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([^/?#]+)/")
 reg_path = os.path.join(HERE, "boards.json"); REG = json.load(open(reg_path))
-have = {k: {t.lower() for t in REG.get(k, [])} for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee")}
+have = {k: {t.lower() for t in REG.get(k, [])} for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee", "teamtailor")}
 have_wd = {u.lower() for u in REG["workday"].values()}
 cands = []
 def add(src, co, title, loc, url, posted=""):
@@ -156,12 +156,92 @@ def token_of(url):
     return None, None
 norm = lambda n: re.sub(r"[^a-z0-9]", "", re.sub(r"\s*\(.*?\)", "", (n or "").lower()))
 known = {norm(v): k for k, v in REG.get("display_names", {}).items()} | {norm(k): k for k in REG["workday"]}
-for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee"):
+for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee", "teamtailor"):
     for t in REG.get(k, []): known.setdefault(norm(t), t)
 for a, c in REG.get("aliases", {}).items():
     if not a.startswith("_"): known.setdefault(norm(a), c)                       # same organisation under another lead name
 for n in list(REG.get("employer_sites", {}).keys()) + ["Amazon", "Google", "TikTok", "Spotify", "Microsoft", "Point72", "Bloomberg", "G-Research", "Bauer Media Group"]:
     if not n.startswith("_"): known.setdefault(norm(n), n)                        # employers enumerated outside the token lists
+STOP = {"the", "and", "of", "ltd", "limited", "plc", "inc", "llc", "llp", "group", "holdings", "company", "co", "uk", "global",
+        "international", "technologies", "technology", "tech", "solutions", "services", "systems", "labs", "lab", "ai", "io", "com"}
+def name_words(company):
+    return [w for w in re.findall(r"[a-z0-9]+", re.sub(r"\s*\(.*?\)", "", (company or "").lower())) if w not in STOP] or \
+           re.findall(r"[a-z0-9]+", (company or "").lower())
+def corroborate(company, token):
+    """Does this board token (or Workday tenant) name the employer? The token must START with the employer's first
+    significant word; a multi-word name must also share a later word, or the token must be that first word plus at most a
+    short suffix. 'bp' -> 'bpinternational' and 'Jack & Jill' -> 'jack-jill-external-ats' pass; 'Meta' -> 'georgetown',
+    'Costa Coffee' -> 'cocacola' and 'Acuity Analytics' -> 'acuity-insights' fail."""
+    tok = norm(token); key = norm(company); words = name_words(company)
+    if not tok or not words: return False
+    tenant = tok
+    if token.startswith("http"):                                               # Workday: judge the tenant slug only, never the whole URL
+        m = WD.search(token); tenant = norm(m.group(1)) if m else tok
+    if tenant == key or (len(tenant) >= 4 and key.startswith(tenant)): return True
+    if not tenant.startswith(words[0]): return False
+    if len(words) == 1: return True
+    return any(w in tenant for w in words[1:]) or len(tenant) <= len(words[0]) + 4
+PROBE = {   # public list endpoints by platform: (url template, key whose presence marks a live board, name field or None)
+    "greenhouse": ("https://boards-api.greenhouse.io/v1/boards/{t}/jobs?content=false", "jobs", None),
+    "ashby": ("https://api.ashbyhq.com/posting-api/job-board/{t}", "jobs", None),
+    "lever": ("https://api.lever.co/v0/postings/{t}?mode=json", None, None),
+    "smartrecruiters": ("https://api.smartrecruiters.com/v1/companies/{t}/postings", "content", None),
+    "pinpoint": ("https://{t}.pinpointhq.com/postings.json", "data", None),
+    "teamtailor": ("https://{t}.teamtailor.com/jobs.json", "items", "title"),
+    "workable": ("https://apply.workable.com/api/v1/widget/accounts/{t}", "jobs", "name"),
+}
+_probe_cache = {}; _workable_blocked = False
+def _locs(k, d):
+    """Flatten the locations a probed board lists, so a UK presence can be checked."""
+    out = []
+    if k == "greenhouse": out = [j.get("location", {}).get("name", "") for j in d.get("jobs", [])]
+    elif k == "ashby": out = [f"{j.get('location','')} {' '.join(x.get('location','') for x in j.get('secondaryLocations', []))}" for j in d.get("jobs", [])]
+    elif k == "lever": out = [f"{j.get('categories',{}).get('location','')} {' '.join(j.get('categories',{}).get('allLocations',[]) or [])}" for j in d]
+    elif k == "smartrecruiters": out = [f"{j.get('location',{}).get('city','')} {j.get('location',{}).get('country','')}" for j in d.get("content", [])]
+    elif k == "pinpoint": out = [f"{j.get('location',{}).get('name','')} {j.get('location',{}).get('country','')}" for j in d.get("data", [])]
+    elif k == "teamtailor": out = [" ".join(a.get("address", {}).get("addressLocality", "") + " " + a.get("address", {}).get("addressCountry", "") for a in (j.get("_jobposting", {}).get("jobLocation") or [])) for j in d.get("items", [])]
+    elif k == "workable": out = [f"{j.get('city','')} {j.get('country','')} {j.get('state','')}" for j in d.get("jobs", [])]
+    return out
+UKLOC = re.compile(r"london|united kingdom|\bUK\b|\bGB\b|england|remote[^,;|]*(uk|united kingdom|europe|emea)", re.I)
+def board_live(k, t, company=None, strict=False):
+    """Does the public API for this board answer? With a company (tier 1.5, strict): the board must ALSO look like that
+    employer — its name field (where the platform has one) must match AND at least one job must sit in the UK — because a
+    guessed slug such as 'prima' or 'haven' can belong to an unrelated firm abroad. Rate-limited or dead boards count as
+    not found in strict mode (a guess is never registered on an unknown), but as 'unknown, keep' for search results."""
+    global _workable_blocked
+    if k == "workday": return True                                             # tenants are verified by the refresh run itself
+    if k not in PROBE: return True
+    if k == "workable" and _workable_blocked: return not strict
+    ck = (k, t.lower(), bool(company))
+    if ck in _probe_cache: return _probe_cache[ck]
+    url, key, namef = PROBE[k]
+    s_, b, _ = get(url.format(t=t), t=10, tries=1)
+    ok = False
+    if s_ == 429 and k == "workable": _workable_blocked = True; return not strict
+    if s_ == 200:
+        try:
+            d = json.loads(b); ok = (key is None and isinstance(d, list)) or (key is not None and key in d)
+            if ok and company:
+                nm = (d.get(namef) if (namef and isinstance(d, dict)) else None)
+                name_ok = (not namef) or (nm and norm(nm) and (norm(nm) in norm(company) or norm(company) in norm(nm)))
+                uk_ok = any(UKLOC.search(x or "") for x in _locs(k, d))
+                ok = bool(name_ok and uk_ok)
+        except Exception: ok = False
+    _probe_cache[ck] = ok
+    return ok
+def probe_token(company):
+    """Tier 1.5: guess the board slug from the employer's name and ask each ATS's public API directly — no search engine.
+    Found most of the boards in the 10 Oct hand sweep in under two minutes."""
+    words = name_words(company); key = norm(company)
+    slugs = []
+    for c in [key, "-".join(words), words[0] if words else "", "".join(words[:2]), "-".join(words[:2])]:
+        if c and len(c) >= 3 and c not in slugs: slugs.append(c)
+    for k in ("greenhouse", "ashby", "lever", "smartrecruiters", "pinpoint", "teamtailor", "workable"):
+        for sl in slugs:
+            if board_live(k, sl, company, strict=True):
+                u = PROBE[k][0].format(t=sl)
+                return k, sl, u
+    return None, None, None
 HOSTS = ("site:job-boards.greenhouse.io OR site:boards.greenhouse.io OR site:job-boards.eu.greenhouse.io OR site:jobs.ashbyhq.com OR "
          "site:jobs.lever.co OR site:apply.workable.com OR site:jobs.smartrecruiters.com OR site:myworkdayjobs.com OR site:pinpointhq.com OR site:teamtailor.com")
 def search_token(company):
@@ -184,16 +264,15 @@ def search_token(company):
         if s == 200:
             urls = [urllib.parse.unquote(re.search(r"uddg=([^&]+)", u).group(1)) if "uddg=" in u else u for u in re.findall(r'<a[^>]+class="result__a"[^>]+href="([^"]+)"', b)]
         time.sleep(15)
-    key = norm(company); stem = key[:6] if len(key) >= 6 else key
     for u in urls:
         k, t = token_of(u)
-        if k and t and (stem in norm(u) or norm(t) in key or key in norm(t)):   # the URL must corroborate the employer, else it's a false match
+        if k and t and corroborate(company, t) and board_live(k, t):          # the board's own name must match the employer and the board must answer
             return k, t, u
     return None, None, None
 new_tokens = {}; posts = []; unresolved = []; covered = 0; searched = 0
 CAP = int(os.environ.get("RESOLVE_CAP", "25"))
 pri = lambda l: (0 if (l["role_type"] == "Standard DS" and re.search(r"senior|staff|lead|principal|head|director|manager", l["title"], re.I)) else 1, l["company"])
-cache = {}
+cache = {}; pcache = {}; probed = 0; PROBE_CAP = int(os.environ.get("PROBE_CAP", "150"))
 for l in sorted([x for x in leads if not x["agency"]], key=pri):
     url = l["url"]; eu = ""
     if "jobs.workable.com/view" in url: eu = url                          # Workable's own feed: live by construction
@@ -205,6 +284,11 @@ for l in sorted([x for x in leads if not x["agency"]], key=pri):
     if not k:                                                                  # tier 1: already in the registry?
         kt = known.get(norm(l["company"]))
         if kt: l["resolved"] = f"registry:{kt}"; covered += 1; continue
+    if not k and not eu:                                                       # tier 1.5: guess the board slug and probe the ATS APIs directly
+        c = pcache.get(norm(l["company"]))
+        if c is None and probed < PROBE_CAP:
+            c = probe_token(l["company"]); pcache[norm(l["company"])] = c; probed += 1
+        if c and c[0]: k, t, eu = c; l["employer_url"] = eu
     if not k and not eu:                                                       # tier 2: search for the board (capped, paced)
         c = cache.get(norm(l["company"]))
         if c is None and searched < CAP:
@@ -222,7 +306,7 @@ by_emp = {}
 for l in unresolved: by_emp.setdefault(l["company"], []).append(l["title"])
 json.dump([{"company": c, "titles": sorted(set(ts)), "source": "linkedin/builtin"} for c, ts in sorted(by_emp.items())],
           open(os.path.join(HERE, "discovered_unresolved_employers.json"), "w"), indent=1)
-print(f"[resolve] registry-covered {covered} · searched {searched} (cap {CAP}) · unresolved employers {len(by_emp)}", file=sys.stderr)
+print(f"[resolve] registry-covered {covered} · probed {probed} (cap {PROBE_CAP}) · searched {searched} (cap {CAP}) · unresolved employers {len(by_emp)}", file=sys.stderr)
 
 # ---- grow the registry; hand employer-site posts to refresh_roles.py ----
 added = 0

@@ -110,7 +110,7 @@ Checkout.com, Trainline return 0 even with live posts) — verify those by GET o
 URL (server-rendered; dead posts change the <title>). JobDataLake MCP, when connected, is a
 faster first pass (`search_jobs`, countries=GB, location=London) but it was down on 2026-10-09.
 As of the 2026-10-09 sweep the registry holds ~70 Greenhouse, 25 Ashby, 10 Lever, 10 Workable,
-7 SmartRecruiters, 6 Pinpoint, 7 Workday boards; the sweep found ~75 live London DS posts at
+7 SmartRecruiters, 6 Pinpoint, 7 Workday boards, plus Teamtailor boards via their public /jobs.json feed (added 11 Oct); the sweep found ~75 live London DS posts at
 ~32 employers that the old fixed list had never looked at.
 
 ## Role-type rule: classify by core role, never by keyword (role_taxonomy.py)
