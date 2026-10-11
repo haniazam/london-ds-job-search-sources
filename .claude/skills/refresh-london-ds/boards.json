@@ -73,6 +73,7 @@
   "thetradedesk",
   "tide",
   "towerresearchcapital",
+  "trgscreen",
   "tripadvisor",
   "tripledotstudios",
   "truelayer",
@@ -220,7 +221,8 @@
   "Sky": "https://sky.wd3.myworkdayjobs.com/wday/cxs/sky/sky_careers/jobs",
   "AXIS (AXIS Capital)": "https://axiscapital.wd1.myworkdayjobs.com/wday/cxs/axiscapital/axiscareers/jobs",
   "DraftKings Inc.": "https://draftkings.wd1.myworkdayjobs.com/wday/cxs/draftkings/DraftKings/jobs",
-  "Paymentsense": "https://paymentsense.wd3.myworkdayjobs.com/wday/cxs/paymentsense/Dojo_Careers/jobs"
+  "Paymentsense": "https://paymentsense.wd3.myworkdayjobs.com/wday/cxs/paymentsense/Dojo_Careers/jobs",
+  "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -348,7 +350,8 @@
   "yonder": "Yonder",
   "CognizantTechnologies2": "Cognizant",
   "bluelightcard": "Blue Light Card",
-  "mypos": "myPOS"
+  "mypos": "myPOS",
+  "trgscreen": "TRG Screen"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",

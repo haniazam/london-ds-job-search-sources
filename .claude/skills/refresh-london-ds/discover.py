@@ -162,6 +162,10 @@ for a, c in REG.get("aliases", {}).items():
     if not a.startswith("_"): known.setdefault(norm(a), c)                       # same organisation under another lead name
 for n in list(REG.get("employer_sites", {}).keys()) + list(REG.get("oraclehcm", {}).keys()) + list(REG.get("successfactors", {}).keys()) + (["Apple"] if "apple" in REG else []) + ["Amazon", "Google", "TikTok", "Spotify", "Microsoft", "Point72", "Bloomberg", "G-Research", "Bauer Media Group"]:
     if not n.startswith("_"): known.setdefault(norm(n), n)                        # employers enumerated outside the token lists
+try:                                                                            # hand-added posts (data/manual_posts.json) are covered too
+    for p in json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(HERE))), "data", "manual_posts.json")))["posts"]:
+        known.setdefault(norm(p["company"]), f"manual:{p['company']}")
+except Exception: pass
 STOP = {"the", "and", "of", "ltd", "limited", "plc", "inc", "llc", "llp", "group", "holdings", "company", "co", "uk", "global",
         "international", "technologies", "technology", "tech", "solutions", "services", "systems", "labs", "lab", "ai", "io", "com"}
 def name_words(company):

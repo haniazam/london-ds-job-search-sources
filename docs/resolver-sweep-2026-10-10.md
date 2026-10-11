@@ -147,3 +147,15 @@ Analytics→`acuity-insights` (different company), Qogita Ashby (API 404) and Kl
 - Not fixable from the container: McKinsey / QuantumBlack (connection dropped — Akamai), BAE Systems (Taleo-backed
   site renders client-side; the indexed London posts 404), L.E.K. (no ATS found), NatWest (site 403s scripts and the
   LinkedIn mirror says Manchester), Compare the Market (no DS post on the BGL board), Perspectum (Oxford).
+
+### 11 Oct 2026 — bootstrap re-run with the merged resolver (tier 1.5 probes + Brave)
+
+`[discover] 432 raw -> 234 unique DS-family leads (26 agency)` · `[resolve] registry-covered 143 · probed 41 · searched 41 · unresolved employers 31`.
+Kept 2 of the 10 proposed boards: workday Citi (`citi.wd5/2`, one London Data Scientist live) and greenhouse `trgscreen`
+(TRG Screen, the real employer behind the "trg." lead; no DS post today). Dropped 8: Domino's (US corporate board, not
+Domino's Pizza UK & Ireland), `GoldmanSachs2` (three-job stub), `magic-careers` (Workable 429, unverifiable) and
+`magic.dev` (Magic.dev is not Magic Memories), plus the repeat false matches Chubb Fire & Security, IBM iX, Tesco Bengaluru,
+HCLTech Hungary — the single-word corroboration rule still lets a tenant that merely starts with the name through.
+Employers in `data/manual_posts.json` now count as registry-covered in tier 1, so Haven, SEGA, Stantec, Sagacity, Raylo and
+UBS leave the unresolved list on the next run. Remaining unresolved: 25, all in the "not fixable from the container" or
+"posting closed" groups above.
