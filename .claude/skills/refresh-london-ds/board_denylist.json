@@ -21,7 +21,7 @@
  },
  "patterns": {
   "georgetown": "Meta lead matched Georgetown University's Workday tenant — 10 Oct 2026",
-  "^intel": "SMG lead matched Intel's Workday tenant — 10 Oct 2026",
+  "^intel$": "SMG lead matched Intel's Workday tenant — 10 Oct 2026",
   "cocacola|coca-cola": "Costa Coffee lead matched Coca-Cola's Workday tenant (no Costa DS post) — 10 Oct 2026",
   "chubb.?fire": "Chubb lead matched Chubb Fire & Security, not Chubb insurance — 10 Oct 2026",
   "ibm.?ix": "IBM lead matched IBM iX Paris tenant — 10 Oct 2026",
