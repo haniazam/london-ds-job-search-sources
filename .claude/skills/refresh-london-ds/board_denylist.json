@@ -1,0 +1,30 @@
+{
+ "_doc": "Board tokens discover.py must never propose again. 'tokens' is platform -> {token: reason} (case-insensitive exact match; workday entries match the tenant slug). 'patterns' is regex -> reason, tested against the normalised token or Workday tenant. Add every token a sweep rejects here with a one-line reason.",
+ "tokens": {
+  "smartrecruiters": {
+   "Dominos": "Domino's US corporate board (all postings us), not Domino's Pizza UK & Ireland — 10/11 Oct 2026",
+   "GoldmanSachs2": "three-job stub, all US — 10/11 Oct 2026",
+   "HCLTechHungary": "regional Hungary board, 0 postings — 10/11 Oct 2026",
+   "TescoBengaluru": "Tesco's Bengaluru tech centre, not Welwyn/London — 10 Oct 2026",
+   "TRGInc": "TRG Inc (US), not TRG Screen (greenhouse trgscreen is the real board) — 10 Oct 2026"
+  },
+  "workable": {
+   "magic-careers": "unverifiable (Workable 429); not confirmed as MAGIC AI's board — 10/11 Oct 2026"
+  },
+  "ashby": {
+   "magic.dev": "Magic.dev (San Francisco ML lab), not Magic Memories / MAGIC AI — 10/11 Oct 2026",
+   "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026"
+  },
+  "greenhouse": {
+   "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026"
+  }
+ },
+ "patterns": {
+  "georgetown": "Meta lead matched Georgetown University's Workday tenant — 10 Oct 2026",
+  "^intel": "SMG lead matched Intel's Workday tenant — 10 Oct 2026",
+  "cocacola|coca-cola": "Costa Coffee lead matched Coca-Cola's Workday tenant (no Costa DS post) — 10 Oct 2026",
+  "chubb.?fire": "Chubb lead matched Chubb Fire & Security, not Chubb insurance — 10 Oct 2026",
+  "ibm.?ix": "IBM lead matched IBM iX Paris tenant — 10 Oct 2026",
+  "bengaluru|hungary": "regional (non-UK) tenant of a global employer — 10 Oct 2026"
+ }
+}
