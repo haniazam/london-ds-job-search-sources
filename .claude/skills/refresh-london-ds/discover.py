@@ -57,6 +57,21 @@ WD = re.compile(r"https?://([a-z0-9]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-
 reg_path = os.path.join(HERE, "boards.json"); REG = json.load(open(reg_path))
 have = {k: {t.lower() for t in REG.get(k, [])} for k in ("greenhouse", "ashby", "lever", "workable", "smartrecruiters", "pinpoint", "recruitee", "teamtailor")}
 have_wd = {u.lower() for u in REG["workday"].values()}
+_dl_path = os.path.join(HERE, "board_denylist.json")
+DENY = json.load(open(_dl_path)) if os.path.exists(_dl_path) else {"tokens": {}, "patterns": {}}
+DENY_TOK = {k: {t.lower(): r for t, r in v.items()} for k, v in DENY.get("tokens", {}).items()}
+DENY_PAT = [(re.compile(p, re.I), r) for p, r in DENY.get("patterns", {}).items()]
+def denied(k, token):
+    """Reason this (platform, token) is on board_denylist.json (a sweep rejected it before), else None. Workday tokens are
+    URLs: only the tenant slug is judged."""
+    t = token.lower(); tenant = t
+    if k == "workday":
+        m = WD.search(token) or re.search(r"https?://([a-z0-9-]+)\.", token, re.I); tenant = (m.group(1) if m else t).lower()
+    r = DENY_TOK.get(k, {}).get(tenant) or DENY_TOK.get(k, {}).get(t)
+    if r: return r
+    for rx, reason in DENY_PAT:
+        if rx.search(tenant): return reason
+    return None
 cands = []
 def add(src, co, title, loc, url, posted=""):
     if not (co and title and url): return
@@ -310,6 +325,9 @@ for l in sorted([x for x in leads if not x["agency"]], key=pri):
         if c is None and searched < CAP:
             c = search_token(l["company"]); cache[norm(l["company"])] = c; searched += 1
         if c and c[0]: k, t, eu = c; l["employer_url"] = eu
+    if k and t and denied(k, t):                                               # a sweep already rejected this board: never re-propose it
+        print(f"  [deny] {l['company']} -> {k}:{t} ({denied(k, t)})", file=sys.stderr)
+        k = t = None; eu = ""
     if k and t:
         bucket = have.get(k, set()) if k != "workday" else have_wd
         l["resolved"] = f"ats:{k}:{t}"

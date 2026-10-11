@@ -65,7 +65,8 @@ posts there), Workable's cross-employer feed, Built In London, and with free key
 environment Adzuna (`ADZUNA_APP_ID`, `ADZUNA_APP_KEY`) and Reed (`REED_API_KEY`) for UK-wide
 coverage including non-tech employers — classifies titles with role_taxonomy, drops agencies,
 and resolves every lead to the employer's own posting. A lead on a supported ATS yields a board
-token that is appended to `boards.json` automatically, so the registry grows itself; an
+token that is appended to `boards.json` automatically, so the registry grows itself (unless
+`board_denylist.json` lists it: every token a sweep rejects goes there with a reason and is never re-proposed); an
 employer-site post is verified by GET + `<title>` and included via `discovered_posts.json`;
 anything unresolved is kept, labelled, in `discovered_leads.json`. Use `--bootstrap` (past
 month, deeper paging) the first time or after a gap; the daily run uses the past week.
