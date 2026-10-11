@@ -102,6 +102,7 @@
   "gradient-labs",
   "hims-and-hers",
   "iwoca.co.uk",
+  "jack-jill-external-ats",
   "junior",
   "legora",
   "lendable",
@@ -123,6 +124,7 @@
   "socure",
   "synthesia",
   "trainline",
+  "twelve",
   "voleon",
   "wayflyer",
   "wayve",
@@ -152,11 +154,14 @@
   "clarity-ai",
   "day30",
   "flinks",
+  "homeprotect",
   "hometrack",
   "humara-2",
   "minderacraft",
   "motabilityfoundation",
+  "oritain",
   "our-future-health",
+  "primait",
   "productmadness",
   "resultance",
   "uncapped",
@@ -164,8 +169,8 @@
   "warden-ai"
  ],
  "smartrecruiters": [
-  "asos",
   "Checkoutcom1",
+  "CognizantTechnologies2",
   "Deloitte6",
   "GenomicsEngland",
   "IQVIA",
@@ -173,6 +178,7 @@
   "ReedBusinessInformationLimited",
   "Talan",
   "Trainline",
+  "asos",
   "wise"
  ],
  "pinpoint": [
@@ -210,7 +216,11 @@
   "bp": "https://bpinternational.wd3.myworkdayjobs.com/wday/cxs/bpinternational/bpCareers/jobs",
   "AVEVA": "https://aveva.wd3.myworkdayjobs.com/wday/cxs/aveva/AVEVA_careers/jobs",
   "Flutter UK & Ireland": "https://flutterbe.wd3.myworkdayjobs.com/wday/cxs/flutterbe/FlutterUKI_External/jobs",
-  "JD.com": "https://jd.wd103.myworkdayjobs.com/wday/cxs/jd/Careers_at_JD/jobs"
+  "JD.com": "https://jd.wd103.myworkdayjobs.com/wday/cxs/jd/Careers_at_JD/jobs",
+  "Sky": "https://sky.wd3.myworkdayjobs.com/wday/cxs/sky/sky_careers/jobs",
+  "AXIS (AXIS Capital)": "https://axiscapital.wd1.myworkdayjobs.com/wday/cxs/axiscapital/axiscareers/jobs",
+  "DraftKings Inc.": "https://draftkings.wd1.myworkdayjobs.com/wday/cxs/draftkings/DraftKings/jobs",
+  "Paymentsense": "https://paymentsense.wd3.myworkdayjobs.com/wday/cxs/paymentsense/Dojo_Careers/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -329,7 +339,14 @@
   "made-tech": "Made Tech",
   "oxfordeconomics": "Oxford Economics",
   "surgohealth": "Surgo Health",
-  "asos": "ASOS"
+  "asos": "ASOS",
+  "homeprotect": "Homeprotect Home Insurance",
+  "oritain": "Oritain",
+  "primait": "Prima",
+  "jack-jill-external-ats": "Jack & Jill",
+  "twelve": "Twelve",
+  "yonder": "Yonder",
+  "CognizantTechnologies2": "Cognizant"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -356,5 +373,8 @@
   "Coalition, Inc.": "Coalition",
   "Qube Research & Technologies": "Qube RT",
   "Relay Technologies": "Relay"
- }
+ },
+ "teamtailor": [
+  "yonder"
+ ]
 }

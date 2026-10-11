@@ -117,3 +117,19 @@ A Teamtailor enumerator would add Blue Light Card and Yonder.
 ## Script run log
 
 _pending — the run was still in its search loop when this file was first committed._
+
+### 11 Oct 2026 — scripted re-run (Brave working)
+
+`RESOLVE_CAP=150 python3 .claude/skills/refresh-london-ds/discover.py --resolve-only` on a fresh `--bootstrap` lead set
+(432 raw → 226 leads), against the registry as of commit 462500a. Brave returned 200 on every query (no 422, no DuckDuckGo
+fallback). `[resolve] registry-covered 117 · searched 67 (cap 150) · unresolved employers 43`; the script proposed 23 boards.
+
+Kept (11): workable `homeprotect`, `oritain`, `primait`; ashby `jack-jill-external-ats`, `twelve`; teamtailor `yonder`;
+workday Sky (`sky.wd3/sky_careers`), AXIS Capital (`axiscapital.wd1/axiscareers`), DraftKings (`draftkings.wd1/DraftKings`),
+Paymentsense/Dojo (`paymentsense.wd3/Dojo_Careers`); smartrecruiters `CognizantTechnologies2`.
+Workable answered 429 to every probe from the container, so the three Workable boards are unverified today.
+
+Dropped before commit (12, all false or dead matches the name-corroboration check let through): SMG→Intel Workday,
+Meta→Georgetown Workday, Chubb→Chubb Fire & Security, Costa Coffee→Coca-Cola Workday (no Costa DS post), IBM→IBM iX
+(Paris tenant), Tesco→`TescoBengaluru`, HCLTech→`HCLTechHungary`, trg.→`TRGInc`, mthree (recruiter), Acuity
+Analytics→`acuity-insights` (different company), Qogita Ashby (API 404) and Klarna Teamtailor (404) — both stale search hits.
