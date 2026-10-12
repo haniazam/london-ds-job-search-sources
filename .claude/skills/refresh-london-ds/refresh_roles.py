@@ -396,6 +396,69 @@ if HAVE_PW:
     except Exception as e:
         print("[spa] failed:", type(e).__name__, e, file=sys.stderr)
 
+# ---------------- Workable fallback: the widget API 429s from cloud egress IPs, but the job pages still load ----------------
+# For each account the API pass lost to 429, re-check the rows the last snapshot carried for it by their own page:
+# jobs.workable.com/view/<id> by GET + <title>, apply.workable.com/<acct>/j/<code> in Playwright (it is an SPA).
+# Every row gets a verdict (live -> active, dead -> dropped, so it closes), and the account leaves UNVERIFIED.
+def workable_page_fallback(accts):
+    SNAP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "data", "snapshots")
+    snaps = sorted(f for f in (os.listdir(SNAP) if os.path.isdir(SNAP) else []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}\.csv", f))
+    if not snaps: return []
+    normk = lambda x: re.sub(r"[^a-z0-9]", "", (x or "").lower())
+    names = {normk(v): k for k, v in REG.get("display_names", {}).items()}            # display name -> token
+    tok_of = lambda co: names.get(normk(co), normk(co))
+    cand = {}
+    for r in csv.DictReader(open(os.path.join(SNAP, snaps[-1]), encoding="utf-8")):
+        u = r.get("Apply URL (unique active post)", "")
+        if "workable.com" not in u: continue
+        a = next((a for a in accts if f"/{a}/" in u or normk(tok_of(r.get("Company"))) == normk(a)), None)
+        if a: cand.setdefault(a, []).append(r)
+    DEAD = re.compile(r"no longer (available|accepting|open)|not found|position is closed|job has been filled|expired|this job is closed", re.I)
+    out, done = [], set()
+    pw = None
+    if any("apply.workable.com" in r["Apply URL (unique active post)"] for rs in cand.values() for r in rs) and HAVE_PW:
+        pw = sync_playwright().start()
+        try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
+        except Exception:
+            import glob
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
+        pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
+    for a, rs in cand.items():
+        verdicts = 0
+        for r in rs:
+            u, role = r["Apply URL (unique active post)"], r["Role"]
+            title = body = ""
+            try:
+                if "jobs.workable.com/view" in u:
+                    tm = re.search(r"<title>(.*?)</title>", get(u, 30), re.S); title = tm.group(1) if tm else ""
+                elif pw:
+                    pg.goto(u, wait_until="domcontentloaded", timeout=45000)
+                    try: pg.wait_for_load_state("networkidle", timeout=8000)
+                    except Exception: pass
+                    pg.wait_for_timeout(2000); title = pg.title(); body = pg.inner_text("body")[:3000]
+                else:
+                    continue                                                           # no Playwright: stays unverified
+            except Exception as e:
+                print(f"[workable-page] {a}: {type(e).__name__} on {u}", file=sys.stderr); continue
+            if re.search(r"\b429\b|too many requests|rate.?limit", title + " " + body[:300], re.I):   # a 429 page is no verdict
+                print(f"[workable-page] {a}: rate-limited on the job page too — stays unverified", file=sys.stderr); continue
+            verdicts += 1
+            live = role.lower()[:25] in (title + body).lower() and not DEAD.search(title + " " + body[:600])
+            print(f"[workable-page] {a}: {'live' if live else 'DEAD'} — {role}", file=sys.stderr)
+            if live: out.append((a, role, level(role), r.get("Location") or "London", u))
+        if verdicts == len(rs): done.add(a)
+    if pw: pw.stop()
+    for a in accts:
+        if a in done or a not in cand: UNVERIFIED["workable"].remove(a)          # every carried row got a verdict (or there were none)
+    if not UNVERIFIED.get("workable"): UNVERIFIED.pop("workable", None)
+    return out
+if UNVERIFIED.get("workable"):
+    try:
+        active += workable_page_fallback(list(UNVERIFIED["workable"]))
+    except Exception as e:
+        print("[workable-page] failed:", type(e).__name__, e, file=sys.stderr)
+
 # ---------------- Google careers (server-rendered HTML; no Playwright needed) ----------------
 # Google's careers SPA hydrates from server HTML that embeds each posting as
 # `jobs/results/<id>-<slug>`. We pull DS-titled London posts straight from that
