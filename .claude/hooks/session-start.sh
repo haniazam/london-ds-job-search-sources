@@ -12,5 +12,5 @@ if python3 -c "import playwright" 2>/dev/null; then
   exit 0
 fi
 export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-pip install -q --disable-pip-version-check playwright
+python3 -m pip install -q --disable-pip-version-check playwright
 python3 -c "import playwright, sys; print('playwright', playwright.__version__ if hasattr(playwright, '__version__') else 'installed')"

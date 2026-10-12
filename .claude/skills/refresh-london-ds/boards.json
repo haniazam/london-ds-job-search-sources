@@ -183,6 +183,7 @@
   "wise"
  ],
  "pinpoint": [
+  "accenture",
   "alcumus",
   "cfc",
   "convexin",
@@ -352,7 +353,8 @@
   "CognizantTechnologies2": "Cognizant",
   "bluelightcard": "Blue Light Card",
   "mypos": "myPOS",
-  "trgscreen": "TRG Screen"
+  "trgscreen": "TRG Screen",
+  "accenture": "Accenture"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
