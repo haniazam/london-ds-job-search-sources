@@ -340,7 +340,7 @@ def spa_refresh():
                         idv = o.get("display_job_id") or o.get("id") or ""
                         if LON.search(loc) and not EXCLUDE.search(t):
                             out.append(("Microsoft", t, level(t), "London",
-                                        f"https://jobs.careers.microsoft.com/global/en/job/{idv}"))
+                                        f"https://apply.careers.microsoft.com/careers?pid={idv}"))
                     for v in o.values(): walk(v)
                 elif isinstance(o, list):
                     for v in o: walk(v)
