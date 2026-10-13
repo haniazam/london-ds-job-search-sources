@@ -505,20 +505,20 @@ except Exception as e:
 
 # ---------------- employer-site posts found by discover.py (verified by GET + <title>) ----------------
 DISC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "discovered_posts.json")
+PAGE_DEAD = re.compile(r'"status"\s*,\s*"EXPIRED"|>\s*Expired\s*<|This (job|position|vacancy) (has expired|is no longer (available|open|accepting))|job is not available anymore', re.I)
 if os.path.exists(DISC):
     seen_urls = {a[4].split("?")[0] for a in active}
     hits = 0
     for p in json.load(open(DISC)):
         u = p["url"]
         if u.split("?")[0] in seen_urls or EXCLUDE.search(p["title"]): continue   # same scope rule as the API boards
-        if "jobs.workable.com/view" in u:                       # Workable's own feed: published state is the proof
-            active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1; continue
-        try:
+        try:                                                                   # every post is fetched: a Workable feed page answers 410 once the post is gone
             page = get(u, 30)
         except Exception as e:
             print(f"[discovered] {p['company']}: {type(e).__name__}", file=sys.stderr); continue
         tm = re.search(r"<title>(.*?)</title>", page, re.S); title = (tm.group(1) if tm else "").lower()
-        if re.search(r"data scien", title) and not re.search(r"no longer|not found|closed|expired|jobs search|\d,\d{3}\+ ", title):
+        if re.search(r"data scien", title) and not re.search(r"no longer|not found|not available|closed|expired|jobs search|\d,\d{3}\+ ", title) \
+                and not PAGE_DEAD.search(page):
             active.append((p["company"], p["title"], level(p["title"]), p["location"], u)); hits += 1
     print(f"[discovered] {hits} employer-site posts verified live", file=sys.stderr)
 

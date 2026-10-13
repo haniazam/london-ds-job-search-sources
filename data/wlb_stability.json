@@ -1,19 +1,821 @@
 {
  "_doc": "Researched WLB (out of 5) and stability (Growing/Stable/Caution) per company, with evidence and date. Method: .claude/skills/refresh-london-ds/wlb_stability.py. Edit by research only; never infer from a posting.",
  "companies": {
-  "Sony Interactive Entertainment": {"aliases": ["PlayStation", "SIE"], "wlb": 4.0, "wlb_source": "Glassdoor SIE London", "wlb_note": "Generally positive.", "stability": "Stable", "stability_evidence": "SIE had studio cuts 2024-25 but data/analytics weren't targeted; DS reqs actively hiring.", "as_of": "2026-10-09"},
-  "Spotify": {"wlb": 4.6, "wlb_source": "Glassdoor DS cohort (4.3 company-wide)", "wlb_note": "The best on the original list.", "stability": "Growing", "stability_evidence": "No company-wide round since Dec 2023; recent cuts small and podcast-only; core R&D rising; London eng/data not hit.", "as_of": "2026-10-09"},
-  "Monzo": {"wlb": 3.9, "wlb_source": "Glassdoor London", "wlb_note": "Moderately positive reviews.", "stability": "Growing", "stability_evidence": "Only ~50 US-exit roles early 2026 (EU-licence refocus); UK revenue over GBP 1bn, profit GBP 60.4m FY25; explicit visa sponsorship.", "as_of": "2026-10-09"},
-  "Ripple": {"wlb": 3.5, "wlb_source": "Glassdoor", "wlb_note": "10+ office days a month; mixed reviews.", "stability": "Growing", "stability_evidence": "Expanding after regulatory clarity; active London hiring.", "as_of": "2026-10-09"},
-  "Stripe": {"wlb": 3.2, "wlb_source": "Glassdoor", "wlb_note": "Accept the WLB hit only if level and comp are right; at least 50% office per month.", "stability": "Growing", "stability_evidence": "Zero layoffs in 2026; ~509 open roles; USD 1.9tn payment volume; USD 159bn valuation.", "as_of": "2026-10-09"},
-  "Google": {"wlb": 4.2, "wlb_source": "Glassdoor / Levels.fyi", "wlb_note": "Strong for FAANG; better than Meta's reputation.", "stability": "Caution", "stability_evidence": "Rolling smaller cuts through 2025-26 for non-AI roles (Cloud UX, Platforms & Devices, manager delayering); Alphabet headcount still up ~4%. London DS posts turn over within days.", "as_of": "2026-10-09"},
-  "QuantumBlack (McKinsey)": {"aliases": ["QuantumBlack", "McKinsey"], "wlb": 1.9, "wlb_source": "Glassdoor DS cohort", "wlb_note": "Worst WLB on the original list; client-facing with travel.", "stability": "Stable", "stability_evidence": "QuantumBlack growing and hiring in London; wider McKinsey contracting (~5,000 cut by mid-2025).", "as_of": "2026-10-09"},
-  "TikTok": {"wlb": null, "wlb_source": null, "wlb_note": "Not verified; long-hours reputation - check before applying.", "stability": "Caution", "stability_evidence": "2025 trust-and-safety cuts (~400 London); commercial and Shop DS expanding; regulatory overhang remains.", "as_of": "2026-10-09"},
-  "Chainalysis": {"wlb": 3.3, "wlb_source": "Glassdoor", "wlb_note": "Mixed reviews; smaller scale-up.", "stability": "Stable", "stability_evidence": "Steady; crypto-compliance demand resilient.", "as_of": "2026-10-09"},
-  "Revolut": {"wlb": 3.6, "wlb_source": "Glassdoor", "wlb_note": "9-12 hour days are a recurring review theme - treat as weak despite the score.", "stability": "Growing", "stability_evidence": "No mass layoffs 2022-26; ~12,000 staff; full UK banking licence March 2026; London's share shrinking versus India.", "as_of": "2026-10-09"},
-  "G-Research": {"wlb": 4.0, "wlb_source": "Glassdoor", "wlb_note": "Unusually strong for quant finance.", "stability": "Stable", "stability_evidence": "Net-hiring in research; 2023-24 London tech cuts were mostly research engineering; quants spared.", "as_of": "2026-10-09"},
-  "Deliveroo": {"wlb": null, "wlb_source": null, "wlb_note": "Not researched.", "stability": "Stable", "stability_evidence": "Now part of DoorDash; London DS hiring active (4 live roles Oct 2026).", "as_of": "2026-10-09"},
-  "Wise": {"wlb": null, "wlb_source": null, "wlb_note": "Not researched.", "stability": "Growing", "stability_evidence": "Profitable; London DS hiring continues.", "as_of": "2026-10-09"},
-  "The Trade Desk": {"wlb": null, "wlb_source": null, "wlb_note": "Not researched.", "stability": "Caution", "stability_evidence": "~15% workforce cut (~575) in Sept 2026 after a weak Q2 and a 67% stock fall.", "as_of": "2026-10-09"}
+  "Sony Interactive Entertainment": {
+   "aliases": [
+    "PlayStation",
+    "SIE"
+   ],
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor SIE London",
+   "wlb_note": "Generally positive.",
+   "stability": "Stable",
+   "stability_evidence": "SIE had studio cuts 2024-25 but data/analytics weren't targeted; DS reqs actively hiring.",
+   "as_of": "2026-10-09"
+  },
+  "Spotify": {
+   "wlb": 4.6,
+   "wlb_source": "Glassdoor DS cohort (4.3 company-wide)",
+   "wlb_note": "The best on the original list.",
+   "stability": "Growing",
+   "stability_evidence": "No company-wide round since Dec 2023; recent cuts small and podcast-only; core R&D rising; London eng/data not hit.",
+   "as_of": "2026-10-09"
+  },
+  "Monzo": {
+   "wlb": 3.9,
+   "wlb_source": "Glassdoor London",
+   "wlb_note": "Moderately positive reviews.",
+   "stability": "Growing",
+   "stability_evidence": "Only ~50 US-exit roles early 2026 (EU-licence refocus); UK revenue over GBP 1bn, profit GBP 60.4m FY25; explicit visa sponsorship.",
+   "as_of": "2026-10-09"
+  },
+  "Ripple": {
+   "wlb": 3.5,
+   "wlb_source": "Glassdoor",
+   "wlb_note": "10+ office days a month; mixed reviews.",
+   "stability": "Growing",
+   "stability_evidence": "Expanding after regulatory clarity; active London hiring.",
+   "as_of": "2026-10-09"
+  },
+  "Stripe": {
+   "wlb": 3.2,
+   "wlb_source": "Glassdoor",
+   "wlb_note": "Accept the WLB hit only if level and comp are right; at least 50% office per month.",
+   "stability": "Growing",
+   "stability_evidence": "Zero layoffs in 2026; ~509 open roles; USD 1.9tn payment volume; USD 159bn valuation.",
+   "as_of": "2026-10-09"
+  },
+  "Google": {
+   "wlb": 4.2,
+   "wlb_source": "Glassdoor / Levels.fyi",
+   "wlb_note": "Strong for FAANG; better than Meta's reputation.",
+   "stability": "Caution",
+   "stability_evidence": "Rolling smaller cuts through 2025-26 for non-AI roles (Cloud UX, Platforms & Devices, manager delayering); Alphabet headcount still up ~4%. London DS posts turn over within days.",
+   "as_of": "2026-10-09"
+  },
+  "QuantumBlack (McKinsey)": {
+   "aliases": [
+    "QuantumBlack",
+    "McKinsey"
+   ],
+   "wlb": 1.9,
+   "wlb_source": "Glassdoor DS cohort",
+   "wlb_note": "Worst WLB on the original list; client-facing with travel.",
+   "stability": "Stable",
+   "stability_evidence": "QuantumBlack growing and hiring in London; wider McKinsey contracting (~5,000 cut by mid-2025).",
+   "as_of": "2026-10-09"
+  },
+  "TikTok": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Not verified; long-hours reputation - check before applying.",
+   "stability": "Caution",
+   "stability_evidence": "2025 trust-and-safety cuts (~400 London); commercial and Shop DS expanding; regulatory overhang remains.",
+   "as_of": "2026-10-09"
+  },
+  "Chainalysis": {
+   "wlb": 3.3,
+   "wlb_source": "Glassdoor",
+   "wlb_note": "Mixed reviews; smaller scale-up.",
+   "stability": "Stable",
+   "stability_evidence": "Steady; crypto-compliance demand resilient.",
+   "as_of": "2026-10-09"
+  },
+  "Revolut": {
+   "wlb": 3.6,
+   "wlb_source": "Glassdoor",
+   "wlb_note": "9-12 hour days are a recurring review theme - treat as weak despite the score.",
+   "stability": "Growing",
+   "stability_evidence": "No mass layoffs 2022-26; ~12,000 staff; full UK banking licence March 2026; London's share shrinking versus India.",
+   "as_of": "2026-10-09"
+  },
+  "G-Research": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor",
+   "wlb_note": "Unusually strong for quant finance.",
+   "stability": "Stable",
+   "stability_evidence": "Net-hiring in research; 2023-24 London tech cuts were mostly research engineering; quants spared.",
+   "as_of": "2026-10-09"
+  },
+  "Deliveroo": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Not researched.",
+   "stability": "Stable",
+   "stability_evidence": "Now part of DoorDash; London DS hiring active (4 live roles Oct 2026).",
+   "as_of": "2026-10-09"
+  },
+  "Wise": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Not researched.",
+   "stability": "Growing",
+   "stability_evidence": "Profitable; London DS hiring continues.",
+   "as_of": "2026-10-09"
+  },
+  "The Trade Desk": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Not researched.",
+   "stability": "Caution",
+   "stability_evidence": "~15% workforce cut (~575) in Sept 2026 after a weak Q2 and a 67% stock fall.",
+   "as_of": "2026-10-09"
+  },
+  "ARQ": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor/Levels.fyi rating attributable to this ARQ (the LatAm cross-border fintech formerly DolarApp); the Glassdoor 'ARQ' page at 3.7 (95 reviews) appears to be an unrelated IT-services firm, so left null.",
+   "stability": "Growing",
+   "stability_evidence": "La Republica reported DolarApp rebranding to ARQ after a US$70m capital injection with 2M+ users and backing from Sequoia, Founders Fund and Kaszek (article undated, c. 2025-26); Ashby postings describe it as 'one of the fastest-growing fintechs' and no layoffs were found.",
+   "as_of": "2026-10-13"
+  },
+  "Abtrace": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi page found for Abtrace (small London/Porto healthtech), so WLB is unknown.",
+   "stability": "Stable",
+   "stability_evidence": "No layoff reports found; last disclosed funding is the £2.1m seed led by Faber plus £1m Innovate UK (UKTN, Aug 2021) with no 2025-26 round surfaced, though current listings cite growth to 600+ GP practices.",
+   "as_of": "2026-10-13"
+  },
+  "Adzuna": {
+   "wlb": 3.9,
+   "wlb_source": "Glassdoor, company-wide overall, 54 reviews, 2026",
+   "wlb_note": "Small review base; an April 2026 review criticises top-down leadership and meeting load as a drag on balance.",
+   "stability": "Caution",
+   "stability_evidence": "City AM reported turnover fell from £30.7m to £20.5m with a £277k pre-tax loss for FY to June 2024, and Revelio Labs shows headcount down ~29% to 159 by March 2026, despite 2026 acquisitions of Trovit/Mitula and Joblift (Dealroom, Jul 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Amazon": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Glassdoor UK company page could not be retrieved (403); 2025-26 Glassdoor/Indeed UK reviews for data/science roles repeatedly cite on-call load, high and rising expectations and burnout, so treat as a documented demanding-hours culture.",
+   "stability": "Caution",
+   "stability_evidence": "Reuters reported ~14,000 corporate role cuts in October 2025 and a second wave in January 2026 taking the total toward ~30,000 across AWS, retail, HR and Prime Video (Reuters/GeekWire, Jan 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Anaplan": {
+   "wlb": 3.7,
+   "wlb_source": "Glassdoor, company-wide overall, 1,088 reviews, mid-2026",
+   "wlb_note": "Reviews praise flexibility but cite silos, top-down decisions and frequent reorganisations under Thoma Bravo ownership.",
+   "stability": "Stable",
+   "stability_evidence": "No company-wide layoff round reported since the June 2023 cuts of ~300 US/UK staff (Channel Futures, Jun 2023); privately held by Thoma Bravo with no 2025-26 financial disclosures or cuts found.",
+   "as_of": "2026-10-13"
+  },
+  "Apple": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Glassdoor UK company page could not be retrieved (403) and no numeric rating surfaced in search, so left null.",
+   "stability": "Growing",
+   "stability_evidence": "Apple reported record Q1 FY26 revenue of $143.8bn, up 16% (Apple 8-K, 29 Jan 2026), with only ~200 Siri/Vision Pro roles cut in August 2026 (Bloomberg) against a largely stable workforce.",
+   "as_of": "2026-10-13"
+  },
+  "Artefact": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor UK, company-wide overall, 216 reviews, 2026",
+   "wlb_note": "Rated in line with the management-consulting average; career-opportunities sub-score 4.1 (Jun 2026).",
+   "stability": "Growing",
+   "stability_evidence": "Ardian agreed to sell its majority stake to Cinven at a valuation over €1bn after headcount grew from 800 to 1,700 since 2021 (Bloomberg/Ardian statement, Jul 2025), with FY24 EBITDA of ~€40m per Mergermarket.",
+   "as_of": "2026-10-13"
+  },
+  "BNY": {
+   "wlb": 3.4,
+   "wlb_source": "Glassdoor, company-wide overall, ~13,800 reviews, Feb 2026",
+   "wlb_note": "Feb 2026 reviews describe balance as decent and better than peer banks; main complaints are below-market pay and bureaucracy.",
+   "stability": "Growing",
+   "stability_evidence": "BNY reported record Q2 2026 results (net income $1.76bn) and raised its 2026 outlook (Simply Wall St summary of Jul 2026 release); no confirmed 2025-26 company-wide layoff round found.",
+   "as_of": "2026-10-13"
+  },
+  "Bauer Media": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor UK page retrieved for Bauer Media Group; Indeed UK shows 3.5/5 from 43 reviews with job security rated lowest (2.8), not used as the WLB score.",
+   "stability": "Caution",
+   "stability_evidence": "Bauer launched a 2026 UK digital-publishing restructure with cuts reported at up to 30% of publishing staff, citing AI Overviews and weak advertising (Digiday/Press Gazette, 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Blenheim Chalcot": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Glassdoor page exists but could not be retrieved (403); AmbitionBox shows 2.7/5 from 275 mostly India-based reviews, not used.",
+   "stability": "Stable",
+   "stability_evidence": "No layoff reports found in 2025-26 trade press or startup-layoff roundups; privately held venture builder (~3,000 staff, £1.5-1.8bn AUM per its own site) with no public financials.",
+   "as_of": "2026-10-13"
+  },
+  "C3 AI": {
+   "wlb": 2.9,
+   "wlb_source": "Glassdoor, company-wide overall, 825 reviews, 2026 (Blind WLB 2.7 from 185 reviews)",
+   "wlb_note": "Well below industry average; reviews cite 5-day office mandate, high burnout and attrition.",
+   "stability": "Caution",
+   "stability_evidence": "Fiscal Q1 FY26 revenue fell 19% to $70.3m (Benzinga, Aug 2025) after CEO Tom Siebel stepped back, a February WARN notice cut 71 HQ jobs including 18 data scientists, and later reporting cites ~35% headcount reduction under a $135m savings programme.",
+   "as_of": "2026-10-13"
+  },
+  "CFC": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor UK, company-wide overall, 144 reviews, 2026",
+   "wlb_note": "68% would recommend; some reviews flag heavy workloads and lagging pay for senior underwriters.",
+   "stability": "Stable",
+   "stability_evidence": "No layoff reports found; CFC hired Nick Line as Chief Underwriting Officer in January 2026 to support its growth strategy (CFC news, 14 Jan 2026), but no 2025 financial results were located.",
+   "as_of": "2026-10-13"
+  },
+  "Capco": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor, company-wide overall, 3,437 reviews, 2026",
+   "wlb_note": "Balance described as good but project-dependent; Capco itself states consulting 'is not a 9-5 job'.",
+   "stability": "Stable",
+   "stability_evidence": "Last reported cuts were Wipro trimming hundreds of onsite Capco roles in early 2023 (Economic Times, Jan 2023); no 2025-26 Capco layoff round or financial distress found.",
+   "as_of": "2026-10-13"
+  },
+  "Carwow": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Glassdoor UK page could not be retrieved (403); Indeed UK shows 4.1/5 from only 8 reviews, not used.",
+   "stability": "Growing",
+   "stability_evidence": "2025 revenue rose 22% to a record £104.2m, though with a £7.6m adjusted EBITDA loss from continued product investment (AM Online, 2026); no layoffs reported and $52m raised in 2024 led by Bessemer.",
+   "as_of": "2026-10-13"
+  },
+  "Citi": {
+   "wlb": 3.6,
+   "wlb_source": "Glassdoor, company-wide overall, 36,520 reviews, 2026",
+   "wlb_note": "Balance varies by department; recurring complaints are layoffs, slow pay growth and office attendance.",
+   "stability": "Caution",
+   "stability_evidence": "Citi is executing a 20,000-role reduction through end-2026 and cut ~1,000 jobs in January 2026 with a spokesperson confirming further headcount cuts this year (Reuters via HRO, Jan 2026).",
+   "as_of": "2026-10-13"
+  },
+  "ClearScore": {
+   "wlb": 4.3,
+   "wlb_source": "Glassdoor, company-wide overall, 136 reviews, 2026",
+   "wlb_note": "96% would recommend; reviews describe a fast-paced high-performance culture with fair pay.",
+   "stability": "Growing",
+   "stability_evidence": "FY2025 revenue rose 37% to £144.7m and adjusted EBITDA more than doubled to £17.1m (ClearScore Group statement, Jul 2026), with acquisitions of Aro and Acre and no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "CoMind": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi reviews found for this ~80-person neurotech startup.",
+   "stability": "Growing",
+   "stability_evidence": "CoMind raised a $60m round led by Plural taking total funding to $102.5m to fund CoMind One regulatory work and team expansion (MassDevice, Oct 2025); no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "Coalition": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "Glassdoor page could not be retrieved (403) and no rating surfaced in search; company was on Inc. Best Workplaces 2024.",
+   "stability": "Growing",
+   "stability_evidence": "Allianz Commercial is transferring its entire commercial cyber book to Coalition under a 10-year-plus partnership with an additional equity investment and board seat (Allianz/Insurance Insider, 2026); no layoffs found.",
+   "as_of": "2026-10-13"
+  },
+  "Coefficient": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi reviews exist for this 1-20 person Marylebone consultancy.",
+   "stability": "Stable",
+   "stability_evidence": "No news coverage either way; a 1-20 person data consultancy (Welcome to the Jungle profile) that was still hiring data scientists in July 2026, with no Companies House distress signals surfaced.",
+   "as_of": "2026-10-13"
+  },
+  "Coinbase": {
+   "wlb": 2.7,
+   "wlb_source": "Glassdoor, company-wide Work/Life Balance sub-rating, 876 reviews, Sep 2026 (overall 3.5 from 1,159 reviews)",
+   "wlb_note": "WLB rating down 12% year on year; 2026 reviews describe 60+ hour weeks and a widely documented intense culture.",
+   "stability": "Caution",
+   "stability_evidence": "Coinbase cut ~700 jobs (14% of staff) in May 2026 citing crypto volatility and an AI reorganisation (Reuters, 5 May 2026), alongside a Q1 2026 net loss of ~$394m.",
+   "as_of": "2026-10-13"
+  },
+  "Disney": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor, company-wide overall, 15,070 reviews, Jun 2026",
+   "wlb_note": "Colleagues and benefits praised; criticism centres on job insecurity and constant reorganisations.",
+   "stability": "Caution",
+   "stability_evidence": "Disney ran three 2026 layoff waves: ~1,000 roles in April (Reuters), several hundred in July and several hundred more on 29 Sep 2026 mainly in HR and IT (Variety).",
+   "as_of": "2026-10-13"
+  },
+  "ElevenLabs": {
+   "wlb": 3.5,
+   "wlb_source": "Glassdoor, company-wide Work/Life Balance sub-rating, 2026 (76% would recommend)",
+   "wlb_note": "WLB is the weakest sub-score; multiple reviews cited by aggregators describe 60+ hour weeks as the norm.",
+   "stability": "Growing",
+   "stability_evidence": "Raised a $500m Series D at an $11bn valuation led by Sequoia (Reuters, Feb 2026) after ending 2025 with over $330m ARR; no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "Elsevier": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor (global mirror), company-wide overall rating, 2,189 reviews, Oct 2026",
+   "wlb_note": "Reviews repeatedly cite work-life balance and flexible/WFH as highlights; main complaints are pay and slow progression; no UK-only cohort was reachable.",
+   "stability": "Growing",
+   "stability_evidence": "Parent RELX reported FY2025 adjusted sales +7% to £9.59bn (Feb 2026) and H1 2026 underlying growth +7% (RELX press release, 23 Jul 2026), with no company-wide layoff round reported in 2024-26.",
+   "as_of": "2026-10-13"
+  },
+  "Faculty": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor UK (Faculty.ai), company-wide overall rating, 101 reviews, Oct 2026",
+   "wlb_note": "81% would recommend and 81% approve of the CEO; the snapshot predates the Accenture integration so newer reviews may differ.",
+   "stability": "Caution",
+   "stability_evidence": "Accenture announced its acquisition of Faculty on 6 Jan 2026 and completed it on 16 Mar 2026 (Accenture newsroom / Pulse2), so the 400+ staff are being integrated into Accenture - acquisition/integration uncertainty rather than any reported cuts.",
+   "as_of": "2026-10-13"
+  },
+  "Fitch Group": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor (Fitch Ratings, global mirror), company-wide overall rating, ~1,005 reviews, Oct 2026",
+   "wlb_note": "Work-life balance is among the most-praised aspects in 2025 reviews, with busy year-end/quarterly periods noted; pay below market is the main complaint.",
+   "stability": "Stable",
+   "stability_evidence": "No 2024-26 layoff round at Fitch Group/Fitch Solutions surfaced in searches (only a 2008 cut of 150 roles, Bond Buyer); the group is privately held by Hearst so no public financials, and the London DS roles sit in Fitch Solutions/BMI.",
+   "as_of": "2026-10-13"
+  },
+  "Focal Systems": {
+   "wlb": 3.4,
+   "wlb_source": "Glassdoor (regional mirrors), company-wide overall rating, 65 reviews, Oct 2026 (other mirrors show 3.6/64 reviews)",
+   "wlb_note": "Reviews are mixed, with several citing disorganised management and long hours alongside praise for remote work and pay.",
+   "stability": "Caution",
+   "stability_evidence": "Last funding was a $25.8M Series B in Dec 2021 (CB Insights) with no new round or 2025-26 news found, and reported 2023 revenue of only $7.1M (Latka) - a weak financial signal for a ~100-person startup.",
+   "as_of": "2026-10-13"
+  },
+  "Fospha": {
+   "wlb": 3.6,
+   "wlb_source": "Glassdoor UK, Work/Life Balance sub-rating, 56 reviews, Oct 2026 (overall rating 4.4)",
+   "wlb_note": "Overall rating is high (90% recommend) but WLB is the weakest sub-score and the latest review (Apr 2026, 2.0) calls the company chaotically run.",
+   "stability": "Stable",
+   "stability_evidence": "Blenheim Chalcot-backed with its last external round in Feb 2018 (£5.3m, Blenheim Chalcot) and no layoff reports found; the Oct 2026 Greenhouse posting says it is scaling across London, Mumbai and Austin.",
+   "as_of": "2026-10-13"
+  },
+  "G MASS": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi rating exists; G MASS is a recruitment agency and the role is for an unnamed fund and corporate services client, so no employer WLB can be assessed.",
+   "stability": "Caution",
+   "stability_evidence": "The Workable posting (20 Aug 2026) is an agency contract at up to £800/day for an undisclosed 'international fund and corporate services organisation', so the actual employer and its stability cannot be verified.",
+   "as_of": "2026-10-13"
+  },
+  "Genomics England": {
+   "wlb": 3.5,
+   "wlb_source": "Glassdoor (.ie mirror), company-wide overall rating, 140 reviews, Oct 2026 (.co.in mirror shows 3.2 on the same 140 reviews)",
+   "wlb_note": "Recent reviews praise mission and work-life balance but cite slow decision-making, bureaucracy and unclear promotion criteria.",
+   "stability": "Caution",
+   "stability_evidence": "A medConfidential briefing (Mar 2026) argues Genomics England will cease to exist as an independent entity, the chair is leaving at end-2026 (company statement), and the body sits inside the NHS England abolition/'smaller centre' cuts context - no redundancy round was found but the structural overhang is real.",
+   "as_of": "2026-10-13"
+  },
+  "GoCardless": {
+   "wlb": 3.7,
+   "wlb_source": "Glassdoor, company-wide overall rating, 321 reviews, Oct 2026 (Wellfound cites Glassdoor WLB sub-score 4.2, older snapshot)",
+   "wlb_note": "Work-life balance and flexible working are consistently praised; slow progression and management are the common complaints.",
+   "stability": "Caution",
+   "stability_evidence": "FY2025 accounts filed Apr 2026 disclosed a ~90-role redundancy provision as headcount fell from 764 to ~600 since 2023 (FStech/UKTN), and a EUR1bn+ acquisition by Mollie was announced Dec 2025 - cuts within 24 months plus acquisition uncertainty, despite first adjusted-EBITDA-positive quarter.",
+   "as_of": "2026-10-13"
+  },
+  "Gradient Labs": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi rating found for this ~20-50 person 2023-founded startup.",
+   "stability": "Growing",
+   "stability_evidence": "Series A upsized to $26M in June 2026 led by Octopus Ventures and CommerzVentures, on top of the $13M Redpoint-led round of July 2025 (BusinessCloud / Dealroom), with no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "Haven": {
+   "wlb": 2.8,
+   "wlb_source": "Glassdoor UK (Haven (UK)), company-wide overall rating, 38 reviews, Oct 2026 (Indeed: 3.2 from 723 reviews)",
+   "wlb_note": "Rating is 22% below the hotel/travel industry average with only 42% recommending; reviews are dominated by park/seasonal staff rather than head-office data roles.",
+   "stability": "Caution",
+   "stability_evidence": "Parent Bourne Leisure posted a pre-tax loss of nearly £170m for 2024 (City AM) and Blackstone is preparing to sell Haven as early as 2026 (Sky News, 2025) - weak financial signal plus ownership-change uncertainty; the Senior Data Scientist posting is also now marked Expired on jobs.haven.com.",
+   "as_of": "2026-10-13"
+  },
+  "Hims & Hers": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi rating could be retrieved (Glassdoor/Blind blocked); for context Blind shows 3.2 overall with WLB 4.1 from 14 reviews, and a 2025 Blind thread says 'everything is P0 all the time' after workforce reductions.",
+   "stability": "Caution",
+   "stability_evidence": "Cut 68 staff (~4%) in 2025 as it exited compounded GLP-1s and received an FDA warning letter on 9 Sep 2025 over semaglutide marketing (FDA / press), leaving regulatory overhang even though FY2026 revenue guidance was raised to $2.8-3.0bn (8-K, 11 May 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Hiscox": {
+   "wlb": 3.4,
+   "wlb_source": "Glassdoor UK, company-wide overall rating, 943 reviews, Oct 2026 (Indeed UK WLB sub-score 3.5 from 142 reviews)",
+   "wlb_note": "Slightly below the insurance-industry average; recent reviews criticise outsourcing of internal operations.",
+   "stability": "Stable",
+   "stability_evidence": "Q1 2026 trading statement (May 2026) reported group written premiums +10.2% to $1.72bn and a positive 2026 outlook; the $200m efficiency programme (May 2025) is outsourcing finance/IT processes but no data/analytics or London layoff round has been reported (the 42-role US cut was Nov 2023).",
+   "as_of": "2026-10-13"
+  },
+  "Hometrack": {
+   "wlb": 4.3,
+   "wlb_source": "Glassdoor (Hometrack), company-wide overall rating, 17 reviews, Oct 2026",
+   "wlb_note": "Small sample; reviews praise learning and a lean flat structure, with one citing tight deadlines; the role requires 3 days on site at Tower Bridge.",
+   "stability": "Caution",
+   "stability_evidence": "Providence Equity Partners agreed to acquire Hometrack from Silver Lake's Houseful in Aug 2026 with management retained (Online Marketplaces) - ownership-change uncertainty, though sister company Zoopla's ~100 job cuts were in 2023 and Houseful has since returned to profit.",
+   "as_of": "2026-10-13"
+  },
+  "Howden": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor (Howden, insurance-industry listing E633290), company-wide overall rating, 598 reviews, Oct 2026",
+   "wlb_note": "In line with the insurance average; reviews praise benefits and growth, with some criticism of management and pay.",
+   "stability": "Growing",
+   "stability_evidence": "Adjusted revenue topped £3.52bn in 2025 driven by organic growth and acquisitions (Insurance Age, 2026), and no 2024-26 layoff round was found.",
+   "as_of": "2026-10-13"
+  },
+  "ICF": {
+   "wlb": 3.7,
+   "wlb_source": "Glassdoor (global), company-wide overall rating, ~2,700-3,000 reviews, Oct 2026",
+   "wlb_note": "Recent reviews cite good remote/hybrid flexibility, but high utilisation targets, low pay and government-driven instability are recurring complaints.",
+   "stability": "Caution",
+   "stability_evidence": "ICF plans to lay off 82 employees from Dec 2026 with a second round in Jan 2027 after a DHS contract was not recompeted, and 2025 revenue fell 7.3% to $1.87bn (Virginia Business, Oct 2026) following ~$90m of USAID-related losses in 2025.",
+   "as_of": "2026-10-13"
+  },
+  "Informed Solutions": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "A Glassdoor page exists (E1536359) with a handful of mixed individual reviews but no retrievable aggregate rating, and no Levels.fyi data.",
+   "stability": "Stable",
+   "stability_evidence": "Private 1992-founded consultancy with full accounts to 30 Sep 2025 filed at Companies House on 19 Dec 2025 (shareholders' funds ~£5.8m) and no layoff reporting found; note the Lead Data Scientist Workable posting now returns HTTP 410 Gone while the Senior posting (18 May 2026) remains live.",
+   "as_of": "2026-10-13"
+  },
+  "Intercom": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor UK, Work/Life Balance sub-rating, 472 reviews, Oct 2026 (overall rating 3.9; Indeed WLB also 3.8)",
+   "wlb_note": "Mixed picture: good balance and comp for some, but others report continuously high expectations and heavy workload from frequent reorganisations.",
+   "stability": "Growing",
+   "stability_evidence": "Sacra estimates ARR of ~$400M in Apr 2026 (up from $382M end-2025) with Fin past $100M ARR, hundreds of open roles and no 2025-26 layoffs reported; an unverified Substack/OnlyCFO claim of a $3.6B Salesforce deal for Fin could not be confirmed.",
+   "as_of": "2026-10-13"
+  },
+  "JPMorgan Chase": {
+   "wlb": 3.9,
+   "wlb_source": "Glassdoor (JPMorganChase global), company-wide overall rating, 35,324 reviews, Oct 2026 (third-party summary puts WLB sub-score at 3.7)",
+   "wlb_note": "Bank-grade long-hours culture is widely documented and WLB varies by team; UK/data-science cohort not retrievable.",
+   "stability": "Stable",
+   "stability_evidence": "Record Q2 2026 net income of $21.2bn on revenue +28% (Barchart, Jul 2026) alongside rolling US cuts of 750+ positions in 2026 WARN filings - small relative to ~300k headcount and the bank kept hiring, with no London data-science cut reported.",
+   "as_of": "2026-10-13"
+  },
+  "Junior AI": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi rating found; the posting states 5 days a week on site in Farringdon.",
+   "stability": "Growing",
+   "stability_evidence": "The company's own Ashby posting (Oct 2026) says it is profitable and bootstrapped with 60+ staff and $0 to $20m+ revenue in 3 years serving PE, consulting and Big 4 clients - self-reported, no independent financials found.",
+   "as_of": "2026-10-13"
+  },
+  "Kharon": {
+   "wlb": 3.9,
+   "wlb_source": "Glassdoor UK, company-wide overall rating, 25 reviews, Oct 2026",
+   "wlb_note": "Small sample; ~60% recommend and 56% positive outlook, with the latest reviews 5-star and no significant cons listed.",
+   "stability": "Stable",
+   "stability_evidence": "No funding or layoff news in 2025-26; recognised in The Global State of RegTech 2026 (Kharon, Jun 2026) and expanding government work, though a jobs aggregator shows headcount down ~11% year-on-year (unreliable source).",
+   "as_of": "2026-10-13"
+  },
+  "Kroo Bank Ltd": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi employee rating found (only Trustpilot customer scores); the posting asks for 1-2 days a week in the London office.",
+   "stability": "Caution",
+   "stability_evidence": "Last disclosed loss was £26.9m for 2023 with a 2023 Series C target of £70m aimed at reaching profitability (City AM / Finextra), and no 2025-26 funding, profit or Companies House result could be verified - a weak financial signal rather than any reported cuts.",
+   "as_of": "2026-10-13"
+  },
+  "LSEG": {
+   "wlb": 3.6,
+   "wlb_source": "Glassdoor (LSEG London Stock Exchange Group), company-wide overall rating, 3,275 reviews, Oct 2026",
+   "wlb_note": "Hybrid flexibility is a frequent positive, with complaints about a 3-day RTO for engineering and post-Refinitiv culture.",
+   "stability": "Stable",
+   "stability_evidence": "No announced LSEG job-cut round in 2025-26 was found (search results concerned Legal & General); a postings tracker shows a small net decline in open roles in Sep 2026 but data/analytics hiring continues.",
+   "as_of": "2026-10-13"
+  },
+  "Legora": {
+   "wlb": 4.6,
+   "wlb_source": "Glassdoor rating as relayed by the Swooped job aggregator, 7 reviews, Oct 2026 - unverified and tiny sample",
+   "wlb_note": "Hyper-growth startup (founded 2023) with too few reviews to judge WLB; treat the score as indicative only.",
+   "stability": "Growing",
+   "stability_evidence": "Raised a $550M Series D led by Accel at a $5.55bn valuation on 10 Mar 2026 (Bloomberg Law), extended to $600M in Apr 2026, with ARR reportedly ~$100M.",
+   "as_of": "2026-10-13"
+  },
+  "Lendable": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor (Lendable), company-wide overall rating, 13 reviews, snapshot ~mid-2024 (Glassdoor UK jobs page cites 193 reviews with career-opportunities 4.2 as of Jul 2026)",
+   "wlb_note": "Small, dated sample; Indeed UK (6 reviews, Feb 2026) rates WLB 3.0 and job security 2.3.",
+   "stability": "Stable",
+   "stability_evidence": "Sifted profiles Lendable as profitable (£15m profit on £32.1m revenue, year not stated) and no 2025-26 layoff or fundraising news surfaced; no fresh financial signal either way.",
+   "as_of": "2026-10-13"
+  },
+  "Lovable": {
+   "wlb": 5.0,
+   "wlb_source": "Glassdoor (Lovable, Stockholm-HQ entity E10602817), company-wide, 25 reviews, latest review Jun 2026",
+   "wlb_note": "Perfect score on a very small sample; the company openly runs a high-intensity scale-up pace and reviewers say the London office is less developed than Stockholm HQ, so treat with caution.",
+   "stability": "Growing",
+   "stability_evidence": "Raised a $400m Series C led by Menlo Ventures at a $13.3bn valuation (Aug 2026, Dealroom) on ~$500m+ ARR, with plans to grow headcount ~50% to 450 in 2026 and no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "MAGIC": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi page found for MAGIC AI (Magic Tech Ltd, London fitness-mirror startup).",
+   "stability": "Caution",
+   "stability_evidence": "Early-stage London hardware startup (Magic Tech Ltd, incorporated Jul 2021, accounts to Dec 2025 filed per Companies House) whose only publicly named backer on its site is footballer Jesse Lingard, with no disclosed institutional funding round or financial results found as of Oct 2026.",
+   "as_of": "2026-10-13"
+  },
+  "Made Tech": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor UK page surfaced for Made Tech; Indeed UK shows 4.0/5 from only 3 reviews (2022-23), which is not a Glassdoor/Levels.fyi rating.",
+   "stability": "Growing",
+   "stability_evidence": "FY26 (to 31 May 2026) trading update of 30 Jun 2026: revenue £58.9m (+27%), adjusted EBITDA £5.9m (+69%), net cash £14.5m and H1 headcount up 16% to 433, with no redundancies reported (AJ Bell / RNS).",
+   "as_of": "2026-10-13"
+  },
+  "Marshmallow": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor star rating surfaced; TrueUp (aggregating Glassdoor/Blind) shows only 39% would recommend (100+ reviews) and 55% CEO approval, weak versus peers.",
+   "stability": "Growing",
+   "stability_evidence": "Raised $90m at a >$2bn valuation led by Portage (Apr 2025, Coverager/Sifted) and swung to a reported £20.3m net profit in 2024 from a small 2023 loss (Companies House filings via Sacra), with no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "Microsoft": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor, company-wide global, 53,746 reviews, 2026 snapshot (no UK or Data Science cohort surfaced)",
+   "wlb_note": "Reviews describe balance as strongly team- and manager-dependent, with a very meeting-heavy culture and some after-hours load, but no company-wide long-hours reputation.",
+   "stability": "Caution",
+   "stability_evidence": "Company-wide layoff rounds of ~6,000 (May 2025) and ~9,000 (~4%, Jul 2025, Reuters) plus a further sub-2.5% round reported in Jul 2026 (Business Insider via Reuters), despite Q3 FY26 revenue growing 18% to $82.9bn.",
+   "as_of": "2026-10-13"
+  },
+  "Neko Health": {
+   "wlb": 4.3,
+   "wlb_source": "Glassdoor UK, company-wide, 40 reviews, 2026 snapshot (75% recommend, 96% CEO approval)",
+   "wlb_note": "Mostly positive but the lowest-rated reviews cite overwork and bullying in a fast-scaling environment.",
+   "stability": "Growing",
+   "stability_evidence": "Closed a $700m Series C led by Lightspeed at ~$7bn valuation (Jul 2026, Dealroom/Pulse 2.0) after a $260m Series B in Jan 2025, with no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "Octopus Energy": {
+   "wlb": 4.8,
+   "wlb_source": "Glassdoor, company-wide, ~1,600 reviews, 2026 snapshot (97% recommend)",
+   "wlb_note": "Balance is reported as team-dependent, with the complaints concentrated in field and ops teams rather than office/data roles.",
+   "stability": "Stable",
+   "stability_evidence": "No layoffs reported and customer accounts rose 2.2m to 19m with Kraken spun out and raising $1bn at $8.65bn (Jul 2026, Origin Energy ASX filing), but Origin cut its FY26 Octopus EBITDA guidance to -A$70m to +A$30m on UK regulatory changes (2026).",
+   "as_of": "2026-10-13"
+  },
+  "Our Future Health": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi page found; Indeed UK shows 3.3/5 from only 3 reviews, mostly from clinic-side staff.",
+   "stability": "Growing",
+   "stability_evidence": "UK government allocated £354m of R&D funding for 2026/27-2029/30 to Our Future Health (Commons written answer, 19 Mar 2026), and no redundancies were reported.",
+   "as_of": "2026-10-13"
+  },
+  "Oxford Economics": {
+   "wlb": 4.2,
+   "wlb_source": "Glassdoor, company-wide, 124 reviews, 2026 snapshot (89% recommend)",
+   "wlb_note": "Recent reviews specifically praise work-life balance; no long-hours reputation.",
+   "stability": "Growing",
+   "stability_evidence": "Acquired Macromonitor (20 Apr 2026) and FrontierView (28 Aug 2026) per company announcements, with no layoffs or revenue decline reported.",
+   "as_of": "2026-10-13"
+  },
+  "Paddle": {
+   "wlb": 3.1,
+   "wlb_source": "Glassdoor, company-wide overall rating, ~150 reviews, 2026 snapshot (Wellfound cites a 4.3 WLB sub-score attributed to Glassdoor but it is unverified)",
+   "wlb_note": "Recent Glassdoor reviews cite burnout expectations, leadership churn and frequent departures alongside praise for remote flexibility.",
+   "stability": "Stable",
+   "stability_evidence": "Last layoff was 8% in Jan 2023 (Finextra), outside the 24-month window; third-party trackers report 2024 revenue ~$90.9m (+19%) and a ~$25m round at ~$1.5bn valuation in Jul 2025, with no 2025-26 cuts reported.",
+   "as_of": "2026-10-13"
+  },
+  "Preply": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor, company-wide Work/Life Balance sub-score, 372 ratings, Sep 2026",
+   "wlb_note": "Flexibility is praised but several reviews mention pressure, a high bar and fast-moving expectations.",
+   "stability": "Growing",
+   "stability_evidence": "Raised a $150m Series D led by WestCap at a $1.2bn valuation while EBITDA-positive for the prior 12 months (Bloomberg, 21 Jan 2026), with no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "Quantum": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi page found for Quantum (quantum.media, London affiliate-marketing firm).",
+   "stability": "Stable",
+   "stability_evidence": "Private London affiliate-marketing firm with 60+ staff and 10+ years trading (quantum.media) and no public financials, no reported cuts, and an active careers board hiring graduates and analysts as of Oct 2026 (Ashby).",
+   "as_of": "2026-10-13"
+  },
+  "Qube RT": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor, company-wide, 129 reviews, 2026 snapshot (75% recommend)",
+   "wlb_note": "No WLB sub-score surfaced; quant hedge-fund pace, though reviews do not single out long hours.",
+   "stability": "Growing",
+   "stability_evidence": "Headcount roughly tripled from 994 (2023) to 2,828 (Mar 2026, Revelio Labs) on ~$36bn AUM, with only small trims concentrated in the Singapore office reported by eFinancialCareers (2025).",
+   "as_of": "2026-10-13"
+  },
+  "RELX": {
+   "wlb": 4.1,
+   "wlb_source": "Glassdoor, company-wide, 789 reviews, 2026 snapshot (88% recommend)",
+   "wlb_note": "Reviews praise hybrid/remote flexibility; complaints centre on pay and progression rather than hours.",
+   "stability": "Growing",
+   "stability_evidence": "2025 results (RELX press release, 12 Feb 2026): underlying revenue +7% to £9.59bn and adjusted operating profit +9% with no restructuring, and the H1 2026 results (23 Jul 2026) reaffirmed the full-year outlook.",
+   "as_of": "2026-10-13"
+  },
+  "Raylo": {
+   "wlb": 4.5,
+   "wlb_source": "Glassdoor UK, company-wide, 29 reviews, 2026 snapshot (86% recommend)",
+   "wlb_note": "Reviewers cite limited flexible-working options and weak benefits despite the high overall score.",
+   "stability": "Stable",
+   "stability_evidence": "No layoffs or new funding round reported in 2025-26; the company site cites 250,000+ subscribers, ~100 UK staff and an S&P Global-assessed green financing framework (raylo.com, 2026) but discloses no profitability figures.",
+   "as_of": "2026-10-13"
+  },
+  "Reed Business Information (EG)": {
+   "wlb": 3.3,
+   "wlb_source": "Glassdoor, Reed Business Information company-wide (legacy RELX unit), 236 reviews, undated snapshot",
+   "wlb_note": "The rating covers the old RBI entity and predates EG's move to Mark Allen Group, so it may not reflect the current EG team.",
+   "stability": "Caution",
+   "stability_evidence": "RELX slated EG for closure at end-2024 before selling it to Mark Allen Group in late 2024 (inside the 24-month window); EG then posted an £854k profit in its first year under MAG (A Media Operator, 15 May 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Relay": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi page for Relay (London last-mile logistics); Indeed UK 'Relay Technologies' 2.0/5 from 9 reviews is courier-driver feedback, not office staff.",
+   "stability": "Growing",
+   "stability_evidence": "Company careers page states it recently closed a $95m Series B after a $35m Plural-led Series A (Feb 2024), with ~160 staff, half in engineering/product/data (Ashby job board, Oct 2026); no layoffs reported.",
+   "as_of": "2026-10-13"
+  },
+  "SEGA Europe": {
+   "wlb": 3.6,
+   "wlb_source": "Glassdoor, SEGA company-wide, 157 reviews, 2026 snapshot (62% recommend); Indeed UK WLB sub-score 3.9 from 84 reviews",
+   "wlb_note": "Reviews report crunch with long days around releases on some teams; pay and progression are rated lower than balance.",
+   "stability": "Stable",
+   "stability_evidence": "Sega cut 240 UK/European roles including Sega Europe HQ on 28 Mar 2024 (outside the 24-month window) with no further UK cuts reported, and Sega Sammy net income rose to ¥45bn in FY to Mar 2025 (Sega Sammy IR via Wikipedia).",
+   "as_of": "2026-10-13"
+  },
+  "Sagacity": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No Glassdoor or Levels.fyi page found for Sagacity Solutions (London data consultancy).",
+   "stability": "Stable",
+   "stability_evidence": "Sagacity states it is now part of Accenture Song (sagacitysolutions.co.uk, 2025 acquisition), placing it inside a profitable parent; no redundancies reported, though post-acquisition integration is the main unknown.",
+   "as_of": "2026-10-13"
+  },
+  "Signifyd": {
+   "wlb": null,
+   "wlb_source": null,
+   "wlb_note": "No aggregate Glassdoor rating surfaced; individual 2025-26 Glassdoor reviews rate it 4-5 and cite a genuine four-day work week.",
+   "stability": "Stable",
+   "stability_evidence": "No layoff round or new funding found for 2024-26; the last raise was a $205m Series E at a $1.34bn valuation (Apr 2021, TechCrunch) and a 2025 Glassdoor review mentions 'tough changes recently', so the financial signal is limited.",
+   "as_of": "2026-10-13"
+  },
+  "Soho House & Co": {
+   "wlb": 3.2,
+   "wlb_source": "Glassdoor, company-wide (hospitality-weighted), 1,284 reviews, 2026 snapshot (46% recommend)",
+   "wlb_note": "Sample is dominated by club/hospitality staff; the data role itself requires four days a week in the office.",
+   "stability": "Caution",
+   "stability_evidence": "Agreed a $2.7bn take-private led by MCR Hotels (Reuters, 18 Aug 2025) while still loss-making (never profitable as of 2024; 2023 net loss $118m), leaving ownership-transition and cost-cutting overhang.",
+   "as_of": "2026-10-13"
+  },
+  "Solirius Reply": {
+   "wlb": 4.2,
+   "wlb_source": "Glassdoor UK, Solirius company-wide, 45 reviews, 2026 snapshot (86% recommend)",
+   "wlb_note": "Reviews praise flexible working; one criticism is sparse work at junior levels.",
+   "stability": "Stable",
+   "stability_evidence": "Now part of Reply Group (acquired 2025), whose FY2025 revenue grew 8% to €2.48bn with net income +18.8% (Reply financial highlights, 2026); no cuts reported at Solirius.",
+   "as_of": "2026-10-13"
+  },
+  "Stantec": {
+   "wlb": 3.7,
+   "wlb_source": "Glassdoor, company-wide overall, 3,572 reviews, Oct 2026 (global page; UK-only cohort not isolated)",
+   "wlb_note": "Named a Glassdoor UK Best Place to Work 2025; reviews cite hybrid/flexible working, with occasional long hours on construction-adjacent projects.",
+   "stability": "Growing",
+   "stability_evidence": "No layoff round found; Q2 2026 net revenue up 11.5% to $1.8bn with backlog up 17.5% to $9.2bn (Stantec Form 6-K, 12 Aug 2026).",
+   "as_of": "2026-10-13"
+  },
+  "The Voleon Group": {
+   "wlb": 4.6,
+   "wlb_source": "Glassdoor, company-wide Work/Life Balance sub-rating, 113 reviews, Aug 2026",
+   "wlb_note": "Research-style quant culture; 88% would recommend, though interview-experience and pay scores are weaker.",
+   "stability": "Growing",
+   "stability_evidence": "No layoffs reported; AUM $23.4bn at Jan 2026 and flagship funds gained 13.6%/13.5% in 2024 and were up 14%/12% YTD by Apr 2025 (Pensions & Investments, 28 May 2025).",
+   "as_of": "2026-10-13"
+  },
+  "Trainline": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor UK, company-wide overall, 432 reviews, Oct 2026",
+   "wlb_note": "Balance varies by team: tech reviewers report good balance and 2-day office hybrid, while a Jul 2026 finance review describes overstretched teams.",
+   "stability": "Growing",
+   "stability_evidence": "No layoff round found; FY2026 operating profit up 43% to £122m with a £75m buyback, though CEO Jody Ford signalled departure in Feb 2026 (results, 6 May 2026, Sharecast).",
+   "as_of": "2026-10-13"
+  },
+  "Tripadvisor": {
+   "wlb": 3.5,
+   "wlb_source": "Glassdoor, company-wide overall, ~1,363 reviews, Oct 2026",
+   "wlb_note": "Reviews praise culture and balance but repeatedly cite layoffs and unclear strategy; CEO approval only ~25%.",
+   "stability": "Caution",
+   "stability_evidence": "Announced ~20% headcount cut (~450-600 roles, hitting engineering/product hardest) with the Viator merger in Nov 2025, with restructuring continuing through Q4 2026 (Boston Globe, 6 Nov 2025; Q2 2026 10-Q).",
+   "as_of": "2026-10-13"
+  },
+  "Tripledot Studios": {
+   "wlb": 3.6,
+   "wlb_source": "Glassdoor, company-wide, 110 reviews, Aug 2026 (figure shown was the career-opportunities sub-score; overall score not confirmed)",
+   "wlb_note": "Small-sample reviews mention launch-crunch pressure and a more corporate feel since scaling.",
+   "stability": "Growing",
+   "stability_evidence": "Closed $800m acquisition of 10 AppLovin studios on 30 Jun 2025 (now 2,500 staff) with the CEO saying layoffs were unlikely and an IPO unlocked (mobilegamer.biz, Jul 2025); no 2026 cuts found.",
+   "as_of": "2026-10-13"
+  },
+  "UBS": {
+   "wlb": 3.7,
+   "wlb_source": "Glassdoor, company-wide overall, ~14,600 reviews, Oct 2026 (global; UK-only cohort not isolated)",
+   "wlb_note": "Recent 2026 reviews praise hybrid working and leave, but banking hours vary by desk and complaints centre on pay rises and progression.",
+   "stability": "Caution",
+   "stability_evidence": "Eliminated several hundred EMEA positions in May 2026 with further Credit Suisse-integration waves planned and up to 10,000 cuts by 2027 (Bloomberg, May 2026).",
+   "as_of": "2026-10-13"
+  },
+  "WPP Media": {
+   "wlb": 3.5,
+   "wlb_source": "Glassdoor UK, company-wide overall, 3,136 reviews, Oct 2026",
+   "wlb_note": "Agency workload and low pay are recurring complaints; only 47% positive business outlook.",
+   "stability": "Caution",
+   "stability_evidence": "FT reported WPP plans up to 1,000 further job cuts by end-2026 on top of ~11,000 roles cut since early 2025 under the Elevate28 cost plan (FT via HR Katha, 1 Sep 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Warden AI": {
+   "wlb": null,
+   "wlb_source": "No Glassdoor or Levels.fyi page found for Warden AI (early-stage, ~2021 founding)",
+   "wlb_note": "Too small for any employee-review data; no rating available.",
+   "stability": "Growing",
+   "stability_evidence": "Raised a ~$1.5m seed led by Onfido founders with Playfair in Jul 2025 and reports 60+ HR-tech vendor clients, but remains a seed-stage startup with no public revenue (VCBacked/Techleap, Jul 2025).",
+   "as_of": "2026-10-13"
+  },
+  "Wayflyer": {
+   "wlb": 3.8,
+   "wlb_source": "Glassdoor, company-wide overall, 179 reviews, Oct 2026",
+   "wlb_note": "70% would recommend and 84% approve of the CEO; no specific long-hours pattern reported.",
+   "stability": "Growing",
+   "stability_evidence": "No cuts since the 2023 40% reduction; secured a $250m Apollo/ATLAS credit facility in Feb 2026 after a $35m Series B-II in Jun 2025 and >$100m revenue (Bloomberg, Feb 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Wayve": {
+   "wlb": 4.5,
+   "wlb_source": "Glassdoor, company-wide overall, 121 reviews, Oct 2026 (WLB sub-score reported inconsistently as 3.9-4.8 by aggregators)",
+   "wlb_note": "Reviews praise flexibility but describe a relentless pace with burnout risk in some teams.",
+   "stability": "Growing",
+   "stability_evidence": "No layoffs reported; raised a ~$1.2bn Series D (to ~$1.5bn with Uber) at an $8.6bn valuation on 25 Feb 2026 and ran an $85m employee share buyback in Jul 2026 (Reuters/TechCrunch, Feb 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Wheely": {
+   "wlb": 3.9,
+   "wlb_source": "Glassdoor, company-wide overall, 62 reviews, Oct 2026",
+   "wlb_note": "Small sample; office reviewers cite very high product standards, while driver/ops reviews are more negative.",
+   "stability": "Growing",
+   "stability_evidence": "Reported profitable with >$100m gross bookings and launched in New York in Mar 2026; last funding was a $15m Series B in Feb 2024 (Entrepreneur UK, Mar 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Woven by Toyota": {
+   "wlb": null,
+   "wlb_source": "No Glassdoor or Levels.fyi page for Woven by Toyota found (only parent Toyota entities); Blind shows 2.8 overall / 3.9 WLB from 126 reviews but is outside the method",
+   "wlb_note": "Blind reviewers rate work/life balance as the company's best category but management and career growth poorly.",
+   "stability": "Stable",
+   "stability_evidence": "No layoffs or restructuring reported for 2024-2026 and the unit remains fully Toyota-funded, with Woven City phase 1 completed in 2025 (Toyota statements, 2025); no standalone financials are published.",
+   "as_of": "2026-10-13"
+  },
+  "Yonder": {
+   "wlb": null,
+   "wlb_source": "No Glassdoor UK or Levels.fyi page confirmed for Yonder (the London card fintech); the only Glassdoor 'Yonder' page found (E567866, 4.0 from 116 reviews) appears to be an unrelated older company",
+   "wlb_note": "No reliable employee rating available for this ~100-200 person fintech.",
+   "stability": "Stable",
+   "stability_evidence": "No layoffs reported; last raise was a £23.4m Series B at a >£100m valuation in Sep 2024, with no 2025-2026 funding or financials found (FinTech Futures, 19 Sep 2024).",
+   "as_of": "2026-10-13"
+  },
+  "Zego": {
+   "wlb": 4.4,
+   "wlb_source": "Glassdoor UK, company-wide overall (Zego Insurance E1851459), ~327 reviews, Oct 2026",
+   "wlb_note": "Reviews describe a pleasant, low-stress balance but a fast-paced, target-driven culture.",
+   "stability": "Growing",
+   "stability_evidence": "Reached profitability in 2025 (after a £4m loss in 2024) and extended a €25m Sompo-led round with Indico and Explorer on 8 Oct 2026; last cuts were in Q3 2023 (Post Online; Dealroom, Oct 2026).",
+   "as_of": "2026-10-13"
+  },
+  "Zilch": {
+   "wlb": 4.0,
+   "wlb_source": "Glassdoor, company-wide overall (Zilch Technology), 130 reviews, Oct 2026",
+   "wlb_note": "75% would recommend; main complaint is the fixed 3-day office hybrid policy.",
+   "stability": "Growing",
+   "stability_evidence": "FY2025 revenue up 93% to £110.3m with net loss cut 79% to £10.5m, a $2bn valuation held in Nov 2025 and banks sounded out for a 2027 London IPO (FT via PaymentExpert, 30 Sep 2026); no 2025-26 layoffs found.",
+   "as_of": "2026-10-13"
+  },
+  "dunnhumby": {
+   "wlb": 4.3,
+   "wlb_source": "Glassdoor, company-wide overall, 1,806 reviews, Oct 2026",
+   "wlb_note": "UK reviewers say work/life balance is well respected despite a fast pace; pay is the main complaint.",
+   "stability": "Stable",
+   "stability_evidence": "No layoff or restructuring reports found for 2025-2026 and it remains a Tesco subsidiary, with a new CEO (Jamie Samaha) from Jul 2026; latest public financials are 2022 (Wikipedia/Companies House, 2026).",
+   "as_of": "2026-10-13"
+  },
+  "iwoca": {
+   "wlb": 4.3,
+   "wlb_source": "Glassdoor, company-wide overall, 213 reviews, Oct 2026",
+   "wlb_note": "85% would recommend; reviews cite flexible hours and relaxed environment, with patchy management.",
+   "stability": "Growing",
+   "stability_evidence": "2025 profit of £85.1m on revenue up 56% to £366m and £1.5bn lent, plus a £250m funding structure closed in Jul 2026 (Alternative Credit Investor, 28 Sep 2026).",
+   "as_of": "2026-10-13"
+  },
+  "loveholidays": {
+   "wlb": 3.9,
+   "wlb_source": "Glassdoor UK, company-wide overall, 190 reviews, Oct 2026",
+   "wlb_note": "75% would recommend and 83% approve of the CEO; no long-hours pattern reported.",
+   "stability": "Growing",
+   "stability_evidence": "Pre-tax profit rose a fifth to £67.6m (FY to Oct 2024) and owner Livingbridge lined up banks for a ~£1bn London IPO in Jan 2026 (Sky News, Jan 2026); IPO outcome not verified and no layoffs found.",
+   "as_of": "2026-10-13"
+  },
+  "myPOS": {
+   "wlb": 3.3,
+   "wlb_source": "Glassdoor, company-wide overall, 21 reviews, Oct 2026 (small sample)",
+   "wlb_note": "Mixed small-sample reviews, including a May 2026 complaint about heavy monitoring and a hostile culture.",
+   "stability": "Stable",
+   "stability_evidence": "No layoffs reported; completed the acquisition of Munich-based LAVEGO on 11 Dec 2025 and rolled out girocard in Germany in May 2026, but no 2025-26 financials are public (myPOS newsroom).",
+   "as_of": "2026-10-13"
+  }
  }
 }
