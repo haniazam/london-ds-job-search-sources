@@ -144,11 +144,16 @@ for acct in REG.get("workable", []):
 
 # ---------------- SmartRecruiters (public postings API; some companies gate it -> 0) ----------------
 for cid in REG.get("smartrecruiters", []):
+    content, offset = [], 0
     try:
-        d = json.loads(get(f"https://api.smartrecruiters.com/v1/companies/{cid}/postings?limit=100"))
+        while True:                                                            # page: Wise alone has 400+ postings
+            d = json.loads(get(f"https://api.smartrecruiters.com/v1/companies/{cid}/postings?limit=100&offset={offset}"))
+            page = d.get("content", []); content += page; offset += len(page)
+            if not page or offset >= int(d.get("totalFound", 0) or 0) or offset >= 2000: break
     except Exception as e:
-        print(f"[smartrecruiters] {cid}: {type(e).__name__}", file=sys.stderr); continue
-    hits = 0
+        print(f"[smartrecruiters] {cid}: {type(e).__name__}", file=sys.stderr)
+        UNVERIFIED.setdefault("smartrecruiters", []).append(cid); continue   # rows carry forward, never close on an API error
+    d = {"content": content}; hits = 0
     for j in d.get("content", []):
         t = j.get("name", ""); L = j.get("location") or {}
         loc = f"{L.get('city','')}, {L.get('country','')} {'remote' if L.get('remote') else ''}"
@@ -216,6 +221,7 @@ for name, site in REG.get("oraclehcm", {}).items():
         print(f"[oraclehcm] {name}: {total} requisitions, {hits} London DS", file=sys.stderr)
     except Exception as e:
         print(f"[oraclehcm] {name}: {type(e).__name__}", file=sys.stderr)
+        UNVERIFIED.setdefault("oraclehcm", []).append(host[:-4] if host.endswith(".com") else host)   # matches //<host>. in the row URL
 
 # ---------------- SAP SuccessFactors career sites (server-rendered /search/ page; Fitch) ----------------
 for name, base in REG.get("successfactors", {}).items():
