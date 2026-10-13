@@ -17,6 +17,11 @@ from role_taxonomy import classify
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 SRC = sys.argv[1] if len(sys.argv) > 1 else "/tmp/ldn_ds_active_pay.csv"
 OUT = sys.argv[2] if len(sys.argv) > 2 else "/tmp/london-ds-board.html"
+# the masthead's "Verified <date>": the snapshot's date when SRC is data/snapshots/<date>.csv, else today
+import datetime as _dt
+_m = re.search(r"(\d{4}-\d{2}-\d{2})\.csv$", SRC)
+_d = _dt.date.fromisoformat(_m.group(1)) if _m else _dt.date.today()
+DATE_LABEL = f"{_d.day} {_d.strftime('%b %Y')}"
 from refresh_roles_scope import BRIEF, via_of, EXCLUDE, london_ok, norm_loc
 SEN = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished|vice president|\bvp\b|\bavp\b|executive director", re.I)
 def comp_parse(c):
@@ -59,6 +64,6 @@ aside_path = os.path.join(ROOT, "data", "set_aside.json")
 aside = json.load(open(aside_path)) if os.path.exists(aside_path) else []
 tpl = open(os.path.join(HERE, "board_template.html"), encoding="utf-8").read()
 page = (tpl.replace("__ROLES__", json.dumps(rows, ensure_ascii=False)).replace("__ASIDE__", json.dumps(aside, ensure_ascii=False))
-           .replace("__NROLES__", str(len(rows))).replace("__NCOS__", str(len({r["co"] for r in rows}))).replace("__NASIDE__", str(len(aside))))
+           .replace("__NROLES__", str(len(rows))).replace("__NCOS__", str(len({r["co"] for r in rows}))).replace("__NASIDE__", str(len(aside))).replace("__DATE__", DATE_LABEL))
 open(OUT, "w", encoding="utf-8").write(page)
 print(f"WROTE {OUT}: {len(rows)} Standard DS roles at {len({r['co'] for r in rows})} employers; {len(aside)} set-aside; WLB/stability for {sum(1 for r in rows if r['wlb'] is not None or r['stab']!='Not researched')} rows")
