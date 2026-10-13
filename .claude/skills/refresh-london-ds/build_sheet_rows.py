@@ -47,8 +47,9 @@ unv_path = "/tmp/ldn_ds_unverified.json"; unv = json.load(open(unv_path)) if os.
 def unreadable(url):
     """The platform key whose board the run could not read, or None."""
     if "workable" in url and "workable" in unv: return "workable"
+    if url.split("?")[0] in unv.get("manual", []): return "manual"
     return next((k for k, ts in unv.items() for t in ts if f"/{t}" in url or f"//{t}." in url), None)
-REASON = {"spa": "JS site; Playwright absent in this run"}
+REASON = {"spa": "JS site not reachable this run (Playwright absent or fetch failed)", "manual": "post page fetch failed this run"}
 closed, carried = [], []
 for v in missing:
     k = unreadable(v[6])

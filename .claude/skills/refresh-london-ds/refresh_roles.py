@@ -258,8 +258,14 @@ except ImportError:
     print("[spa] Playwright not installed — skipping JS sites. "
           "Run: pip install playwright && python -m playwright install chromium", file=sys.stderr)
     # the Sheet must carry these sites' rows forward as unverified, never close them (build_sheet_rows.py reads this)
-    UNVERIFIED["spa"] = ["www.lifeatspotify", "www.gresearch", "bloomberg.avature", "jobs.careers.microsoft", "careers.point72", "careers.tiktok"]
+    UNVERIFIED["spa"] = ["www.lifeatspotify", "www.gresearch", "bloomberg.avature", "jobs.careers.microsoft", "apply.careers.microsoft", "careers.point72", "careers.tiktok", "lifeattiktok"]
 
+SPA_HOSTS = {"spotify": ["www.lifeatspotify"], "gresearch": ["www.gresearch"], "bloomberg": ["bloomberg.avature"],
+             "microsoft": ["apply.careers.microsoft", "jobs.careers.microsoft"], "point72": ["careers.point72"], "tiktok": ["careers.tiktok", "lifeattiktok"]}
+def spa_fail(site, e):
+    """A JS-site block that raised leaves its rows unverified (build_sheet_rows.py carries them forward), never closed."""
+    print(f"[spa] {site}", type(e).__name__, e, file=sys.stderr)
+    UNVERIFIED.setdefault("spa", []).extend(h for h in SPA_HOSTS[site] if h not in UNVERIFIED.get("spa", []))
 def spa_refresh():
     out = []
     with sync_playwright() as p:
@@ -301,7 +307,7 @@ def spa_refresh():
                     elif isinstance(o, list):
                         for v in o: walk(v)
                 walk(d)
-        except Exception as e: print("[spa] spotify", type(e).__name__, file=sys.stderr)
+        except Exception as e: spa_fail("spotify", e)
 
         # G-Research (individual vacancy pages)
         try:
@@ -315,7 +321,7 @@ def spa_refresh():
                     if re.search(r"data-scien|machine-learning|nlp|natural-language|decision", slug):
                         out.append(("G-Research", slug.replace("-", " ").title(), "Regular/Mid",
                                     "London", f"https://www.gresearch.com{h if h.startswith('/') else '/vacancies/'+slug+'/'}"))
-        except Exception as e: print("[spa] gresearch", type(e).__name__, file=sys.stderr)
+        except Exception as e: spa_fail("gresearch", e)
 
         # Bloomberg avature
         try:
@@ -326,7 +332,7 @@ def spa_refresh():
                     if "london" in t.lower() or "Economics" in t:
                         url = h if h.startswith("http") else "https://bloomberg.avature.net" + h
                         out.append(("Bloomberg", t[:60], level(t), "London (verify)", url))
-        except Exception as e: print("[spa] bloomberg", type(e).__name__, file=sys.stderr)
+        except Exception as e: spa_fail("bloomberg", e)
 
         # Microsoft Eightfold (in-browser)
         try:
@@ -345,7 +351,7 @@ def spa_refresh():
                 elif isinstance(o, list):
                     for v in o: walk(v)
             walk(d)
-        except Exception as e: print("[spa] microsoft", type(e).__name__, file=sys.stderr)
+        except Exception as e: spa_fail("microsoft", e)
 
         # Point72 CSOD
         try:
@@ -359,7 +365,7 @@ def spa_refresh():
                     seen2.add(h)
                     url = h if h.startswith("http") else "https://careers.point72.com" + h
                     out.append(("Point72", t, level(t), "London (multi)", url))
-        except Exception as e: print("[spa] point72", type(e).__name__, file=sys.stderr)
+        except Exception as e: spa_fail("point72", e)
 
         # TikTok
         try:
@@ -382,7 +388,7 @@ def spa_refresh():
                     elif isinstance(o, list):
                         for v in o: walk(v)
                 walk(d)
-        except Exception as e: print("[spa] tiktok", type(e).__name__, file=sys.stderr)
+        except Exception as e: spa_fail("tiktok", e)
 
         b.close()
     # dedupe
@@ -395,6 +401,7 @@ if HAVE_PW:
         active += spa_refresh()
     except Exception as e:
         print("[spa] failed:", type(e).__name__, e, file=sys.stderr)
+        for site in SPA_HOSTS: spa_fail(site, e)
 
 # ---------------- Workable fallback: the widget API 429s from cloud egress IPs, but the job pages still load ----------------
 # For each account the API pass lost to 429, re-check the rows the last snapshot carried for it by their own page:
@@ -511,13 +518,15 @@ if os.path.exists(DISC):
 
 # ---------------- hand-added posts on sites without an API (data/manual_posts.json), verified each run ----------------
 try:
-    from manual_posts import verified_rows
+    from manual_posts import verified_rows, UNVERIFIED_URLS
     for r in verified_rows():
         if EXCLUDE.search(r["Role"]): continue
         if r["Apply URL (unique active post)"].split("?")[0] not in {a[4].split("?")[0] for a in active}:
             active.append((r["Company"], r["Role"], r["Level"], r["Location"], r["Apply URL (unique active post)"]))
 except Exception as e:
     print(f"[manual] skipped: {type(e).__name__} {e}", file=sys.stderr)
+else:
+    if UNVERIFIED_URLS: UNVERIFIED["manual"] = list(UNVERIFIED_URLS)          # fetch errors carry forward as unverified
 
 # ---------------- companies known to have NO active London DS (documented) ----------------
 NO_ROLE = [
