@@ -13,7 +13,9 @@ from role_taxonomy import classify
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE))); PATH = os.path.join(ROOT, "data", "manual_posts.json")
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36", "Accept-Language": "en-GB,en;q=0.9"}
 SEN = re.compile(r"senior|staff|lead|principal|head|director|manager|\bsr\.?\b|distinguished|vice president|\bvp\b|\bavp\b|executive director", re.I)
-DEAD = re.compile(r"no longer|not found|closed|expired|jobs search|\d,\d{3}\+ |\bjobs in (the )?united states", re.I)
+DEAD = re.compile(r"no longer|not found|not available|closed|expired|jobs search|\d,\d{3}\+ |\bjobs in (the )?united states", re.I)
+# a page whose <title> still names the role but whose body marks it expired (inploi/Haven: "status","EXPIRED" + an Expired badge)
+PAGE_DEAD = re.compile(r'"status"\s*,\s*"EXPIRED"|>\s*Expired\s*<|This (job|position|vacancy) (has expired|is no longer (available|open|accepting))|job is not available anymore', re.I)
 UNVERIFIED_URLS = []   # posts whose page could not be fetched this run (network/429/5xx): unverified, not closed
 def verified_rows(pause=3.0):
     rows = []; UNVERIFIED_URLS.clear()
@@ -26,7 +28,7 @@ def verified_rows(pause=3.0):
             if not (isinstance(e, urllib.error.HTTPError) and e.code in (404, 410)): UNVERIFIED_URLS.append(p["url"].split("?")[0])
             continue
         m = re.search(r"<title>(.*?)</title>", page, re.S); title = html.unescape(m.group(1)) if m else ""
-        if re.search(r"data scien", title, re.I) and not DEAD.search(title):
+        if re.search(r"data scien", title, re.I) and not DEAD.search(title) and not PAGE_DEAD.search(page):
             rows.append({"Company": p["company"], "Role": p["title"], "Role Type": classify(p["title"]), "Level": "Senior+" if SEN.search(p["title"]) else "Regular/Mid",
                          "Location": p.get("location", "London"), "Apply URL (unique active post)": p["url"], "Status": "Active", "Notes": "manual post, title-verified", "Approx London TC": p.get("comp", "")})
         else:
