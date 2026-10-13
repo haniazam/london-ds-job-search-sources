@@ -351,7 +351,7 @@ td select.status{height:36px;font-size:12.5px;padding:0 28px 0 11px}
     </div>
     <h1>Every live role, <em>checked at source</em></h1>
     <p class="standfirst">
-      <b>178 roles at 99 employers</b>, each one confirmed on the employer&rsquo;s own board or API rather than
+      <b><span id="n-roles">—</span> roles at <span id="n-cos">—</span> employers</b>, each one confirmed on the employer&rsquo;s own board or API rather than
       taken from an aggregator. Every role carries a 0&ndash;10 score, a pay figure labelled with where that figure
       came from, and one concrete next action. Pipeline status is yours to set and is kept in this browser.
     </p>
@@ -364,10 +364,10 @@ td select.status{height:36px;font-size:12.5px;padding:0 28px 0 11px}
       Target List researched a company, its work&ndash;life balance and stability notes are carried over.
     </div>
     <dl class="stats">
-      <div class="stat"><b id="s-live">178</b><span>Verified live</span></div>
+      <div class="stat"><b id="s-live">—</b><span>Verified live</span></div>
       <div class="stat hot"><b id="s-top">&mdash;</b><span>Apply now &middot; 7+</span></div>
       <div class="stat"><b id="s-active">&mdash;</b><span>In your pipeline</span></div>
-      <div class="stat"><b id="s-aside">33</b><span>Set aside</span></div>
+      <div class="stat"><b id="s-aside">__NASIDE__</b><span>Set aside</span></div>
     </dl>
   </header>
 
@@ -589,6 +589,10 @@ const table_clear=()=>{$("tablewrap").innerHTML=""};
 $("aside").innerHTML=ASIDE.map(([c,w,t])=>
   `<li><div class="hd"><span class="nm">${esc(c)}</span><span class="tg ${t}">${TAG[t]||""}</span></div><p>${esc(w)}</p></li>`).join("");
 $("s-aside").textContent=ASIDE.length;
+/* counts come from the data, so a refresh can never leave a stale headline number */
+$("s-live").textContent=ROLES.length;
+$("n-roles").textContent=ROLES.length;
+$("n-cos").textContent=new Set(ROLES.map(r=>r.co)).size;
 
 /* interactions */
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("on"),1800)}
