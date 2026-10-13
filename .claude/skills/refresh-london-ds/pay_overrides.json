@@ -110,5 +110,101 @@
   "hi": 83,
   "label": "sourced: Glassdoor range shown on this BNY London posting",
   "date": "2026-10-11"
+ },
+ {
+  "company": "Amazon",
+  "title_regex": ".",
+  "lo": 95,
+  "hi": 115,
+  "label": "sourced: Levels.fyi Amazon Data Scientist II (L5) London avg TC $128k (base $98k) ~ £96k, and Levels.fyi Amazon UK Data Scientist median £115k (updated Jan 2026)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Anaplan",
+  "title_regex": "Lead|Head|Director|Manager|Principal|Staff",
+  "lo": 66,
+  "hi": 99,
+  "label": "Glassdoor est. shown on Anaplan Principal AI Data Scientist London posting £66k-£99k (base estimate)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Apple",
+  "title_regex": ".",
+  "lo": 121,
+  "hi": 135,
+  "label": "sourced: Levels.fyi Apple Data Scientist London ICT3 £121k TC, median £126k-£135k (updated Jun 2026)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "C3 AI",
+  "title_regex": ".",
+  "lo": 75,
+  "hi": 100,
+  "label": "Glassdoor est. shown on C3 AI London Data Scientist postings £75k-£100k (base estimate)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Deliveroo",
+  "title_regex": "Lead|Head|Director|Manager|Principal|Staff",
+  "lo": 113,
+  "hi": null,
+  "label": "sourced: Indeed UK Deliveroo Data Science Manager £113,260 average (3 salaries reported; single point, likely base)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Kharon",
+  "title_regex": "^Senior Data Scientist",
+  "lo": 105,
+  "hi": 120,
+  "label": "posted: Kharon Pinpoint pay-transparency posting, Senior Data Scientist (Agentic Systems and Graph Risk Analytics), London hybrid, £105,000-£120,000 base",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Kharon",
+  "title_regex": "^Data Scientist",
+  "lo": 90,
+  "hi": 105,
+  "label": "posted: Kharon Pinpoint pay-transparency posting, Data Scientist, Retrieval & Agentic Systems, London hybrid, £90,000-£105,000 base",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Made Tech",
+  "title_regex": "^Senior",
+  "lo": 49.5,
+  "hi": 75,
+  "label": "posted: Made Tech pay-transparency posting 'Senior Data Scientist - SC cleared' £49,500-£75,000 base (any UK hub incl. London), Oct 2026",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Reed Business Information (EG)",
+  "title_regex": ".",
+  "lo": 50,
+  "hi": 58,
+  "label": "posted: EG / Reed Business Information pay-transparency posting 'Data Scientist £50-58k' base, London (SmartRecruiters, Oct 2026)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Spotify",
+  "title_regex": ".",
+  "lo": 68,
+  "hi": 78,
+  "label": "sourced: Indeed UK Spotify Data Scientist avg £67.9k (8 salaries) to Senior Data Scientist avg £78.4k (3 salaries), base only, 2026",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Wise",
+  "title_regex": "^Lead Data Scientist",
+  "lo": 90.5,
+  "hi": 127,
+  "label": "posted: Wise SmartRecruiters posting Job Ad Salary Range £90,500-£127,000 base, Lead Data Scientist London (same range on all four Lead DS posts)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Wise",
+  "title_regex": "^Senior Data Science Lead",
+  "lo": 118.5,
+  "hi": 164,
+  "label": "posted: Wise SmartRecruiters posting Job Ad Salary Range £118,500-£164,000 base, Senior Data Science Lead - AML Risk London",
+  "date": "2026-10-13"
  }
 ]
