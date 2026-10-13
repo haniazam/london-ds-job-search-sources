@@ -60,11 +60,6 @@
   "closed"
  ],
  [
-  "ICF",
-  "Senior DS (Workday) returns a generic page — closed",
-  "closed"
- ],
- [
   "Mention Me",
   "Senior/Lead DS (Workable) — radar marks closed; Workable rate-limited",
   "closed"
@@ -227,6 +222,26 @@
  [
   "Zopa (Data Scientist (Mid and Senior Level))",
   "Closed — not returned by Lever API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Carwow (Senior Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-13)",
+  "closed"
+ ],
+ [
+  "Octopus Energy (Data Scientist)",
+  "Closed — not returned by Lever API on the 2026-10-13 refresh (was live on 2026-10-13)",
+  "closed"
+ ],
+ [
+  "Wise (Data Science Lead (DSL1) - KYC Global & Onboarding)",
+  "Closed — not returned by SmartRecruiters API on the 2026-10-13 refresh (was live on 2026-10-13)",
+  "closed"
+ ],
+ [
+  "Zego (Head of Telematics Data Science)",
+  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-13)",
   "closed"
  ]
 ]
