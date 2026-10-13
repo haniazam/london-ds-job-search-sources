@@ -206,5 +206,325 @@
   "hi": 164,
   "label": "posted: Wise SmartRecruiters posting Job Ad Salary Range £118,500-£164,000 base, Senior Data Science Lead - AML Risk London",
   "date": "2026-10-13"
+ },
+ {
+  "company": "Abtrace",
+  "title_regex": ".",
+  "lo": 76,
+  "hi": null,
+  "label": "sourced: Indeed UK Abtrace Data Scientist avg £76.1k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Artefact",
+  "title_regex": "^Senior",
+  "lo": 77.5,
+  "hi": null,
+  "label": "sourced: Glassdoor Artefact Senior Data Scientist est. avg £77.6k; Data Scientist median total pay £55k (17 salaries)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Capco",
+  "title_regex": "Manager",
+  "lo": 77,
+  "hi": null,
+  "label": "sourced: Glassdoor Capco Senior Data Scientist est. avg £77.2k; Indeed London Data Scientist avg £59.7k (10 salaries); manager grade sits above",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Carwow",
+  "title_regex": "^Senior",
+  "lo": 79,
+  "hi": 88,
+  "label": "sourced: Indeed UK carwow Senior Data Scientist avg £79.4k (6 salaries); Glassdoor carwow Data Scientist total pay to £88k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "CFC",
+  "title_regex": "^Associate Data Scientist",
+  "lo": 42,
+  "hi": 75,
+  "label": "sourced: Glassdoor est. on CFC Associate Data Scientist London listing £42k–£75k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "ClearScore",
+  "title_regex": "^Senior",
+  "lo": 70,
+  "hi": 96,
+  "label": "sourced: Levels.fyi ClearScore Data Scientist UK TC £70.3k–£96.2k (senior at the upper end)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Disney",
+  "title_regex": "^Senior",
+  "lo": 67,
+  "hi": 103,
+  "label": "sourced: Glassdoor est. on this Walt Disney Company Senior Data Scientist London listing £67k–£103k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "dunnhumby",
+  "title_regex": "Senior Applied",
+  "lo": 59,
+  "hi": 77,
+  "label": "sourced: Glassdoor dunnhumby Senior Applied Data Scientist London base avg £59k; Senior Data Scientist est. avg £77.1k (92 salaries)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Elsevier",
+  "title_regex": ".",
+  "lo": 76,
+  "hi": null,
+  "label": "sourced: Glassdoor Elsevier Data Scientist avg £76.4k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Faculty",
+  "title_regex": "^Data Scientist$",
+  "lo": 45,
+  "hi": 72,
+  "label": "sourced: Levels.fyi Faculty Data Scientist Greater London TC £45.4k–£72.3k; Indeed UK avg £63.6k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Faculty",
+  "title_regex": "^Senior",
+  "lo": 76,
+  "hi": 83,
+  "label": "sourced: Glassdoor Faculty Senior Data Scientist est. avg £76.4k (124 salaries) to Indeed UK avg £83.3k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Faculty",
+  "title_regex": "^Lead",
+  "lo": 97,
+  "hi": null,
+  "label": "sourced: Indeed UK Faculty Lead Data Scientist London avg £97.4k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Faculty",
+  "title_regex": "^Principal",
+  "lo": 97,
+  "hi": null,
+  "label": "sourced: Indeed UK Faculty Lead Data Scientist London avg £97.4k; principal sits above lead",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Fospha",
+  "title_regex": "^Junior",
+  "lo": 35,
+  "hi": 45,
+  "label": "sourced: Glassdoor est. on Fospha Junior Data Scientist London listing £35k–£45k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Gradient Labs",
+  "title_regex": ".",
+  "lo": 61,
+  "hi": 86,
+  "label": "sourced: Glassdoor range on Gradient Labs Founding Data Scientist London listing £61k–£86k (lead product DS likely above)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Hiscox",
+  "title_regex": "^Data Scientist$",
+  "lo": 66,
+  "hi": null,
+  "label": "sourced: Indeed UK Hiscox Data Scientist London avg £66.2k; Glassdoor Hiscox Lead Data Scientist listing £57k–£77k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Informed Solutions",
+  "title_regex": "^Senior",
+  "lo": null,
+  "hi": 86,
+  "label": "sourced: Glassdoor est. on Informed Solutions Lead Data Scientist listing £65k–£86k; senior sits below lead",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Intercom",
+  "title_regex": "^Senior",
+  "lo": 107,
+  "hi": 149,
+  "label": "sourced: Levels.fyi Intercom Senior Data Scientist TC £107k–£149k, median £128k (company-wide sample converted to £; London may differ)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Lendable",
+  "title_regex": ".",
+  "lo": 68,
+  "hi": 95,
+  "label": "sourced: Levels.fyi Lendable Data Scientist UK TC £67.9k–£94.6k; Glassdoor listing range £58k–£75k; Indeed London avg £57.7k (3 salaries)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "loveholidays",
+  "title_regex": ".",
+  "lo": null,
+  "hi": 74,
+  "label": "sourced: Indeed UK loveholidays Senior Data Scientist avg £74.3k (4 salaries); mid-level sits below",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "LSEG",
+  "title_regex": "^Senior Applied",
+  "lo": 77,
+  "hi": 89,
+  "label": "sourced: Glassdoor LSEG Senior Data Scientist avg £77.4k (16 salaries); Levels.fyi LSEG Data Scientist UK TC to £88.8k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Marshmallow",
+  "title_regex": "^(Staff|Principal)",
+  "lo": 78,
+  "hi": 95,
+  "label": "sourced: Glassdoor est. on Marshmallow Staff and Principal Data Scientist London listings £78k–£95k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Microsoft",
+  "title_regex": "Sr Data Scientist",
+  "lo": 129,
+  "hi": 218,
+  "label": "sourced: Levels.fyi Microsoft Senior Data Scientist UK TC £129k–£218k; Glassdoor base avg £96k (52 salaries)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Octopus Energy",
+  "title_regex": "Data Scientist",
+  "lo": 51,
+  "hi": 80,
+  "label": "sourced: Glassdoor ranges on Octopus Energy London Data Scientist listings £51k–£80k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Our Future Health",
+  "title_regex": "^Senior",
+  "lo": 60,
+  "hi": null,
+  "label": "sourced: Our Future Health Health Data Scientist posting 'salary from £60,000'; senior sits above",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Oxford Economics",
+  "title_regex": ".",
+  "lo": 63,
+  "hi": null,
+  "label": "sourced: Indeed UK Oxford Economics Senior Economist avg £63.5k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Preply",
+  "title_regex": "^Staff",
+  "lo": 49,
+  "hi": 96,
+  "label": "sourced: Glassdoor range on Preply Staff Data Scientist London listing £49k–£96k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Relay",
+  "title_regex": "^Senior",
+  "lo": 91,
+  "hi": 107,
+  "label": "sourced: Glassdoor range on Relay Senior Data Scientist London listings £91k–£107k (employer-provided not confirmed)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "RELX",
+  "title_regex": "^Senior",
+  "lo": 76,
+  "hi": null,
+  "label": "sourced: Glassdoor Elsevier (RELX) Data Scientist avg £76.4k; Senior Data Scientist II sits above",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Sony Interactive Entertainment",
+  "title_regex": "^Senior/Staff",
+  "lo": 57,
+  "hi": 88,
+  "label": "sourced: Glassdoor est. on this PlayStation Senior/Staff Data Scientist London listing £57k–£88k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Stantec",
+  "title_regex": "^Principal",
+  "lo": 68,
+  "hi": null,
+  "label": "sourced: Glassdoor range on Stantec Data Scientist Water Sector listing £50k–£68k; principal sits above",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "The Voleon Group",
+  "title_regex": ".",
+  "lo": 55,
+  "hi": 100,
+  "label": "sourced: Glassdoor range on Voleon Data Scientist (London) listing £55k–£100k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "TikTok",
+  "title_regex": "TikTok Shop",
+  "lo": 91,
+  "hi": 96,
+  "label": "sourced: Indeed UK TikTok Data Scientist avg £96.5k and Senior Data Scientist avg £91.3k (3 salaries each)",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Tripadvisor",
+  "title_regex": "^Senior",
+  "lo": 70,
+  "hi": 96,
+  "label": "sourced: Levels.fyi Tripadvisor Data Scientist UK TC £70.4k–£96.4k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Tripadvisor",
+  "title_regex": "^Principal",
+  "lo": 96,
+  "hi": null,
+  "label": "sourced: Levels.fyi Tripadvisor Data Scientist UK TC top £96.4k; principal sits above",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Tripledot Studios",
+  "title_regex": ".",
+  "lo": 57,
+  "hi": null,
+  "label": "sourced: Glassdoor Tripledot Studios Data Scientist median total pay £57k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Wayve",
+  "title_regex": "^Senior",
+  "lo": 61,
+  "hi": 102,
+  "label": "sourced: Glassdoor est. on Wayve Senior Data Scientist London listing £61k–£102k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "WPP Media",
+  "title_regex": "^Data Scientist$",
+  "lo": 58,
+  "hi": 72,
+  "label": "sourced: Glassdoor est. WPP Media / GroupM Data Scientist London £58k–£72k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Zego",
+  "title_regex": "^Lead",
+  "lo": 85,
+  "hi": 94,
+  "label": "sourced: Glassdoor est. on Zego Lead Data Scientist - Telematics London listing £85k–£94k",
+  "date": "2026-10-13"
+ },
+ {
+  "company": "Zilch",
+  "title_regex": "^Senior",
+  "lo": 80,
+  "hi": 114,
+  "label": "sourced: Levels.fyi Zilch Data Scientist UK TC £80.3k–£114k",
+  "date": "2026-10-13"
  }
 ]
