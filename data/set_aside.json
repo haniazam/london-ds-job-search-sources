@@ -163,5 +163,70 @@
   "Discovered employers not yet resolved (25)",
   "Found by the discovery sweep with a London DS title but not tied to a readable board after the 11 Oct runs (Brave search, slug probing, and the new Oracle HCM / SuccessFactors / Apple enumerators): sites that block scripts (McKinsey/QuantumBlack, BAE Systems, NatWest), employers with no board anywhere (British Airways, PureGym, Welltower, Zepz, Compare the Market) and closed postings. Kept in discovered_unresolved_employers.json for the weekly sweep.",
   "unv"
+ ],
+ [
+  "Amazon (Data Scientist II, RufusX Science UK)",
+  "Closed — not returned by amazon.jobs API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Blue Light Card (Principal Product Data Scientist)",
+  "Closed — not returned by Teamtailor API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "bp (Senior data scientist)",
+  "Closed — not returned by Workday API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "ElevenLabs (Data Scientist - AI Safety)",
+  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Faculty (Senior Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Faculty (Senior Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Fresha (Head of Data Science)",
+  "Closed — not returned by Lever API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Ocado (Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "PhysicsX (Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Tripadvisor (Senior Data Science Manager (Experimentation))",
+  "Closed — not returned by Greenhouse API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Tripadvisor (Data Scientist, Experimentation)",
+  "Closed — not returned by Greenhouse API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "WPP Media (Data Scientist - Marketing Science)",
+  "Closed — not returned by Greenhouse API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
+ ],
+ [
+  "Zopa (Data Scientist (Mid and Senior Level))",
+  "Closed — not returned by Lever API on the 2026-10-13 refresh (was live on 2026-10-12)",
+  "closed"
  ]
 ]
