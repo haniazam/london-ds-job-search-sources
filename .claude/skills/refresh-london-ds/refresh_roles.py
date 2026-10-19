@@ -101,22 +101,23 @@ for q in ["data scientist", "applied scientist"]:
     except Exception as e:
         print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr)
 
+UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 # ---------------- Workday CXS (mostly 0 London DS; re-check) ----------------
 WORKDAY = REG["workday"]
 for name, url in WORKDAY.items():
     try:
         d = json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": 0,
-                                      "searchText": "data scientist London"}))
+                                      "searchText": "data scientist"}))
         for j in d.get("jobPostings", []):
             t = j.get("title", ""); loc = j.get("locationsText", "")
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 host = url.split("/wday/")[0]; site = url.rstrip("/").rsplit("/", 2)[-2]
                 active.append((name, t, level(t), loc, f"{host}/en-US/{site}{j.get('externalPath', '')}"))
     except Exception as e:
-        print(f"[workday] {name}: {type(e).__name__}", file=sys.stderr)
+        print(f"[workday] {name}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr)
+        UNVERIFIED.setdefault("workday", []).append(url.split("//")[1].split("/")[0].split(".")[0])   # tenant host, matches //<tenant>. in the row URL
 
 # ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
-UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 wk_strikes = 0    # consecutive accounts lost to 429 -> after 2, one un-slept attempt each (bounds the pass at ~2 min, not ~40)
 for acct in REG.get("workable", []):
     tries = 1 if wk_strikes >= 2 else 3

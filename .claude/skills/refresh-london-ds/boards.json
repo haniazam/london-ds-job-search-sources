@@ -82,6 +82,7 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
@@ -92,6 +93,7 @@
  "ashby": [
   "Abound",
   "arq",
+  "beamery",
   "bolt",
   "carwow",
   "chainalysis-careers",
@@ -125,6 +127,7 @@
   "render",
   "socure",
   "synthesia",
+  "teya",
   "trainline",
   "twelve",
   "voleon",
@@ -226,7 +229,8 @@
   "Paymentsense": "https://paymentsense.wd3.myworkdayjobs.com/wday/cxs/paymentsense/Dojo_Careers/jobs",
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
-  "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs"
+  "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -358,7 +362,10 @@
   "trgscreen": "TRG Screen",
   "accenture": "Accenture",
   "warden-ai": "Warden AI",
-  "dept": "DEPT\u00ae"
+  "dept": "DEPT®",
+  "beamery": "Beamery",
+  "teya": "Teya",
+  "via": "Via"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
