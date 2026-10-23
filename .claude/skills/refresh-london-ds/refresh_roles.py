@@ -344,6 +344,7 @@ def spa_refresh():
         try:
             goto("https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&num=50&start=0", 2000)
             d = json.loads(pg.inner_text("body"))
+            if not isinstance(d, dict) or "data" not in d: raise ValueError("Microsoft search returned no 'data' (rate-limited/gated)")   # unreadable != empty
             def walk(o):
                 if isinstance(o, dict):
                     t = o.get("name") or o.get("title")
