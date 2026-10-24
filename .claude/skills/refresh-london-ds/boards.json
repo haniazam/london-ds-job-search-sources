@@ -26,6 +26,7 @@
   "dataiku",
   "deepmind",
   "deliveroo",
+  "dept",
   "doordashusa",
   "drweng",
   "dunnhumby",
@@ -86,7 +87,9 @@
   "wheely",
   "winton",
   "wise",
-  "wppmedia"
+  "wppmedia",
+  "via",
+  "payuk"
  ],
  "ashby": [
   "Abound",
@@ -131,7 +134,11 @@
   "wayve",
   "xyz-reality",
   "zego",
-  "zilch"
+  "zilch",
+  "beamery",
+  "teya",
+  "moss",
+  "airwallex"
  ],
  "lever": [
   "analyticpartners",
@@ -167,7 +174,8 @@
   "resultance",
   "uncapped",
   "vortexa",
-  "warden-ai"
+  "warden-ai",
+  "infosys-consulting-europe"
  ],
  "smartrecruiters": [
   "Checkoutcom1",
@@ -180,7 +188,9 @@
   "Talan",
   "Trainline",
   "asos",
-  "wise"
+  "wise",
+  "qima",
+  "SyngentaGroup"
  ],
  "pinpoint": [
   "accenture",
@@ -193,7 +203,8 @@
   "oxfordeconomics",
   "stint",
   "surgohealth",
-  "systematica"
+  "systematica",
+  "dogstrust"
  ],
  "recruitee": [
   "cityscience"
@@ -225,7 +236,8 @@
   "Paymentsense": "https://paymentsense.wd3.myworkdayjobs.com/wday/cxs/paymentsense/Dojo_Careers/jobs",
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
-  "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs"
+  "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -356,7 +368,20 @@
   "mypos": "myPOS",
   "trgscreen": "TRG Screen",
   "accenture": "Accenture",
-  "warden-ai": "Warden AI"
+  "warden-ai": "Warden AI",
+  "dept": "DEPT®",
+  "beamery": "Beamery",
+  "teya": "Teya",
+  "infosys-consulting-europe": "Infosys Consulting",
+  "via": "Via",
+  "moss": "Moss",
+  "qima": "QIMA",
+  "g-mass": "G.Digital",
+  "airwallex": "Airwallex",
+  "axle-energy": "Axle Energy",
+  "SyngentaGroup": "Syngenta",
+  "dogstrust": "Dogs Trust",
+  "payuk": "Pay.UK"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",

@@ -180,23 +180,8 @@
   "closed"
  ],
  [
-  "Faculty (Senior Data Scientist)",
-  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-12)",
-  "closed"
- ],
- [
-  "Faculty (Senior Data Scientist)",
-  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-12)",
-  "closed"
- ],
- [
   "Fresha (Head of Data Science)",
   "Closed — not returned by Lever API on the 2026-10-13 refresh (was live on 2026-10-12)",
-  "closed"
- ],
- [
-  "Ocado (Data Scientist)",
-  "Closed — not returned by Greenhouse API on the 2026-10-13 refresh (was live on 2026-10-12)",
   "closed"
  ],
  [
@@ -225,11 +210,6 @@
   "closed"
  ],
  [
-  "Carwow (Senior Data Scientist)",
-  "Closed — not returned by Ashby API on the 2026-10-13 refresh (was live on 2026-10-13)",
-  "closed"
- ],
- [
   "Octopus Energy (Data Scientist)",
   "Closed — not returned by Lever API on the 2026-10-13 refresh (was live on 2026-10-13)",
   "closed"
@@ -252,6 +232,86 @@
  [
   "Informed Solutions (Lead Data Scientist)",
   "Closed — Workable page answers 410 on the 2026-10-13 refresh (was live on 2026-10-13)",
+  "closed"
+ ],
+ [
+  "WPP Media (Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-10-15 refresh (was live on 2026-10-15)",
+  "closed"
+ ],
+ [
+  "Sagacity (Data Scientist)",
+  "Closed — not returned by LinkedIn (title verified) on the 2026-10-19 refresh (was live on 2026-10-19)",
+  "closed"
+ ],
+ [
+  "AIG (Data Scientist, GenAI)",
+  "Closed — not returned by Workday API on the 2026-10-20 refresh (was live on 2026-10-20)",
+  "closed"
+ ],
+ [
+  "SEGA Europe (Senior Data Scientist)",
+  "Closed — not returned by employer site (title verified) on the 2026-10-20 refresh (was live on 2026-10-20)",
+  "closed"
+ ],
+ [
+  "GoCardless (Senior Data Scientist, Payment Intelligence)",
+  "Closed — not returned by Greenhouse API on the 2026-10-21 refresh (was live on 2026-10-21)",
+  "closed"
+ ],
+ [
+  "Oxford Economics (Sr. Economist / Data Scientist - Economic Impact)",
+  "Closed — not returned by employer site (title verified) on the 2026-10-21 refresh (was live on 2026-10-21)",
+  "closed"
+ ],
+ [
+  "Raylo (Lead Data Scientist)",
+  "Closed — not returned by LinkedIn (title verified) on the 2026-10-21 refresh (was live on 2026-10-21)",
+  "closed"
+ ],
+ [
+  "Apple (Data Scientist - WPC - Analytics)",
+  "Closed — not returned by employer site (title verified) on the 2026-10-22 refresh (was live on 2026-10-22)",
+  "closed"
+ ],
+ [
+  "ElevenLabs (Marketing Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-10-22 refresh (was live on 2026-10-22)",
+  "closed"
+ ],
+ [
+  "iwoca (Data Scientist - iwocaPay Risk Squad)",
+  "Closed — not returned by Ashby API on the 2026-10-22 refresh (was live on 2026-10-22)",
+  "closed"
+ ],
+ [
+  "LSEG (Data Scientist)",
+  "Closed — not returned by Workday API on the 2026-10-22 refresh (was live on 2026-10-22)",
+  "closed"
+ ],
+ [
+  "Yonder (Data Scientist)",
+  "Closed — not returned by Teamtailor API on the 2026-10-22 refresh (was live on 2026-10-22)",
+  "closed"
+ ],
+ [
+  "Google (Senior Staff Product Data Scientist Merchant Shopping)",
+  "Closed — not returned by google.com post (title verified) on the 2026-10-23 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Howden (Lead Data Scientist)",
+  "Closed — not returned by Workday API on the 2026-10-23 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Moss (Senior Data Scientist (f/m/d))",
+  "Closed — not returned by Ashby API on the 2026-10-23 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Qube RT (Data Scientist - Fixed Income)",
+  "Closed — not returned by Greenhouse API on the 2026-10-23 refresh (was live on 2026-10-23)",
   "closed"
  ]
 ]
