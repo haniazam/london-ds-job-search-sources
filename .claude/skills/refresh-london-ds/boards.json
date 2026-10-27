@@ -6,6 +6,7 @@
   "amplitude",
   "anaplan",
   "anthropic",
+  "archer56",
   "artefact",
   "betsson",
   "blacklane",
@@ -56,6 +57,7 @@
   "ocadogroup",
   "onrunning",
   "optiver",
+  "payuk",
   "physicsx",
   "pinterest",
   "polyai",
@@ -63,6 +65,7 @@
   "quadraturecapital",
   "quberesearchandtechnologies",
   "rapp",
+  "rightmovecareers",
   "rockstargames",
   "schonfeld",
   "signifyd95",
@@ -82,14 +85,13 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
   "winton",
   "wise",
-  "wppmedia",
-  "via",
-  "payuk"
+  "wppmedia"
  ],
  "ashby": [
   "Abound",
@@ -197,14 +199,15 @@
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
   "oxfordeconomics",
+  "royal",
   "stint",
   "surgohealth",
-  "systematica",
-  "dogstrust"
+  "systematica"
  ],
  "recruitee": [
   "cityscience"
@@ -237,7 +240,9 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "Ocado Logistics": "https://ocado.wd3.myworkdayjobs.com/wday/cxs/ocado/en-US/jobs",
+  "Visa": "https://visa.wd5.myworkdayjobs.com/wday/cxs/visa/Visa/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -381,7 +386,11 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "archer56": "Archer",
+  "pulse": "Pulse Group",
+  "rightmovecareers": "Rightmove",
+  "royal": "Royal Mail"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
