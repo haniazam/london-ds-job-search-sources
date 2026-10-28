@@ -56,6 +56,7 @@
   "ocadogroup",
   "onrunning",
   "optiver",
+  "payuk",
   "physicsx",
   "pinterest",
   "polyai",
@@ -82,14 +83,13 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
   "winton",
   "wise",
-  "wppmedia",
-  "via",
-  "payuk"
+  "wppmedia"
  ],
  "ashby": [
   "Abound",
@@ -165,6 +165,7 @@
   "homeprotect",
   "hometrack",
   "humara-2",
+  "infosys-consulting-europe",
   "minderacraft",
   "motabilityfoundation",
   "oritain",
@@ -174,8 +175,7 @@
   "resultance",
   "uncapped",
   "vortexa",
-  "warden-ai",
-  "infosys-consulting-europe"
+  "warden-ai"
  ],
  "smartrecruiters": [
   "Checkoutcom1",
@@ -185,26 +185,28 @@
   "IQVIA",
   "PublicisGroupe",
   "ReedBusinessInformationLimited",
+  "SyngentaGroup",
   "Talan",
   "Trainline",
+  "Visa",
   "asos",
-  "wise",
   "qima",
-  "SyngentaGroup"
+  "wise"
  ],
  "pinpoint": [
   "accenture",
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
   "oxfordeconomics",
+  "royal",
   "stint",
   "surgohealth",
-  "systematica",
-  "dogstrust"
+  "systematica"
  ],
  "recruitee": [
   "cityscience"
@@ -237,7 +239,8 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "Ocado Logistics": "https://ocado.wd3.myworkdayjobs.com/wday/cxs/ocado/en-US/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -381,7 +384,9 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "royal": "Royal Mail",
+  "Visa": "Visa"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
