@@ -56,6 +56,7 @@
   "ocadogroup",
   "onrunning",
   "optiver",
+  "payuk",
   "physicsx",
   "pinterest",
   "polyai",
@@ -82,14 +83,13 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
   "winton",
   "wise",
-  "wppmedia",
-  "via",
-  "payuk"
+  "wppmedia"
  ],
  "ashby": [
   "Abound",
@@ -197,6 +197,7 @@
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
@@ -204,7 +205,7 @@
   "stint",
   "surgohealth",
   "systematica",
-  "dogstrust"
+  "youlend"
  ],
  "recruitee": [
   "cityscience"
@@ -381,7 +382,8 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "youlend": "YouLend"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
