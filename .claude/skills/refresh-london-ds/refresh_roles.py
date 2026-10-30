@@ -39,6 +39,7 @@ def get(url, t=20, post=None):
     with urllib.request.urlopen(r, timeout=t) as f:
         return f.read().decode("utf-8", "replace")
 
+UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 active = []   # (company, role, level, location, url)
 norole = []   # (company, reason)
 
@@ -48,7 +49,7 @@ for tok in GREENHOUSE:
     try:
         d = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{tok}/jobs?content=false"))
     except Exception as e:
-        print(f"[gh] {tok}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[gh] {tok}: {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("greenhouse", []).append(tok); continue
     hits = []
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = (j.get("location") or {}).get("name", "")
@@ -69,7 +70,7 @@ for org in REG["ashby"]:
                 shown = loc if LON.search(loc) else f"{loc} (+London)"
                 active.append((org, t, level(t), shown, j.get("jobUrl")))
     except Exception as e:
-        print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr)
+        print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("ashby", []).append(org)
 
 # ---------------- Lever ----------------
 for org in REG["lever"]:
@@ -80,7 +81,7 @@ for org in REG["lever"]:
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 active.append((org, t, level(t), loc, j.get("hostedUrl")))
     except Exception as e:
-        print(f"[lever] {org}: {type(e).__name__}", file=sys.stderr)
+        print(f"[lever] {org}: {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("lever", []).append(org)
 
 # ---------------- Amazon ----------------
 seen = set()
@@ -99,9 +100,8 @@ for q in ["data scientist", "applied scientist"]:
             seen.add(jid)
             active.append(("Amazon", t, level(t), "London", f"https://www.amazon.jobs{job.get('job_path')}"))
     except Exception as e:
-        print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr)
+        print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("amazon", ["www.amazon.jobs"])
 
-UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 # ---------------- Workday CXS (mostly 0 London DS; re-check) ----------------
 WORKDAY = REG["workday"]
 for name, url in WORKDAY.items():
@@ -167,7 +167,7 @@ for acct in REG.get("pinpoint", []):
     try:
         d = json.loads(get(f"https://{acct}.pinpointhq.com/postings.json"))
     except Exception as e:
-        print(f"[pinpoint] {acct}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[pinpoint] {acct}: {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("pinpoint", []).append(acct); continue
     items = d.get("data", d) if isinstance(d, dict) else d; hits = 0
     for j in items:
         t = j.get("title", ""); loc = json.dumps(j.get("location", "")) + " " + json.dumps(j.get("workplace_type", ""))
@@ -180,7 +180,7 @@ for co in REG.get("recruitee", []):
     try:
         d = json.loads(get(f"https://{co}.recruitee.com/api/offers/"))
     except Exception as e:
-        print(f"[recruitee] {co}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[recruitee] {co}: {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("recruitee", []).append(co); continue
     hits = 0
     for j in d.get("offers", []):
         t = j.get("title", ""); loc = f"{j.get('city','')} {j.get('country','')} {j.get('location','')}"
@@ -193,7 +193,7 @@ for co in REG.get("teamtailor", []):
     try:
         d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
     except Exception as e:
-        print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("teamtailor", []).append(co); continue
     hits = 0
     for j in d.get("items", []):
         t = j.get("title", "")
@@ -254,7 +254,7 @@ if "apple" in REG:
             pg += 1
         print(f"[apple] {total} GBR results, {hits} London DS", file=sys.stderr)
     except Exception as e:
-        print(f"[apple] {type(e).__name__}", file=sys.stderr)
+        print(f"[apple] {type(e).__name__}", file=sys.stderr); UNVERIFIED.setdefault("apple", ["jobs.apple.com"])
 
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
@@ -283,7 +283,7 @@ def spa_refresh():
             # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
             # instead of failing the whole JS-site pass.
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
             if not exe: raise
             b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
@@ -436,7 +436,7 @@ def workable_page_fallback(accts):
         try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
         except Exception:
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
             b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():
