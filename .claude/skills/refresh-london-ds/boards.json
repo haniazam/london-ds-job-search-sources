@@ -197,6 +197,7 @@
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
@@ -204,7 +205,7 @@
   "stint",
   "surgohealth",
   "systematica",
-  "dogstrust"
+  "youlend"
  ],
  "recruitee": [
   "cityscience"
@@ -381,7 +382,9 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "youlend": "YouLend",
+  "labgenius": "LabGenius Therapeutics"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -417,6 +420,7 @@
  },
  "teamtailor": [
   "bluelightcard",
+  "labgenius",
   "mypos",
   "yonder"
  ],
