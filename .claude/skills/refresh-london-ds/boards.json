@@ -93,7 +93,9 @@
  ],
  "ashby": [
   "Abound",
+  "airwallex",
   "arq",
+  "beamery",
   "bolt",
   "carwow",
   "chainalysis-careers",
@@ -104,6 +106,7 @@
   "elevenlabs",
   "faculty",
   "gradient-labs",
+  "hawk",
   "hims-and-hers",
   "iwoca.co.uk",
   "jack-jill-external-ats",
@@ -114,6 +117,7 @@
   "loveholidays",
   "marshmallow",
   "moneybox",
+  "moss",
   "multiverse",
   "neko-health",
   "omaze",
@@ -127,6 +131,7 @@
   "render",
   "socure",
   "synthesia",
+  "teya",
   "trainline",
   "twelve",
   "voleon",
@@ -134,11 +139,7 @@
   "wayve",
   "xyz-reality",
   "zego",
-  "zilch",
-  "beamery",
-  "teya",
-  "moss",
-  "airwallex"
+  "zilch"
  ],
  "lever": [
   "analyticpartners",
@@ -185,18 +186,21 @@
   "IQVIA",
   "PublicisGroupe",
   "ReedBusinessInformationLimited",
+  "SyngentaGroup",
   "Talan",
   "Trainline",
+  "Verisk",
   "asos",
-  "wise",
+  "entain",
   "qima",
-  "SyngentaGroup"
+  "wise"
  ],
  "pinpoint": [
   "accenture",
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
@@ -204,7 +208,7 @@
   "stint",
   "surgohealth",
   "systematica",
-  "dogstrust"
+  "youlend"
  ],
  "recruitee": [
   "cityscience"
@@ -237,7 +241,10 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "Formula.": "https://formulaone.wd3.myworkdayjobs.com/wday/cxs/formulaone/F1/jobs",
+  "Dell Technologies": "https://dell.wd1.myworkdayjobs.com/wday/cxs/dell/External/jobs",
+  "Visa": "https://visa.wd5.myworkdayjobs.com/wday/cxs/visa/Visa/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -369,7 +376,7 @@
   "trgscreen": "TRG Screen",
   "accenture": "Accenture",
   "warden-ai": "Warden AI",
-  "dept": "DEPT®",
+  "dept": "DEPT\u00ae",
   "beamery": "Beamery",
   "teya": "Teya",
   "infosys-consulting-europe": "Infosys Consulting",
@@ -381,7 +388,12 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "entain": "Entain",
+  "Verisk": "Verisk",
+  "youlend": "YouLend",
+  "hawk": "Hawk",
+  "labgenius": "LabGenius Therapeutics"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -417,6 +429,7 @@
  },
  "teamtailor": [
   "bluelightcard",
+  "labgenius",
   "mypos",
   "yonder"
  ],
