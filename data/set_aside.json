@@ -160,11 +160,6 @@
   "unv"
  ],
  [
-  "Amazon (Data Scientist II, RufusX Science UK)",
-  "Closed — not returned by amazon.jobs API on the 2026-10-13 refresh (was live on 2026-10-12)",
-  "closed"
- ],
- [
   "Blue Light Card (Principal Product Data Scientist)",
   "Closed — not returned by Teamtailor API on the 2026-10-13 refresh (was live on 2026-10-12)",
   "closed"
@@ -245,11 +240,6 @@
   "closed"
  ],
  [
-  "AIG (Data Scientist, GenAI)",
-  "Closed — not returned by Workday API on the 2026-10-20 refresh (was live on 2026-10-20)",
-  "closed"
- ],
- [
   "SEGA Europe (Senior Data Scientist)",
   "Closed — not returned by employer site (title verified) on the 2026-10-20 refresh (was live on 2026-10-20)",
   "closed"
@@ -300,11 +290,6 @@
   "closed"
  ],
  [
-  "Howden (Lead Data Scientist)",
-  "Closed — not returned by Workday API on the 2026-10-23 refresh (was live on 2026-10-23)",
-  "closed"
- ],
- [
   "Moss (Senior Data Scientist (f/m/d))",
   "Closed — not returned by Ashby API on the 2026-10-23 refresh (was live on 2026-10-23)",
   "closed"
@@ -312,6 +297,16 @@
  [
   "Qube RT (Data Scientist - Fixed Income)",
   "Closed — not returned by Greenhouse API on the 2026-10-23 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Amazon (Data Scientist II, Alexa for Shopping Science UK)",
+  "Closed — not returned by amazon.jobs API on the 2026-11-09 refresh (was live on 2026-11-09)",
+  "closed"
+ ],
+ [
+  "Disney (Senior Data Scientist)",
+  "Closed — not returned by employer site (title verified) on the 2026-11-09 refresh (was live on 2026-11-09)",
   "closed"
  ]
 ]

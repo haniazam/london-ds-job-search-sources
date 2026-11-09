@@ -65,6 +65,7 @@ sa_path = os.path.join(ROOT, "data", "set_aside.json"); sa = json.load(open(sa_p
 live_names = {f"{r[0]} ({r[1]})" for r in out}
 sa = [e for e in sa if not (e[2] == "unv" and any(e[0].startswith(r[0]) and r[1].split(" - ")[0].split(",")[0] in e[0] for r in out) and e[0] in live_names)]
 sa = [e for e in sa if not (e[2] == "unv" and e[0] == "Wise (Senior DS Lead, AML Risk)" and any(r[0] == "Wise" and "AML Risk" in r[1] for r in out))]
+sa = [e for e in sa if not (e[2] == "closed" and e[0] in live_names)]   # a role that is live again leaves the closed list
 have = {e[0] for e in sa}
 for c in closed:
     name = f"{c[0]} ({c[1]})"

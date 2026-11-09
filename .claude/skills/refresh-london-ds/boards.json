@@ -93,7 +93,9 @@
  ],
  "ashby": [
   "Abound",
+  "airwallex",
   "arq",
+  "beamery",
   "bolt",
   "carwow",
   "chainalysis-careers",
@@ -101,6 +103,7 @@
   "cohere",
   "comind",
   "deel",
+  "edited",
   "elevenlabs",
   "faculty",
   "gradient-labs",
@@ -114,6 +117,7 @@
   "loveholidays",
   "marshmallow",
   "moneybox",
+  "moss",
   "multiverse",
   "neko-health",
   "omaze",
@@ -123,10 +127,12 @@
   "quantexa",
   "quantum",
   "ramp",
+  "refractal",
   "relay",
   "render",
   "socure",
   "synthesia",
+  "teya",
   "trainline",
   "twelve",
   "voleon",
@@ -134,11 +140,7 @@
   "wayve",
   "xyz-reality",
   "zego",
-  "zilch",
-  "beamery",
-  "teya",
-  "moss",
-  "airwallex"
+  "zilch"
  ],
  "lever": [
   "analyticpartners",
@@ -185,12 +187,13 @@
   "IQVIA",
   "PublicisGroupe",
   "ReedBusinessInformationLimited",
+  "SyngentaGroup",
   "Talan",
   "Trainline",
   "asos",
-  "wise",
+  "entain",
   "qima",
-  "SyngentaGroup"
+  "wise"
  ],
  "pinpoint": [
   "accenture",
@@ -237,7 +240,8 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "Just Eat Takeaway.com": "https://justeat.wd3.myworkdayjobs.com/wday/cxs/justeat/justeat_careers/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -381,7 +385,10 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "refractal": "Refractal",
+  "edited": "EDITED",
+  "entain": "Entain"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
