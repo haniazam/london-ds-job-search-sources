@@ -6,6 +6,7 @@
   "amplitude",
   "anaplan",
   "anthropic",
+  "archer56",
   "artefact",
   "betsson",
   "blacklane",
@@ -56,6 +57,7 @@
   "ocadogroup",
   "onrunning",
   "optiver",
+  "payuk",
   "physicsx",
   "pinterest",
   "polyai",
@@ -82,18 +84,19 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
   "winton",
   "wise",
-  "wppmedia",
-  "via",
-  "payuk"
+  "wppmedia"
  ],
  "ashby": [
   "Abound",
+  "airwallex",
   "arq",
+  "beamery",
   "bolt",
   "carwow",
   "chainalysis-careers",
@@ -101,9 +104,11 @@
   "cohere",
   "comind",
   "deel",
+  "edited",
   "elevenlabs",
   "faculty",
   "gradient-labs",
+  "hawk",
   "hims-and-hers",
   "iwoca.co.uk",
   "jack-jill-external-ats",
@@ -114,6 +119,7 @@
   "loveholidays",
   "marshmallow",
   "moneybox",
+  "moss",
   "multiverse",
   "neko-health",
   "omaze",
@@ -123,10 +129,12 @@
   "quantexa",
   "quantum",
   "ramp",
+  "refractal",
   "relay",
   "render",
   "socure",
   "synthesia",
+  "teya",
   "trainline",
   "twelve",
   "voleon",
@@ -134,11 +142,7 @@
   "wayve",
   "xyz-reality",
   "zego",
-  "zilch",
-  "beamery",
-  "teya",
-  "moss",
-  "airwallex"
+  "zilch"
  ],
  "lever": [
   "analyticpartners",
@@ -165,6 +169,7 @@
   "homeprotect",
   "hometrack",
   "humara-2",
+  "infosys-consulting-europe",
   "minderacraft",
   "motabilityfoundation",
   "oritain",
@@ -174,8 +179,7 @@
   "resultance",
   "uncapped",
   "vortexa",
-  "warden-ai",
-  "infosys-consulting-europe"
+  "warden-ai"
  ],
  "smartrecruiters": [
   "Checkoutcom1",
@@ -185,18 +189,20 @@
   "IQVIA",
   "PublicisGroupe",
   "ReedBusinessInformationLimited",
+  "SyngentaGroup",
   "Talan",
   "Trainline",
   "asos",
-  "wise",
+  "entain",
   "qima",
-  "SyngentaGroup"
+  "wise"
  ],
  "pinpoint": [
   "accenture",
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
@@ -204,7 +210,7 @@
   "stint",
   "surgohealth",
   "systematica",
-  "dogstrust"
+  "youlend"
  ],
  "recruitee": [
   "cityscience"
@@ -237,7 +243,9 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "Formula.": "https://formulaone.wd3.myworkdayjobs.com/wday/cxs/formulaone/F1/jobs",
+  "Visa": "https://visa.wd5.myworkdayjobs.com/wday/cxs/visa/Visa/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -369,7 +377,7 @@
   "trgscreen": "TRG Screen",
   "accenture": "Accenture",
   "warden-ai": "Warden AI",
-  "dept": "DEPT®",
+  "dept": "DEPT\u00ae",
   "beamery": "Beamery",
   "teya": "Teya",
   "infosys-consulting-europe": "Infosys Consulting",
@@ -381,7 +389,15 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "entain": "Entain",
+  "archer56": "Archer",
+  "argusmedia": "Argus Media",
+  "labgenius": "LabGenius Therapeutics",
+  "refractal": "Refractal",
+  "edited": "EDITED",
+  "hawk": "Hawk",
+  "youlend": "YouLend"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -416,7 +432,9 @@
   "Fitch Ratings": "Fitch Group"
  },
  "teamtailor": [
+  "argusmedia",
   "bluelightcard",
+  "labgenius",
   "mypos",
   "yonder"
  ],
