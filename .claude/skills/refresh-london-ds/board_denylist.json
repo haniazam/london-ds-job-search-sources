@@ -2,38 +2,42 @@
  "_doc": "Board tokens discover.py must never propose again. 'tokens' is platform -> {token: reason} (case-insensitive exact match; workday entries match the tenant slug). 'patterns' is regex -> reason, tested against the normalised token or Workday tenant. Add every token a sweep rejects here with a one-line reason.",
  "tokens": {
   "smartrecruiters": {
-   "Dominos": "Domino's US corporate board (all postings us), not Domino's Pizza UK & Ireland — 10/11 Oct 2026",
-   "GoldmanSachs2": "three-job stub, all US — 10/11 Oct 2026",
-   "HCLTechHungary": "regional Hungary board, 0 postings — 10/11 Oct 2026",
-   "TescoBengaluru": "Tesco's Bengaluru tech centre, not Welwyn/London — 10 Oct 2026",
-   "TRGInc": "TRG Inc (US), not TRG Screen (greenhouse trgscreen is the real board) — 10 Oct 2026"
+   "Dominos": "Domino's US corporate board (all postings us), not Domino's Pizza UK & Ireland \u2014 10/11 Oct 2026",
+   "GoldmanSachs2": "three-job stub, all US \u2014 10/11 Oct 2026",
+   "HCLTechHungary": "regional Hungary board, 0 postings \u2014 10/11 Oct 2026",
+   "TescoBengaluru": "Tesco's Bengaluru tech centre, not Welwyn/London \u2014 10 Oct 2026",
+   "TRGInc": "TRG Inc (US), not TRG Screen (greenhouse trgscreen is the real board) \u2014 10 Oct 2026",
+   "Acuity1": "single posting, Vienna only, no UK role \u2014 2026-11-09"
   },
   "workable": {
-   "magic-careers": "unverifiable (Workable 429); not confirmed as MAGIC AI's board — 10/11 Oct 2026",
-   "axle-energy": "Axle Energy board empty (0 jobs) — nothing to verify as UK DS — 23 Oct 2026",
-   "g-mass": "unverifiable (Workable 429); not confirmed as employer own UK board — 23 Oct 2026"
+   "magic-careers": "unverifiable (Workable 429); not confirmed as MAGIC AI's board \u2014 10/11 Oct 2026",
+   "axle-energy": "Axle Energy board empty (0 jobs) \u2014 nothing to verify as UK DS \u2014 23 Oct 2026",
+   "g-mass": "unverifiable (Workable 429); not confirmed as employer own UK board \u2014 23 Oct 2026"
   },
   "ashby": {
-   "magic.dev": "Magic.dev (San Francisco ML lab), not Magic Memories / MAGIC AI — 10/11 Oct 2026",
-   "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026",
-   "stealth": "Generic 'Stealth Startup' board, no UK postings — 19 Oct 2026",
-   "melotech": "Melotech: Berlin-only postings, no UK role — 21 Oct 2026",
-   "pulse": "Pulse Group board has 0 UK postings (10 jobs, none UK) — 23 Oct 2026"
+   "magic.dev": "Magic.dev (San Francisco ML lab), not Magic Memories / MAGIC AI \u2014 10/11 Oct 2026",
+   "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics \u2014 10 Oct 2026",
+   "stealth": "Generic 'Stealth Startup' board, no UK postings \u2014 19 Oct 2026",
+   "melotech": "Melotech: Berlin-only postings, no UK role \u2014 21 Oct 2026",
+   "pulse": "Pulse Group board has 0 UK postings (10 jobs, none UK) \u2014 23 Oct 2026",
+   "alan": "Alan is the French health insurer, not The Alan Turing Institute; no UK posts \u2014 2026-11-09",
+   "ATG": "ATG Entertainment board lists only US (NYC/SF) roles, no UK posting \u2014 2026-11-09"
   },
   "greenhouse": {
-   "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026",
-   "haven": "Haven Interactive Studios (Montreal games studio), not the London Haven DS employer — 19 Oct 2026"
+   "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics \u2014 10 Oct 2026",
+   "haven": "Haven Interactive Studios (Montreal games studio), not the London Haven DS employer \u2014 19 Oct 2026",
+   "pulse": "Pulse Group is a healthcare staffing agency (NHS locum/nursing roles), not an employer \u2014 2026-11-09"
   },
   "lever": {
-   "mpower": "mPower: US-only Lever board, not a London employer — 13 Oct 2026"
+   "mpower": "mPower: US-only Lever board, not a London employer \u2014 13 Oct 2026"
   }
  },
  "patterns": {
-  "georgetown": "Meta lead matched Georgetown University's Workday tenant — 10 Oct 2026",
-  "^intel$": "SMG lead matched Intel's Workday tenant — 10 Oct 2026",
-  "cocacola|coca-cola": "Costa Coffee lead matched Coca-Cola's Workday tenant (no Costa DS post) — 10 Oct 2026",
-  "chubb.?fire": "Chubb lead matched Chubb Fire & Security, not Chubb insurance — 10 Oct 2026",
-  "ibm.?ix": "IBM lead matched IBM iX Paris tenant — 10 Oct 2026",
-  "bengaluru|hungary": "regional (non-UK) tenant of a global employer — 10 Oct 2026"
+  "georgetown": "Meta lead matched Georgetown University's Workday tenant \u2014 10 Oct 2026",
+  "^intel$": "SMG lead matched Intel's Workday tenant \u2014 10 Oct 2026",
+  "cocacola|coca-cola": "Costa Coffee lead matched Coca-Cola's Workday tenant (no Costa DS post) \u2014 10 Oct 2026",
+  "chubb.?fire": "Chubb lead matched Chubb Fire & Security, not Chubb insurance \u2014 10 Oct 2026",
+  "ibm.?ix": "IBM lead matched IBM iX Paris tenant \u2014 10 Oct 2026",
+  "bengaluru|hungary": "regional (non-UK) tenant of a global employer \u2014 10 Oct 2026"
  }
 }
