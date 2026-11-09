@@ -67,7 +67,7 @@ for org in REG["ashby"]:
             sec = [x.get("location", "") for x in j.get("secondaryLocations", [])]
             if DS.search(t) and (LON.search(loc) or any(LON.search(x) for x in sec)) and not EXCLUDE.search(t):
                 shown = loc if LON.search(loc) else f"{loc} (+London)"
-                active.append((org, t, level(t), shown, j.get("jobUrl")))
+                active.append((org, t, level(t), shown, re.sub(r"(jobs\.ashbyhq\.com/)([^/]+)", lambda m: m.group(1)+m.group(2).lower(), j.get("jobUrl") or "")))
     except Exception as e:
         print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr)
 
@@ -283,7 +283,7 @@ def spa_refresh():
             # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
             # instead of failing the whole JS-site pass.
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
             if not exe: raise
             b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
@@ -436,7 +436,7 @@ def workable_page_fallback(accts):
         try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
         except Exception:
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
             b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():
