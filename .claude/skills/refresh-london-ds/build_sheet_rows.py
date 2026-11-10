@@ -16,7 +16,7 @@ OUT_DIR = os.environ.get("SHEET_OUT", "/tmp")
 COLS = ["Company", "Role", "Role Type", "Level", "Approx London TC", "Location", "Apply URL (unique active post)", "Status", "Notes"]
 rows = [r for r in csv.DictReader(open(SRC, encoding="utf-8")) if r.get("Role Type") == "Standard DS" and not EXCLUDE.search(r["Role"]) and london_ok(r["Location"])]
 for r in rows: r["Location"] = norm_loc(r["Location"])
-key = lambda u: (u or "").split("?")[0].rstrip("/")
+key = lambda u: ((u or "").split("?")[0].rstrip("/").lower() if "ashbyhq.com" in (u or "").lower() else (u or "").split("?")[0].rstrip("/"))  # Ashby org slugs are case-insensitive (arq vs ARQ)
 prev_rows, prev_date = [], None
 if PREV:
     prev_rows = json.load(open(PREV))
