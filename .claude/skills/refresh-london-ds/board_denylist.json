@@ -18,7 +18,8 @@
    "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026",
    "stealth": "Generic 'Stealth Startup' board, no UK postings — 19 Oct 2026",
    "melotech": "Melotech: Berlin-only postings, no UK role — 21 Oct 2026",
-   "pulse": "Pulse Group board has 0 UK postings (10 jobs, none UK) — 23 Oct 2026"
+   "pulse": "Pulse Group board has 0 UK postings (10 jobs, none UK) — 23 Oct 2026",
+   "alan": "Alan (French health insurer; FR/BE postings), not The Alan Turing Institute — 10 Nov 2026"
   },
   "greenhouse": {
    "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026",
@@ -26,6 +27,9 @@
   },
   "lever": {
    "mpower": "mPower: US-only Lever board, not a London employer — 13 Oct 2026"
+  },
+  "workday": {
+   "standard": "Tenant 'standard' returns 0 jobs; not confirmed as Standard Chartered's UK board — 10 Nov 2026"
   }
  },
  "patterns": {
