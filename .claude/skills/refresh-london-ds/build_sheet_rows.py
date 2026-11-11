@@ -20,7 +20,12 @@ key = lambda u: (u or "").split("?")[0].rstrip("/")
 prev_rows, prev_date = [], None
 if PREV:
     prev_rows = json.load(open(PREV))
-    prev_date = datetime.date.fromtimestamp(os.path.getmtime(PREV)).isoformat()      # when the previous rows were generated
+    # when the previous rows were last refreshed: the newest refresh date their notes mention, else the newest
+    # snapshot before DATE (the JSON's mtime is when it was saved from the Sheet, i.e. today -- never that)
+    dates = [d for r in prev_rows if len(r) >= 9 for d in re.findall(r"\d{4}-\d{2}-\d{2}", r[8]) if d < DATE]
+    SNAP = os.path.join(ROOT, "data", "snapshots")
+    snaps = sorted(f[:10] for f in (os.listdir(SNAP) if os.path.isdir(SNAP) else []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}\.csv", f) and f[:10] < DATE)
+    prev_date = max(dates) if dates else (snaps[-1] if snaps else datetime.date.fromtimestamp(os.path.getmtime(PREV)).isoformat())
 else:                                                                               # default baseline: newest snapshot strictly before DATE
     SNAP = os.path.join(ROOT, "data", "snapshots")
     snaps = sorted(f for f in (os.listdir(SNAP) if os.path.isdir(SNAP) else []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}\.csv", f) and f[:10] < DATE)
@@ -44,19 +49,32 @@ for r in sorted(rows, key=lambda r: (r["Company"].lower(), r["Level"] != "Senior
 missing = [v for k, v in prev_active.items() if k not in seen]
 # a board the run could not read (429 / gated) makes its rows unverified, never closed: carry them forward
 unv_path = "/tmp/ldn_ds_unverified.json"; unv = json.load(open(unv_path)) if os.path.exists(unv_path) else {}
-def unreadable(url):
-    """The platform key whose board the run could not read, or None."""
-    if "workable" in url and "workable" in unv: return "workable"
+REG = json.load(open(os.path.join(HERE, "boards.json")))
+_normk = lambda x: re.sub(r"[^a-z0-9]", "", (x or "").lower())
+_tok_of_name = {_normk(v): k for k, v in REG.get("display_names", {}).items()}            # display name -> board token
+def unreadable(url, company=""):
+    """The platform key whose board the run could not read, or None. A Workable row's URL (apply.workable.com/j/<code>)
+    does not name its account, so the 429'd accounts are matched through the company's display name -- one rate-limited
+    Workable board must never carry every Workable row forward (boards that were read and no longer list the role closed it)."""
+    if "workable" in url:
+        accts = {a.lower() for a in unv.get("workable", [])}
+        tok = _tok_of_name.get(_normk(company), _normk(company))
+        return "workable" if accts and (tok.lower() in accts or _normk(tok) in {_normk(a) for a in accts} or any(f"/{a}/" in url for a in accts)) else None
     if url.split("?")[0] in unv.get("manual", []): return "manual"
-    return next((k for k, ts in unv.items() for t in ts if f"/{t}" in url or f"//{t}." in url), None)
+    return next((k for k, ts in unv.items() if k != "workable" for t in ts if f"/{t}" in url or f"//{t}." in url), None)
 REASON = {"spa": "JS site not reachable this run (Playwright absent or fetch failed)", "manual": "post page fetch failed this run"}
-closed, carried = [], []
+closed, carried, dups = [], [], []
+live_posts = {(r[0].lower(), r[1].lower()) for r in out}                              # company + title of every live row
 for v in missing:
-    k = unreadable(v[6])
+    if (v[0].lower(), v[1].lower()) in live_posts:                                       # same post under another URL (e.g. a
+        dups.append(v); continue                                                         # Workable feed link beside the apply link)
+    k = unreadable(v[6], v[0])
     if k:
         row = list(v); row[7] = "Unverified"
+        lv = re.search(r"last verified (\d{4}-\d{2}-\d{2})", row[8])                       # keep the real last-verified date
+        last = lv.group(1) if lv else prev_date
         prior = re.sub(r"^(not re-verified on \S+ \([^)]*\); last verified [^;]*; )+", "", re.sub(r"^NEW \(refresh [^)]*\); ", "", row[8]))
-        row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {prev_date}; " + prior
+        row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {last}; " + prior
         out.append(row); carried.append(row)
     else: closed.append(v)
 out.sort(key=lambda r: (r[0].lower(), r[3] != "Senior+", r[1].lower()))
@@ -65,13 +83,19 @@ sa_path = os.path.join(ROOT, "data", "set_aside.json"); sa = json.load(open(sa_p
 live_names = {f"{r[0]} ({r[1]})" for r in out}
 sa = [e for e in sa if not (e[2] == "unv" and any(e[0].startswith(r[0]) and r[1].split(" - ")[0].split(",")[0] in e[0] for r in out) and e[0] in live_names)]
 sa = [e for e in sa if not (e[2] == "unv" and e[0] == "Wise (Senior DS Lead, AML Risk)" and any(r[0] == "Wise" and "AML Risk" in r[1] for r in out))]
+sa = [e for e in sa if not (e[2] in ("closed", "dup") and (e[0] in live_names or e[0].removesuffix(" — duplicate link") in live_names))]   # live again
 have = {e[0] for e in sa}
 for c in closed:
     name = f"{c[0]} ({c[1]})"
     if name not in have:
         sa.append([name, f"Closed — not returned by {via_of(c[6]).replace('verified via ', '')} on the {DATE} refresh (was live on {prev_date})", "closed"]); have.add(name)
+for d in dups:
+    live = next(r for r in out if (r[0].lower(), r[1].lower()) == (d[0].lower(), d[1].lower()))
+    name = f"{d[0]} ({d[1]}) — duplicate link"
+    if name not in have:
+        sa.append([name, f"Duplicate link for the live post, superseded on {DATE} by {live[6]}", "dup"]); have.add(name)
 json.dump(sa, open(sa_path, "w"), indent=1, ensure_ascii=False); open(sa_path, "a").write("\n")
-LABEL = {"closed": "No active London DS role", "mon": "No active London DS role", "unv": "Unverified lead", "scope": "Out of scope", "floor": "Below floor", "caution": "Caution", "profile": "Profile mismatch", "mismatch": "Profile mismatch"}
+LABEL = {"closed": "No active London DS role", "mon": "No active London DS role", "unv": "Unverified lead", "scope": "Out of scope", "floor": "Below floor", "caution": "Caution", "profile": "Profile mismatch", "mismatch": "Profile mismatch", "dup": "Duplicate link"}
 tail = [[""] * 9, ["— COMPANIES WITH NO ACTIVE LONDON DS ROLE / UNVERIFIED LEADS —"] + [""] * 8]
 for e in sa: tail.append([e[0], "—", "—", "—", "—", "—", "", LABEL.get(e[2], e[2].title()), e[1]])
 values = out + tail
@@ -84,3 +108,4 @@ print(f"[sheet] {len(out)} Standard DS rows at {len({r[0] for r in out})} employ
       f"{len(sa)} set-aside rows; {len(values)} rows -> A2:I{len(values)+1}; wrote {jp}")
 for r in new: print(f"   + {r[0]} | {r[1]} | {r[4]} | {r[5]}")
 for c in closed: print(f"   - {c[0]} | {c[1]} | {c[6]}")
+for d in dups: print(f"   = {d[0]} | {d[1]} | duplicate link {d[6]} (live post kept under its other URL)")
