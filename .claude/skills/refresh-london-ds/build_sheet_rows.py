@@ -84,6 +84,10 @@ live_names = {f"{r[0]} ({r[1]})" for r in out}
 sa = [e for e in sa if not (e[2] == "unv" and any(e[0].startswith(r[0]) and r[1].split(" - ")[0].split(",")[0] in e[0] for r in out) and e[0] in live_names)]
 sa = [e for e in sa if not (e[2] == "unv" and e[0] == "Wise (Senior DS Lead, AML Risk)" and any(r[0] == "Wise" and "AML Risk" in r[1] for r in out))]
 sa = [e for e in sa if not (e[2] in ("closed", "dup") and (e[0] in live_names or e[0].removesuffix(" — duplicate link") in live_names))]   # live again
+live_cos = {r[0] for r in out}                                                        # a company-level "no role / mismatch" note is
+stale = [e for e in sa if e[2] in ("closed", "mon", "unv", "profile", "mismatch") and e[0] in live_cos]   # stale once it has a live row
+for e in stale: print(f"   ^ {e[0]} un-parked: now has a live Standard DS row (was: {e[1][:80]})", file=sys.stderr)
+sa = [e for e in sa if e not in stale]
 have = {e[0] for e in sa}
 for c in closed:
     name = f"{c[0]} ({c[1]})"
