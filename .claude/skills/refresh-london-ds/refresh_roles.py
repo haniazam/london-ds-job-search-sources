@@ -273,6 +273,16 @@ def spa_fail(site, e):
     """A JS-site block that raised leaves its rows unverified (build_sheet_rows.py carries them forward), never closed."""
     print(f"[spa] {site}", type(e).__name__, e, file=sys.stderr)
     UNVERIFIED.setdefault("spa", []).extend(h for h in SPA_HOSTS[site] if h not in UNVERIFIED.get("spa", []))
+def _preinstalled_chromium():
+    """Path of the pre-installed Chromium under /opt/pw-browsers (the pip playwright may
+    pin a newer build than the one shipped; the symlink /opt/pw-browsers/chromium and the
+    chrome-linux64/ layout are both tried), or None."""
+    import glob, os
+    for c in (["/opt/pw-browsers/chromium"]
+              + sorted(glob.glob("/opt/pw-browsers/chromium-*/chrome-linux64/chrome"), reverse=True)
+              + sorted(glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome"), reverse=True)):
+        if os.path.exists(c): return c
+    return None
 def spa_refresh():
     out = []
     with sync_playwright() as p:
@@ -282,8 +292,7 @@ def spa_refresh():
             # pip's playwright may want a newer Chromium than the pre-installed one
             # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
             # instead of failing the whole JS-site pass.
-            import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = _preinstalled_chromium()
             if not exe: raise
             b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
@@ -435,8 +444,8 @@ def workable_page_fallback(accts):
         pw = sync_playwright().start()
         try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
         except Exception:
-            import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = _preinstalled_chromium()
+            if not exe: raise
             b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():
