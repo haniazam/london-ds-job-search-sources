@@ -358,7 +358,9 @@ def spa_refresh():
 
         # Microsoft Eightfold (in-browser)
         try:
-            goto("https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&num=50&start=0", 2000)
+            # London-filtered: the unfiltered search returns 2,000+ positions and a London post fell outside the top 50 on
+            # 2026-11-12 (a live row closed wrongly); "locations" is a list, "location" is null on this API
+            goto("https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&location=London%2C%20United%20Kingdom&num=100&start=0", 2000)
             d = json.loads(pg.inner_text("body"))
             if not isinstance(d, dict) or "data" not in d: raise ValueError("Microsoft search returned no 'data' (rate-limited/gated)")   # unreadable != empty
             def walk(o):
