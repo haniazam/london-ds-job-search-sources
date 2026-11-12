@@ -70,11 +70,6 @@
   "mon"
  ],
  [
-  "Moonpig",
-  "Lead Product Analyst only (not a DS title); 0 DS on Lever",
-  "profile"
- ],
- [
   "Goodnotes",
   "Senior DS, Stealth AI is a 12-month fixed-term contract — excluded by scope",
   "scope"
@@ -160,11 +155,6 @@
   "unv"
  ],
  [
-  "Amazon (Data Scientist II, RufusX Science UK)",
-  "Closed — not returned by amazon.jobs API on the 2026-10-13 refresh (was live on 2026-10-12)",
-  "closed"
- ],
- [
   "Blue Light Card (Principal Product Data Scientist)",
   "Closed — not returned by Teamtailor API on the 2026-10-13 refresh (was live on 2026-10-12)",
   "closed"
@@ -245,11 +235,6 @@
   "closed"
  ],
  [
-  "AIG (Data Scientist, GenAI)",
-  "Closed — not returned by Workday API on the 2026-10-20 refresh (was live on 2026-10-20)",
-  "closed"
- ],
- [
   "SEGA Europe (Senior Data Scientist)",
   "Closed — not returned by employer site (title verified) on the 2026-10-20 refresh (was live on 2026-10-20)",
   "closed"
@@ -300,11 +285,6 @@
   "closed"
  ],
  [
-  "Howden (Lead Data Scientist)",
-  "Closed — not returned by Workday API on the 2026-10-23 refresh (was live on 2026-10-23)",
-  "closed"
- ],
- [
   "Moss (Senior Data Scientist (f/m/d))",
   "Closed — not returned by Ashby API on the 2026-10-23 refresh (was live on 2026-10-23)",
   "closed"
@@ -313,5 +293,45 @@
   "Qube RT (Data Scientist - Fixed Income)",
   "Closed — not returned by Greenhouse API on the 2026-10-23 refresh (was live on 2026-10-23)",
   "closed"
+ ],
+ [
+  "DEPT® (Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-11-11 refresh (was live on 2026-11-10)",
+  "closed"
+ ],
+ [
+  "Entain (Data Science Manager)",
+  "Closed — not returned by SmartRecruiters API on the 2026-11-11 refresh (was live on 2026-11-10)",
+  "closed"
+ ],
+ [
+  "Spotify (Data Scientist, Company Planning & Execution)",
+  "Closed — not returned by lifeatspotify.com (title verified) on the 2026-11-11 refresh (was live on 2026-11-10)",
+  "closed"
+ ],
+ [
+  "Vortexa (Principal Data Scientist)",
+  "Closed — not returned by Workable API on the 2026-11-11 refresh (was live on 2026-11-10)",
+  "closed"
+ ],
+ [
+  "Wise (Lead Data Scientist - Scams Prevention)",
+  "Closed — not returned by SmartRecruiters API on the 2026-11-11 refresh (was live on 2026-11-10)",
+  "closed"
+ ],
+ [
+  "Our Future Health (Senior Data Scientist - (Privacy & Security Controls))",
+  "Closed — not returned by Workable API on the 2026-11-12 refresh (was live on 2026-11-11)",
+  "closed"
+ ],
+ [
+  "Faculty (Senior Data Scientist) — duplicate link",
+  "Duplicate link for the live post, superseded on 2026-11-12 by https://jobs.ashbyhq.com/faculty/e6e788ad-706d-433e-8a33-356f90fcff31",
+  "dup"
+ ],
+ [
+  "Wise (Senior Data Science Lead - AML Risk) — duplicate link",
+  "Duplicate link for the live post, superseded on 2026-11-12 by https://jobs.smartrecruiters.com/wise/744000152657629",
+  "dup"
  ]
 ]
