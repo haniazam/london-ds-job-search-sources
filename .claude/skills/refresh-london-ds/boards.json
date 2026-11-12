@@ -208,7 +208,8 @@
   "stint",
   "surgohealth",
   "systematica",
-  "dogstrust"
+  "dogstrust",
+  "ravelin"
  ],
  "recruitee": [
   "cityscience"
@@ -391,7 +392,8 @@
   "arrive": "Arrive",
   "entain": "Entain",
   "tailscom": "Tails.com",
-  "edited": "EDITED"
+  "edited": "EDITED",
+  "ravelin": "Ravelin"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",

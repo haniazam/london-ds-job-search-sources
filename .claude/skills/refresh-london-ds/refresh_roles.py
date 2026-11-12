@@ -40,6 +40,13 @@ def get(url, t=20, post=None):
         return f.read().decode("utf-8", "replace")
 
 active = []   # (company, role, level, location, url)
+UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated / 5xx); the Sheet carries their rows forward as unverified
+def board_error(platform, token, e):
+    """Log a board read failure. A 404 means the board is gone (its rows may close); any other error (429, 5xx, timeout,
+    bad JSON) leaves the board unread, so its rows must carry forward as unverified, never close."""
+    code = getattr(e, "code", None)
+    print(f"[{platform}] {token}: {type(e).__name__}" + ("" if code == 404 else " — rows carried forward as unverified"), file=sys.stderr)
+    if code != 404: UNVERIFIED.setdefault(platform, []).append(token)
 norole = []   # (company, reason)
 
 # ---------------- Greenhouse ----------------
@@ -48,7 +55,7 @@ for tok in GREENHOUSE:
     try:
         d = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{tok}/jobs?content=false"))
     except Exception as e:
-        print(f"[gh] {tok}: {type(e).__name__}", file=sys.stderr); continue
+        board_error("greenhouse", tok, e); continue
     hits = []
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = (j.get("location") or {}).get("name", "")
@@ -69,7 +76,7 @@ for org in REG["ashby"]:
                 shown = loc if LON.search(loc) else f"{loc} (+London)"
                 active.append((org, t, level(t), shown, j.get("jobUrl")))
     except Exception as e:
-        print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr)
+        board_error("ashby", org, e)
 
 # ---------------- Lever ----------------
 for org in REG["lever"]:
@@ -80,7 +87,7 @@ for org in REG["lever"]:
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 active.append((org, t, level(t), loc, j.get("hostedUrl")))
     except Exception as e:
-        print(f"[lever] {org}: {type(e).__name__}", file=sys.stderr)
+        board_error("lever", org, e)
 
 # ---------------- Amazon ----------------
 seen = set()
@@ -101,7 +108,6 @@ for q in ["data scientist", "applied scientist"]:
     except Exception as e:
         print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr)
 
-UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 # ---------------- Workday CXS (mostly 0 London DS; re-check) ----------------
 WORKDAY = REG["workday"]
 for name, url in WORKDAY.items():
@@ -167,7 +173,7 @@ for acct in REG.get("pinpoint", []):
     try:
         d = json.loads(get(f"https://{acct}.pinpointhq.com/postings.json"))
     except Exception as e:
-        print(f"[pinpoint] {acct}: {type(e).__name__}", file=sys.stderr); continue
+        board_error("pinpoint", acct, e); continue
     items = d.get("data", d) if isinstance(d, dict) else d; hits = 0
     for j in items:
         t = j.get("title", ""); loc = json.dumps(j.get("location", "")) + " " + json.dumps(j.get("workplace_type", ""))
@@ -180,7 +186,7 @@ for co in REG.get("recruitee", []):
     try:
         d = json.loads(get(f"https://{co}.recruitee.com/api/offers/"))
     except Exception as e:
-        print(f"[recruitee] {co}: {type(e).__name__}", file=sys.stderr); continue
+        board_error("recruitee", co, e); continue
     hits = 0
     for j in d.get("offers", []):
         t = j.get("title", ""); loc = f"{j.get('city','')} {j.get('country','')} {j.get('location','')}"
@@ -193,7 +199,7 @@ for co in REG.get("teamtailor", []):
     try:
         d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
     except Exception as e:
-        print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
+        board_error("teamtailor", co, e); continue
     hits = 0
     for j in d.get("items", []):
         t = j.get("title", "")
