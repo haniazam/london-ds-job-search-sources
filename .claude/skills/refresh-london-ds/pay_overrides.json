@@ -20,7 +20,7 @@
   "title_regex": "^Senior Data Scientist",
   "lo": 55,
   "hi": 62,
-  "label": "Glassdoor est. for this Capco London posting",
+  "label": "sourced: Glassdoor est. for this Capco London posting",
   "date": "2026-10-09"
  },
  {
@@ -140,7 +140,7 @@
   "title_regex": ".",
   "lo": 75,
   "hi": 100,
-  "label": "Glassdoor est. shown on C3 AI London Data Scientist postings £75k-£100k (base estimate)",
+  "label": "sourced: Glassdoor est. shown on C3 AI London Data Scientist postings £75k-£100k (base estimate)",
   "date": "2026-10-13"
  },
  {
