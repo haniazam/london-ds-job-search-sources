@@ -30,11 +30,6 @@
   "mon"
  ],
  [
-  "Mastercard",
-  "No London DS on Workday",
-  "mon"
- ],
- [
   "Houseful",
   "LinkedIn post expired; no live post found",
   "closed"
@@ -333,5 +328,15 @@
   "Wise (Senior Data Science Lead - AML Risk) — duplicate link",
   "Duplicate link for the live post, superseded on 2026-11-12 by https://jobs.smartrecruiters.com/wise/744000152657629",
   "dup"
+ ],
+ [
+  "Monzo (Senior Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-11-13 refresh (was live on 2026-11-12)",
+  "closed"
+ ],
+ [
+  "WPP Media (SVP, Data Science Lead, CoE - Global Clients)",
+  "Closed — not returned by Greenhouse API on the 2026-11-13 refresh (was live on 2026-11-12)",
+  "closed"
  ]
 ]

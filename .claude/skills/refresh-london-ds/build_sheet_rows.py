@@ -34,11 +34,16 @@ else:                                                                           
         prev_date = snaps[-1][:10]
         print(f"[sheet] no previous rows given; diffing against data/snapshots/{snaps[-1]}", file=sys.stderr)
 prev_active = {key(r[6]): r for r in prev_rows if len(r) >= 9 and r[6].startswith("http")}
-seen, out = set(), []
-for r in sorted(rows, key=lambda r: (r["Company"].lower(), r["Level"] != "Senior+", r["Role"].lower())):
+seen, out, in_dups, seen_posts = set(), [], [], {}
+# a LinkedIn mirror sorts after the employer's own post for the same company + title, so the ATS URL is the one kept
+for r in sorted(rows, key=lambda r: (r["Company"].lower(), r["Level"] != "Senior+", r["Role"].lower(), "linkedin.com" in r["Apply URL (unique active post)"])):
     u = key(r["Apply URL (unique active post)"])
     if u in seen: continue
     seen.add(u)
+    pk = (r["Company"].lower(), r["Role"].lower())
+    if pk in seen_posts and "linkedin.com" in u:   # a LinkedIn mirror of a post already listed from the employer's own board/ATS
+        in_dups.append([r["Company"], r["Role"], "Standard DS", r["Level"], r["Approx London TC"], r["Location"], r["Apply URL (unique active post)"], "Active", ""]); continue
+    seen_posts.setdefault(pk, u)
     brief = r["Level"] == "Senior+" and bool(BRIEF.search(r["Role"]))
     notes = []
     if u not in prev_active: notes.append(f"NEW (refresh {DATE})")
@@ -63,7 +68,7 @@ def unreadable(url, company=""):
     if url.split("?")[0] in unv.get("manual", []): return "manual"
     return next((k for k, ts in unv.items() if k != "workable" for t in ts if f"/{t}" in url or f"//{t}." in url), None)
 REASON = {"spa": "JS site not reachable this run (Playwright absent or fetch failed)", "manual": "post page fetch failed this run"}
-closed, carried, dups = [], [], []
+closed, carried, dups = [], [], list(in_dups)
 live_posts = {(r[0].lower(), r[1].lower()) for r in out}                              # company + title of every live row
 for v in missing:
     if (v[0].lower(), v[1].lower()) in live_posts:                                       # same post under another URL (e.g. a
@@ -83,7 +88,7 @@ sa_path = os.path.join(ROOT, "data", "set_aside.json"); sa = json.load(open(sa_p
 live_names = {f"{r[0]} ({r[1]})" for r in out}
 sa = [e for e in sa if not (e[2] == "unv" and any(e[0].startswith(r[0]) and r[1].split(" - ")[0].split(",")[0] in e[0] for r in out) and e[0] in live_names)]
 sa = [e for e in sa if not (e[2] == "unv" and e[0] == "Wise (Senior DS Lead, AML Risk)" and any(r[0] == "Wise" and "AML Risk" in r[1] for r in out))]
-sa = [e for e in sa if not (e[2] in ("closed", "dup") and (e[0] in live_names or e[0].removesuffix(" — duplicate link") in live_names))]   # live again
+sa = [e for e in sa if not (e[2] == "closed" and e[0] in live_names)]   # live again (a "dup" entry is for a live post by definition, so it stays)
 live_cos = {r[0] for r in out}                                                        # a company-level "no role / mismatch" note is
 stale = [e for e in sa if e[2] in ("closed", "mon", "unv", "profile", "mismatch") and e[0] in live_cos]   # stale once it has a live row
 for e in stale: print(f"   ^ {e[0]} un-parked: now has a live Standard DS row (was: {e[1][:80]})", file=sys.stderr)

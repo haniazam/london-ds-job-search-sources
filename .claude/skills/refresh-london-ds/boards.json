@@ -55,6 +55,7 @@
   "monzo",
   "ocadogroup",
   "onrunning",
+  "oodlefinance",
   "optiver",
   "payuk",
   "physicsx",
@@ -249,7 +250,8 @@
   "jobgether",
   "QuriousAssociatesLimited",
   "Degree6",
-  "kimarutalent"
+  "kimarutalent",
+  "Avance Consulting"
  ],
  "display_names": {
   "deepmind": "Google DeepMind",
@@ -393,7 +395,8 @@
   "entain": "Entain",
   "tailscom": "Tails.com",
   "edited": "EDITED",
-  "ravelin": "Ravelin"
+  "ravelin": "Ravelin",
+  "oodlefinance": "Oodle Car Finance"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",

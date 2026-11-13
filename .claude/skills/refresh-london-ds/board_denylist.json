@@ -6,7 +6,8 @@
    "GoldmanSachs2": "three-job stub, all US — 10/11 Oct 2026",
    "HCLTechHungary": "regional Hungary board, 0 postings — 10/11 Oct 2026",
    "TescoBengaluru": "Tesco's Bengaluru tech centre, not Welwyn/London — 10 Oct 2026",
-   "TRGInc": "TRG Inc (US), not TRG Screen (greenhouse trgscreen is the real board) — 10 Oct 2026"
+   "TRGInc": "TRG Inc (US), not TRG Screen (greenhouse trgscreen is the real board) — 10 Oct 2026",
+   "AvanceConsultingServices2": "Avance Consulting: US IT staffing agency, all postings US — 13 Nov 2026"
   },
   "workable": {
    "magic-careers": "unverifiable (Workable 429); not confirmed as MAGIC AI's board — 10/11 Oct 2026",
@@ -32,6 +33,9 @@
   },
   "workday": {
    "standard": "The Standard (US insurer, Portland OR; 0 UK postings), not Standard Chartered — 11 Nov 2026"
+  },
+  "pinpoint": {
+   "ipsos": "Ipsos pinpoint board exposes 0 postings via postings.json (unverifiable) — 13 Nov 2026"
   }
  },
  "patterns": {
