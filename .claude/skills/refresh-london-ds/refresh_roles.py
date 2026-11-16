@@ -191,7 +191,7 @@ for co in REG.get("recruitee", []):
 # ---------------- Teamtailor (public JSON Feed at /jobs.json; locations in the schema.org jobposting) ----------------
 for co in REG.get("teamtailor", []):
     try:
-        d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
+        d = json.loads(get(f"https://{co}/jobs.json" if "." in co else f"https://{co}.teamtailor.com/jobs.json"))   # token may be a custom careers host (careers.smg.team)
     except Exception as e:
         print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
     hits = 0
