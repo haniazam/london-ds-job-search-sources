@@ -22,10 +22,17 @@
   },
   "greenhouse": {
    "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026",
-   "haven": "Haven Interactive Studios (Montreal games studio), not the London Haven DS employer — 19 Oct 2026"
+   "haven": "Haven Interactive Studios (Montreal games studio), not the London Haven DS employer — 19 Oct 2026",
+   "archer56": "Archer Aviation (US eVTOL; UK posts are Hampshire only), not the London 'Archer' that posted Senior Specialist, Data Scientist — 17 Nov 2026",
+   "digitalfuturesacademy": "Digital Futures Academy board is empty (0 jobs); it is a training academy, the Principal DS lead was LinkedIn-only — 17 Nov 2026",
+   "orbisk": "Orbisk (Dutch food-waste startup, 0 UK posts), not Orbis Group, which is a recruitment agency — 17 Nov 2026"
   },
   "lever": {
    "mpower": "mPower: US-only Lever board, not a London employer — 13 Oct 2026"
+  },
+  "pinpoint": {
+   "ipsos": "Ipsos Pinpoint board is empty (0 postings); not the Ipsos UK careers site — 17 Nov 2026",
+   "virgin": "Virgin Group careers (groupcareers.virgin.com), not Virgin Atlantic; 2 postings, no DS — 17 Nov 2026"
   }
  },
  "patterns": {

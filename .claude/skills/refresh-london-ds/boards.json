@@ -52,10 +52,12 @@
   "marshallwace",
   "mavensecuritiesholdingltd",
   "mongodb",
+  "monks",
   "monzo",
   "ocadogroup",
   "onrunning",
   "optiver",
+  "payuk",
   "physicsx",
   "pinterest",
   "polyai",
@@ -82,22 +84,25 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
   "winton",
   "wise",
-  "wppmedia",
-  "via",
-  "payuk"
+  "wppmedia"
  ],
  "ashby": [
   "Abound",
+  "airwallex",
   "arq",
+  "arrive",
+  "beamery",
   "bolt",
   "carwow",
   "chainalysis-careers",
   "chattermill",
+  "cint",
   "cohere",
   "comind",
   "deel",
@@ -114,6 +119,7 @@
   "loveholidays",
   "marshmallow",
   "moneybox",
+  "moss",
   "multiverse",
   "neko-health",
   "omaze",
@@ -127,6 +133,7 @@
   "render",
   "socure",
   "synthesia",
+  "teya",
   "trainline",
   "twelve",
   "voleon",
@@ -135,10 +142,8 @@
   "xyz-reality",
   "zego",
   "zilch",
-  "beamery",
-  "teya",
-  "moss",
-  "airwallex"
+  "edited",
+  "refractal"
  ],
  "lever": [
   "analyticpartners",
@@ -190,21 +195,23 @@
   "asos",
   "wise",
   "qima",
-  "SyngentaGroup"
+  "SyngentaGroup",
+  "Entain"
  ],
  "pinpoint": [
   "accenture",
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
   "oxfordeconomics",
+  "ravelin",
   "stint",
   "surgohealth",
-  "systematica",
-  "dogstrust"
+  "systematica"
  ],
  "recruitee": [
   "cityscience"
@@ -237,13 +244,19 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "AEGIS London": "https://aegislondon.wd3.myworkdayjobs.com/wday/cxs/aegislondon/Careers/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
   "QuriousAssociatesLimited",
   "Degree6",
-  "kimarutalent"
+  "kimarutalent",
+  "Orbis Group",
+  "Infused Solutions",
+  "William Alexander",
+  "Edenbrook",
+  "Women in Data®"
  ],
  "display_names": {
   "deepmind": "Google DeepMind",
@@ -381,7 +394,15 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "monks": "Monks",
+  "cint": "Cint",
+  "arrive": "Arrive",
+  "ravelin": "Ravelin Technology",
+  "volter-demo": "Volter",
+  "edited": "EDITED",
+  "refractal": "Refractal",
+  "Entain": "Entain"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -390,7 +411,8 @@
   "Disney": "https://www.disneycareers.com/en/search-jobs?k=data%20scientist&l=London",
   "Spotify": "https://www.lifeatspotify.com/jobs?q=data%20scientist&l=london",
   "Expedia": "https://careers.expediagroup.com/jobs/?keyword=data+scientist&location=London",
-  "Ripple": "https://ripple.com/careers/all-jobs/"
+  "Ripple": "https://ripple.com/careers/all-jobs/",
+  "Standard Chartered": "https://jobs.standardchartered.com/search/?q=data+scientist&locationsearch=London"
  },
  "external_lists": {
   "_doc": "Other lists of the same search to diff against on every refresh; a role there but not here is either dead, out of scope, or a missed board token.",
@@ -418,6 +440,7 @@
  "teamtailor": [
   "bluelightcard",
   "mypos",
+  "volter-demo",
   "yonder"
  ],
  "oraclehcm": {
