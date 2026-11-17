@@ -31,10 +31,11 @@ EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|work
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
 
-def get(url, t=20, post=None):
+def get(url, t=20, post=None, headers=None):
     data = json.dumps(post).encode() if post is not None else None
     hdr = dict(UA)
     if post is not None: hdr["Content-Type"] = "application/json"
+    if headers: hdr.update(headers)
     r = urllib.request.Request(url, data=data, headers=hdr)
     with urllib.request.urlopen(r, timeout=t) as f:
         return f.read().decode("utf-8", "replace")
@@ -106,8 +107,11 @@ UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limi
 WORKDAY = REG["workday"]
 for name, url in WORKDAY.items():
     try:
+        # Workday CXS answers 429 to a bare POST; it wants the site's Origin/Referer (browser-like) headers.
+        wd_host = url.split("/wday/")[0]; wd_site = url.rstrip("/").rsplit("/", 2)[-2]
         d = json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": 0,
-                                      "searchText": "data scientist"}))
+                                      "searchText": "data scientist"},
+                           headers={"Origin": wd_host, "Referer": f"{wd_host}/{wd_site}", "Accept-Language": "en-GB,en;q=0.9"}))
         for j in d.get("jobPostings", []):
             t = j.get("title", ""); loc = j.get("locationsText", "")
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
@@ -254,7 +258,8 @@ if "apple" in REG:
             pg += 1
         print(f"[apple] {total} GBR results, {hits} London DS", file=sys.stderr)
     except Exception as e:
-        print(f"[apple] {type(e).__name__}", file=sys.stderr)
+        print(f"[apple] {type(e).__name__} — rows carried forward as unverified", file=sys.stderr)
+        UNVERIFIED.setdefault("apple", []).append("jobs.apple")   # matches //jobs.apple. in the row URL
 
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
@@ -283,7 +288,7 @@ def spa_refresh():
             # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
             # instead of failing the whole JS-site pass.
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = next((x for x in ["/opt/pw-browsers/chromium"] + glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") if os.path.exists(x)), None)
             if not exe: raise
             b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
@@ -436,7 +441,7 @@ def workable_page_fallback(accts):
         try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
         except Exception:
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = next((x for x in ["/opt/pw-browsers/chromium"] + glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") if os.path.exists(x)), None)
             b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():
@@ -567,6 +572,14 @@ from refresh_roles_scope import london_ok
 active = [a for a in active if london_ok(a[3])]
 # ---------------- write CSV ----------------
 json.dump(UNVERIFIED, open("/tmp/ldn_ds_unverified.json", "w"))
+# the boards this run enumerated (registry at run time): a row from one of these that the board no longer returns is closed by
+# the board's verdict; a row from anywhere else must be re-verified by its own page before build_sheet_rows.py may close it
+json.dump({"greenhouse": REG.get("greenhouse", []), "ashby": REG.get("ashby", []), "lever": REG.get("lever", []), "workable": REG.get("workable", []),
+           "smartrecruiters": REG.get("smartrecruiters", []), "pinpoint": REG.get("pinpoint", []), "recruitee": REG.get("recruitee", []),
+           "teamtailor": REG.get("teamtailor", []), "workday": [u.split("//")[1].split(".")[0] for u in REG.get("workday", {}).values()],
+           "oraclehcm": [v["host"] for k, v in REG.get("oraclehcm", {}).items() if isinstance(v, dict)],
+           "successfactors": [v.split("//")[1] for k, v in REG.get("successfactors", {}).items() if k != "_doc"],
+           "apple": ["jobs.apple.com"] if "apple" in REG else []}, open("/tmp/ldn_ds_registry.json", "w"))
 # Proper display names (per CLAUDE.md) instead of raw ATS tokens.
 PRETTY = {"openai": "OpenAI", "deepmind": "Google DeepMind", "monzo": "Monzo",
           "mangroup": "Man Group", "gocardless": "GoCardless", "dunnhumby": "dunnhumby",
