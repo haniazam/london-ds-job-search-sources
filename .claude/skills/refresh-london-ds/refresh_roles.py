@@ -191,7 +191,7 @@ for co in REG.get("recruitee", []):
 # ---------------- Teamtailor (public JSON Feed at /jobs.json; locations in the schema.org jobposting) ----------------
 for co in REG.get("teamtailor", []):
     try:
-        d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
+        d = json.loads(get(f"https://{co}/jobs.json" if "." in co else f"https://{co}.teamtailor.com/jobs.json"))   # token may be a custom careers host (careers.smg.team)
     except Exception as e:
         print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
     hits = 0
@@ -254,7 +254,8 @@ if "apple" in REG:
             pg += 1
         print(f"[apple] {total} GBR results, {hits} London DS", file=sys.stderr)
     except Exception as e:
-        print(f"[apple] {type(e).__name__}", file=sys.stderr)
+        print(f"[apple] {type(e).__name__} — rows carried forward as unverified", file=sys.stderr)
+        UNVERIFIED.setdefault("apple", []).append("jobs.apple")   # matches //jobs.apple. in the row URL
 
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
@@ -283,7 +284,7 @@ def spa_refresh():
             # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
             # instead of failing the whole JS-site pass.
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
             if not exe: raise
             b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
@@ -343,9 +344,20 @@ def spa_refresh():
 
         # Microsoft Eightfold (in-browser)
         try:
-            goto("https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&num=50&start=0", 2000)
-            d = json.loads(pg.inner_text("body"))
-            if not isinstance(d, dict) or "data" not in d: raise ValueError("Microsoft search returned no 'data' (rate-limited/gated)")   # unreadable != empty
+            # Eightfold returns at most 50 per call; page with start= (the SC-cleared Sr DS post sat beyond the first 50 on 2026-11-16)
+            pages = []; start = 0
+            while start < 300:                                   # Eightfold hands back 10 positions per call whatever num= says; data.count is the total (83 on 2026-11-16)
+                goto(f"https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&num=50&start={start}", 1500)
+                try: d = json.loads(pg.inner_text("body"))
+                except ValueError:
+                    if start == 0: raise ValueError("Microsoft search returned non-JSON (rate-limited/gated)")   # unreadable != empty
+                    print(f"[spa] microsoft: page start={start} not JSON — keeping the first {start}", file=sys.stderr); break
+                if not isinstance(d, dict) or "data" not in d: raise ValueError("Microsoft search returned no 'data' (rate-limited/gated)")   # unreadable != empty
+                pages.append(d)
+                got = len((d.get("data") or {}).get("positions") or []); total = (d.get("data") or {}).get("count") or 0
+                start += got
+                if not got or start >= total: break
+            d = pages
             def walk(o):
                 if isinstance(o, dict):
                     t = o.get("name") or o.get("title")
@@ -436,7 +448,7 @@ def workable_page_fallback(accts):
         try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
         except Exception:
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
             b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():
@@ -484,10 +496,15 @@ if UNVERIFIED.get("workable"):
 def google_refresh():
     out, seen = [], set()
     base = "https://www.google.com/about/careers/applications/jobs/results/"
-    try:
-        html = get(base + "?location=London%2C%20UK&q=data%20scientist", t=25)
-    except Exception as e:
-        print("[google]", type(e).__name__, file=sys.stderr); return out
+    html = ""
+    for page_no in range(1, 6):                       # 20 results per page; London DS search ran to 3 pages on 2026-11-16
+        try:
+            chunk = get(base + f"?location=London%2C%20UK&q=data%20scientist&page={page_no}", t=25)
+        except Exception as e:
+            if page_no == 1: print("[google]", type(e).__name__, file=sys.stderr); return out
+            break
+        if not re.search(r"jobs/results/\d+-", chunk): break
+        html += chunk
     for m in re.finditer(r"jobs/results/(\d+)-([a-z0-9-]+)", html):
         jid, slug = m.group(1), m.group(2)
         if jid in seen: continue
