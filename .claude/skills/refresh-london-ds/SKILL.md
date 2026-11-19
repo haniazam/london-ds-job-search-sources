@@ -202,6 +202,18 @@ company data — the label is the point.
   Same for Google: a closed google.com post returns 200 with title "Jobs search — Google
   Careers"; a live one is titled "<Role> — Google Careers". Google postings turn over
   fast (the Staff/Shopping DS post closed within a day of being listed).
+- **Board drift (16-Nov-2026 refresh):** Greenhouse `deepmind` returns 404 — Google DeepMind now posts on
+  google.com/about/careers (the Google block covers it; its London search ran to 3 pages, so `google_refresh`
+  pages). Workday CXS answers every tenant with a Cloudflare challenge (HTTP 429, `Cf-Mitigated: challenge`)
+  from the cloud container — all Workday rows carry forward as Unverified until the egress changes. Microsoft's
+  Eightfold search returns 10 positions per call whatever `num=` says (`data.count` is the total) — page with
+  `start=`. The pre-installed Chromium lives at `/opt/pw-browsers/chromium-*/chrome-linux64/chrome` (not
+  `chrome-linux`). `build_sheet_rows.py` now re-checks a row no enumerated board returned on its own job page
+  (Playwright for the JS hosts) before calling it closed, and closes a row its own board still enumerates but no
+  longer lists (relocated / re-titled) with that reason; six live rows (Entain ×2, EDITED, Refractal, Microsoft,
+  Standard Chartered) would otherwise have been closed because discover.py had found them weeks earlier without
+  registering their boards. Standard Chartered's site (jobs.standardchartered.com, SuccessFactors) has a JS-only
+  search — its posts live in `data/manual_posts.json`.
 - **Point72**: `careers.point72.com` CSOD — anchors `/CSJobDetail?jobName=...&jobCode=...`.
 - **Bloomberg**: `bloomberg.avature.net/careers/SearchJobs/data%20scientist`
   → `/careers/JobDetail/<slug>/<id>` (London DS = Economics DS).
