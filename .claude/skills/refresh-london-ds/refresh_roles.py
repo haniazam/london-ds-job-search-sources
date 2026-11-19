@@ -42,13 +42,23 @@ def get(url, t=20, post=None):
 active = []   # (company, role, level, location, url)
 norole = []   # (company, reason)
 
+UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
+def api_error(platform, tok, e):
+    """A board API error that is NOT a 404 (429 / 5xx / timeout) leaves the board's rows unverified, never closed.
+    A 404 means the board itself is gone (token moved), so its job URLs are dead and the rows may close."""
+    code = getattr(e, "code", None)
+    if code == 404:
+        print(f"[{platform}] {tok}: board 404 (gone)", file=sys.stderr); return
+    print(f"[{platform}] {tok}: {type(e).__name__} {code or ''} — rows carried forward as unverified", file=sys.stderr)
+    UNVERIFIED.setdefault(platform, []).append(tok)
+
 # ---------------- Greenhouse ----------------
 GREENHOUSE = REG["greenhouse"]
 for tok in GREENHOUSE:
     try:
         d = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{tok}/jobs?content=false"))
     except Exception as e:
-        print(f"[gh] {tok}: {type(e).__name__}", file=sys.stderr); continue
+        api_error("greenhouse", tok, e); continue
     hits = []
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = (j.get("location") or {}).get("name", "")
@@ -69,7 +79,7 @@ for org in REG["ashby"]:
                 shown = loc if LON.search(loc) else f"{loc} (+London)"
                 active.append((org, t, level(t), shown, j.get("jobUrl")))
     except Exception as e:
-        print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr)
+        api_error("ashby", org, e)
 
 # ---------------- Lever ----------------
 for org in REG["lever"]:
@@ -80,7 +90,7 @@ for org in REG["lever"]:
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 active.append((org, t, level(t), loc, j.get("hostedUrl")))
     except Exception as e:
-        print(f"[lever] {org}: {type(e).__name__}", file=sys.stderr)
+        api_error("lever", org, e)
 
 # ---------------- Amazon ----------------
 seen = set()
@@ -101,20 +111,38 @@ for q in ["data scientist", "applied scientist"]:
     except Exception as e:
         print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr)
 
-UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 # ---------------- Workday CXS (mostly 0 London DS; re-check) ----------------
 WORKDAY = REG["workday"]
+wd_strikes = 0    # consecutive tenants lost to 429 -> after 2, one un-slept attempt each (the block is per-IP, so retries only burn the run's clock)
+def workday_page(url, offset):
+    """Workday rate-limits bursts across tenants (HTTP 429 since Nov 2026): pace calls and back off before giving up."""
+    tries = 1 if wd_strikes >= 2 else 3
+    for attempt in range(tries):
+        try:
+            return json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": "data scientist"}))
+        except Exception as e:
+            if getattr(e, "code", None) == 429 and attempt < tries - 1:
+                time.sleep(20 * (attempt + 1)); continue
+            raise
+def workday_search(url):
+    """All pages of the tenant's 'data scientist' search (20 per call; big tenants return 30-100 and a London post can sit past page 1)."""
+    d = workday_page(url, 0); posts = list(d.get("jobPostings", [])); total = d.get("total") or 0
+    while len(posts) < min(total, 200):
+        time.sleep(2); nxt = workday_page(url, len(posts)).get("jobPostings", [])
+        if not nxt: break
+        posts += nxt
+    d["jobPostings"] = posts; return d
 for name, url in WORKDAY.items():
     try:
-        d = json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": 0,
-                                      "searchText": "data scientist"}))
+        d = workday_search(url); wd_strikes = 0; time.sleep(4)
         for j in d.get("jobPostings", []):
             t = j.get("title", ""); loc = j.get("locationsText", "")
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 host = url.split("/wday/")[0]; site = url.rstrip("/").rsplit("/", 2)[-2]
                 active.append((name, t, level(t), loc, f"{host}/en-US/{site}{j.get('externalPath', '')}"))
     except Exception as e:
-        print(f"[workday] {name}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr)
+        if getattr(e, "code", None) == 429: wd_strikes += 1
+        print(f"[workday] {name}: {type(e).__name__} {getattr(e, 'code', '')} — rows carried forward as unverified", file=sys.stderr)
         UNVERIFIED.setdefault("workday", []).append(url.split("//")[1].split("/")[0].split(".")[0])   # tenant host, matches //<tenant>. in the row URL
 
 # ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
@@ -284,7 +312,7 @@ def spa_refresh():
             # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
             # instead of failing the whole JS-site pass.
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
+            exe = ((glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") + glob.glob("/opt/pw-browsers/chromium/chrome*")) or [None])[0]
             if not exe: raise
             b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
@@ -448,7 +476,7 @@ def workable_page_fallback(accts):
         try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
         except Exception:
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") or [None])[0]
+            exe = ((glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") + glob.glob("/opt/pw-browsers/chromium/chrome*")) or [None])[0]
             b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():

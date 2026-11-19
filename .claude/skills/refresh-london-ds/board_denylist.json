@@ -7,7 +7,8 @@
    "HCLTechHungary": "regional Hungary board, 0 postings — 10/11 Oct 2026",
    "TescoBengaluru": "Tesco's Bengaluru tech centre, not Welwyn/London — 10 Oct 2026",
    "TRGInc": "TRG Inc (US), not TRG Screen (greenhouse trgscreen is the real board) — 10 Oct 2026",
-   "JACOBSDOUWEEGBERTS": "JDE Peet's (coffee, NL/DE/MY postings), not Jacobs engineering 'Data Scientist (D&D UK)' — 18 Nov 2026"
+   "JACOBSDOUWEEGBERTS": "Jacobs Douwe Egberts (coffee, Maidenhead), not Jacobs engineering which posted 'Data Scientist (D&D UK)' — 19 Nov 2026",
+   "mottmacdonald": "one-posting stub; company record 404s on the SmartRecruiters API, Mott MacDonald hires via its own site — 19 Nov 2026"
   },
   "workable": {
    "magic-careers": "unverifiable (Workable 429); not confirmed as MAGIC AI's board — 10/11 Oct 2026",
@@ -26,7 +27,7 @@
   "greenhouse": {
    "acuity-insights": "Acuity Insights (Canada), not Acuity Analytics — 10 Oct 2026",
    "haven": "Haven Interactive Studios (Montreal games studio), not the London Haven DS employer — 19 Oct 2026",
-   "archer56": "Archer Aviation (San Jose, no UK postings); the LinkedIn 'Archer' London DS lead is a different employer — 18 Nov 2026",
+   "archer56": "Archer Aviation (US eVTOL; only DS post is San Jose) — LinkedIn 'Archer' London lead was a different employer — 19 Nov 2026",
    "digitalfuturesacademy": "Digital Futures training academy board, 0 postings (grad-placement programme, out of scope) — 18 Nov 2026",
    "orbisk": "Orbisk (Dutch food-waste startup, 0 UK), not Orbis Group (London recruiter) — 16 Nov 2026",
    "dcd": "'dcd' board exists with 0 postings; not confirmed as DatacenterDynamics — 16 Nov 2026"
@@ -35,11 +36,11 @@
    "mpower": "mPower: US-only Lever board, not a London employer — 13 Oct 2026"
   },
   "pinpoint": {
-   "ipsos": "ipsos.pinpointhq.com is empty (0 postings); Ipsos UK posts elsewhere — 18 Nov 2026",
-   "virgin": "Virgin Group board (2 London finance/partner posts, 0 DS), not Virgin Atlantic — 16 Nov 2026"
+   "ipsos": "Ipsos Pinpoint board is empty (0 postings) — nothing to verify as UK DS — 19 Nov 2026",
+   "virgin": "Virgin Group (groupcareers.virgin.com, 2 London finance/partner posts), not Virgin Atlantic; the Crawley DS lead is not London-eligible anyway — 19 Nov 2026"
   },
   "teamtailor": {
-   "volter-demo": "Teamtailor demo board ('Volter'), not an employer — 18 Nov 2026"
+   "volter-demo": "Teamtailor demo board ('Volter', one Marketing Lead post), not a real employer — 19 Nov 2026"
   },
   "workday": {
    "standard": "The Standard (US insurer, Portland OR), not Standard Chartered — 16 Nov 2026"
