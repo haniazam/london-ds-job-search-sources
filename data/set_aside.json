@@ -160,11 +160,6 @@
   "unv"
  ],
  [
-  "Amazon (Data Scientist II, RufusX Science UK)",
-  "Closed — not returned by amazon.jobs API on the 2026-10-13 refresh (was live on 2026-10-12)",
-  "closed"
- ],
- [
   "Blue Light Card (Principal Product Data Scientist)",
   "Closed — not returned by Teamtailor API on the 2026-10-13 refresh (was live on 2026-10-12)",
   "closed"
@@ -235,18 +230,8 @@
   "closed"
  ],
  [
-  "WPP Media (Data Scientist)",
-  "Closed — not returned by Greenhouse API on the 2026-10-15 refresh (was live on 2026-10-15)",
-  "closed"
- ],
- [
   "Sagacity (Data Scientist)",
   "Closed — not returned by LinkedIn (title verified) on the 2026-10-19 refresh (was live on 2026-10-19)",
-  "closed"
- ],
- [
-  "AIG (Data Scientist, GenAI)",
-  "Closed — not returned by Workday API on the 2026-10-20 refresh (was live on 2026-10-20)",
   "closed"
  ],
  [
@@ -300,11 +285,6 @@
   "closed"
  ],
  [
-  "Howden (Lead Data Scientist)",
-  "Closed — not returned by Workday API on the 2026-10-23 refresh (was live on 2026-10-23)",
-  "closed"
- ],
- [
   "Moss (Senior Data Scientist (f/m/d))",
   "Closed — not returned by Ashby API on the 2026-10-23 refresh (was live on 2026-10-23)",
   "closed"
@@ -312,6 +292,136 @@
  [
   "Qube RT (Data Scientist - Fixed Income)",
   "Closed — not returned by Greenhouse API on the 2026-10-23 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Apple (Machine Learning Data Scientist - Apple Pay Marketing)",
+  "Closed — not returned by employer site (title verified) on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Dogs Trust (Data Scientist)",
+  "Closed — not returned by employer site (title verified) on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Marshmallow (Principal Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Marshmallow (Staff Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Marshmallow (Junior Pricing Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Marshmallow (Pricing Data Scientist)",
+  "Closed — not returned by Ashby API on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Moonpig (Data Scientist)",
+  "Closed — not returned by Lever API on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Oodle Car Finance (Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Wise (Lead Data Scientist - Causal Inference)",
+  "Closed — not returned by SmartRecruiters API on the 2026-11-17 refresh (was live on 2026-10-23)",
+  "closed"
+ ],
+ [
+  "Infosys Consulting (Data Scientist - GenAI - Consultant)",
+  "Closed — not returned by Workable feed on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "Kharon (Sr. Data Scientist, Retrieval & Agentic Systems)",
+  "Closed — not returned by Pinpoint API on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "Made Tech (Senior Data Scientist)",
+  "Closed — not returned by Pinpoint API on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "Monks (Junior Data Scientist)",
+  "Closed — not returned by employer site (title verified) on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "Monzo (Data Science Manager)",
+  "Closed — not returned by Greenhouse API on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "Monzo (Data Science Manager, Financial Crime)",
+  "Closed — not returned by Greenhouse API on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "Volter (Data Scientist)",
+  "Closed — board 'volter-demo' is deny-listed (Teamtailor demo board ('Volter'), not an employer — 18 Nov 2026) on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "Wise (Lead Data Scientist - Receive Risk)",
+  "Closed — not returned by SmartRecruiters API on the 2026-11-18 refresh (was live on 2026-11-17)",
+  "closed"
+ ],
+ [
+  "CFC (Data Scientist)",
+  "Closed — not returned by Pinpoint API on the 2026-11-19 refresh (was live on 2026-11-18)",
+  "closed"
+ ],
+ [
+  "ICF (Associate Data Scientist)",
+  "Closed — not returned by Workday API on the 2026-11-19 refresh (was live on 2026-11-18)",
+  "closed"
+ ],
+ [
+  "Deliveroo (Senior Data Scientist - Experimentation)",
+  "Closed — not returned by Greenhouse API on the 2026-11-20 refresh (was live on 2026-11-19)",
+  "closed"
+ ],
+ [
+  "Deliveroo (Senior Product Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-11-20 refresh (was live on 2026-11-19)",
+  "closed"
+ ],
+ [
+  "Relay (Senior Data Scientist, Experimentation)",
+  "Closed — not returned by Ashby API on the 2026-11-20 refresh (was live on 2026-11-19)",
+  "closed"
+ ],
+ [
+  "Relay (Senior Data Scientist, Personalisation)",
+  "Closed — not returned by Ashby API on the 2026-11-20 refresh (was live on 2026-11-19)",
+  "closed"
+ ],
+ [
+  "Relay (Senior Decision Scientist, Marketplace)",
+  "Closed — not returned by Ashby API on the 2026-11-20 refresh (was live on 2026-11-19)",
+  "closed"
+ ],
+ [
+  "Relay (Senior Decision Scientist, Partner Excellence)",
+  "Closed — not returned by Ashby API on the 2026-11-20 refresh (was live on 2026-11-19)",
+  "closed"
+ ],
+ [
+  "Relay (Senior Decision Scientist, Sales)",
+  "Closed — not returned by Ashby API on the 2026-11-20 refresh (was live on 2026-11-19)",
   "closed"
  ]
 ]
