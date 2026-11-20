@@ -198,7 +198,7 @@
   "entain",
   "qima",
   "wise",
-  "Entain"
+  "sportradar"
  ],
  "pinpoint": [
   "accenture",
@@ -418,7 +418,8 @@
   "uktv": "UKTV (BBC Studios)",
   "careers.smg.team": "SMG",
   "Entain": "Entain",
-  "cint": "Cint"
+  "cint": "Cint",
+  "sportradar": "Sportradar"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
