@@ -95,6 +95,18 @@ def page_check(url, role):
     """'live' when the post page still carries the role, 'closed' on 404/410 or a generic title, 'unverified' on any other failure."""
     import html as _h, urllib.request, urllib.error
     spa = any(h in url for h in SPA_HOSTS)
+    wd = re.match(r"https://([^./]+)\.(wd\d+)\.myworkdayjobs\.com/[^/]+/([^/]+)/job/(.+)$", url.split("?")[0])
+    if wd:
+        # Workday job pages are an SPA shell for live and closed posts alike (empty <title>), so the HTML never settles it:
+        # ask the CXS job endpoint instead — 200 live, 404/410 closed, anything else (403 S22, 429 challenge) unverified.
+        api = f"https://{wd[1]}.{wd[2]}.myworkdayjobs.com/wday/cxs/{wd[1]}/{wd[3]}/job/{wd[4]}"
+        try:
+            with urllib.request.urlopen(urllib.request.Request(api, headers={**UA, "Accept": "application/json"}), timeout=35) as f:
+                return "live" if f.status == 200 else "unverified"
+        except urllib.error.HTTPError as e:
+            return "closed" if e.code in (404, 410) else "unverified"
+        except Exception:
+            return "unverified"
     if spa:
         title = _spa_title(url)
         if title is None: return "unverified"
