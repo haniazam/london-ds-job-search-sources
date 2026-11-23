@@ -15,7 +15,7 @@ if Playwright is missing — it just skips the browser companies).
 
 See SKILL.md for endpoints, gotchas and the upload step (assistant action).
 """
-import csv, html, json, os, re, sys, time, urllib.parse, urllib.request
+import csv, html, json, os, re, sys, time, urllib.error, urllib.parse, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from role_taxonomy import classify as role_type, COLLECT as DS   # core-role classifier (see role_taxonomy.py)
 
@@ -38,6 +38,16 @@ def get(url, t=20, post=None):
     r = urllib.request.Request(url, data=data, headers=hdr)
     with urllib.request.urlopen(r, timeout=t) as f:
         return f.read().decode("utf-8", "replace")
+
+def curl_post(url, post, t=30):
+    """POST via curl (browser-like TLS fingerprint); raises HTTPError on a non-2xx so callers treat it like get()."""
+    import subprocess
+    r = subprocess.run(["curl", "-s", "-w", "\n%{http_code}", "-A", UA["User-Agent"], "-H", "Content-Type: application/json",
+                        "-d", json.dumps(post), url], capture_output=True, text=True, timeout=t)
+    body, _, code = r.stdout.rpartition("\n")
+    if not code.startswith("2"):
+        raise urllib.error.HTTPError(url, int(code or 0), "curl fallback", {}, None)
+    return body
 
 active = []   # (company, role, level, location, url)
 norole = []   # (company, reason)
@@ -121,8 +131,12 @@ def workday_page(url, offset):
         try:
             return json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": "data scientist"}))
         except Exception as e:
-            if getattr(e, "code", None) == 429 and attempt < tries - 1:
-                time.sleep(20 * (attempt + 1)); continue
+            if getattr(e, "code", None) == 429:
+                # Workday's Cloudflare edge 429s Python-urllib's TLS fingerprint on most tenants (23 Nov 2026) while curl
+                # gets 200 from the same IP in the same second: re-issue the identical POST through curl first.
+                try: return json.loads(curl_post(url, {"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": "data scientist"}))
+                except Exception: pass
+                if attempt < tries - 1: time.sleep(20 * (attempt + 1)); continue
             raise
 def workday_search(url):
     """All pages of the tenant's 'data scientist' search (20 per call; big tenants return 30-100 and a London post can sit past page 1)."""

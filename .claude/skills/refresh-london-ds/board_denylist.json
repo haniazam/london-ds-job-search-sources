@@ -30,7 +30,8 @@
    "archer56": "Archer Aviation (US eVTOL; only DS post is San Jose) — LinkedIn 'Archer' London lead was a different employer — 19 Nov 2026",
    "digitalfuturesacademy": "Digital Futures training academy board, 0 postings (grad-placement programme, out of scope) — 18 Nov 2026",
    "orbisk": "Orbisk (Dutch food-waste startup, 0 UK), not Orbis Group (London recruiter) — 16 Nov 2026",
-   "dcd": "'dcd' board exists with 0 postings; not confirmed as DatacenterDynamics — 16 Nov 2026"
+   "dcd": "'dcd' board exists with 0 postings; not confirmed as DatacenterDynamics — 16 Nov 2026",
+   "capgeminideutschlandgmbh": "Capgemini Deutschland GmbH: Germany-only Greenhouse board (all DS posts Berlin/Frankfurt/München), lead job 4100860101 404s; UK Capgemini is not on Greenhouse — 23 Nov 2026"
   },
   "lever": {
    "mpower": "mPower: US-only Lever board, not a London employer — 13 Oct 2026"
@@ -40,7 +41,7 @@
    "virgin": "Virgin Group (groupcareers.virgin.com, 2 London finance/partner posts), not Virgin Atlantic; the Crawley DS lead is not London-eligible anyway — 19 Nov 2026"
   },
   "teamtailor": {
-   "volter-demo": "Teamtailor demo board ('Volter', one Marketing Lead post), not a real employer — 19 Nov 2026"
+   "volter-demo": "Volter's real Teamtailor board (redirects to careers.getvolter.com; live 'Data Scientist' post) but the feed carries no job location, so the London claim (LinkedIn) cannot be verified from the employer post — keep out until it can — 23 Nov 2026 (supersedes 19 Nov 'demo board')"
   },
   "workday": {
    "standard": "The Standard (US insurer, Portland OR), not Standard Chartered — 16 Nov 2026"
