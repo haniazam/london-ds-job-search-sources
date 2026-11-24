@@ -144,7 +144,8 @@
   "zilch",
   "edited",
   "refractal",
-  "cint"
+  "cint",
+  "hawk"
  ],
  "lever": [
   "analyticpartners",
@@ -254,7 +255,8 @@
   "Centrica": "https://centrica.wd3.myworkdayjobs.com/wday/cxs/centrica/Centrica/jobs",
   "Formula 1": "https://formulaone.wd3.myworkdayjobs.com/wday/cxs/formulaone/F1/jobs",
   "Betway (Super Group)": "https://myhcm.wd3.myworkdayjobs.com/wday/cxs/myhcm/Betway/jobs",
-  "Haleon": "https://gsknch.wd3.myworkdayjobs.com/wday/cxs/gsknch/GSKCareers/jobs"
+  "Haleon": "https://gsknch.wd3.myworkdayjobs.com/wday/cxs/gsknch/GSKCareers/jobs",
+  "Cisco": "https://cisco.wd5.myworkdayjobs.com/wday/cxs/cisco/Cisco_Careers/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -419,7 +421,8 @@
   "careers.smg.team": "SMG",
   "Entain": "Entain",
   "cint": "Cint",
-  "sportradar": "Sportradar"
+  "sportradar": "Sportradar",
+  "hawk": "Hawk"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -429,7 +432,9 @@
   "Spotify": "https://www.lifeatspotify.com/jobs?q=data%20scientist&l=london",
   "Expedia": "https://careers.expediagroup.com/jobs/?keyword=data+scientist&location=London",
   "Ripple": "https://ripple.com/careers/all-jobs/",
-  "Standard Chartered": "https://jobs.standardchartered.com/search/?q=data+scientist&locationsearch=London"
+  "Standard Chartered": "https://jobs.standardchartered.com/search/?q=data+scientist&locationsearch=London",
+  "Meta": "https://www.metacareers.com/jobsearch/?offices[0]=London%2C%20UK&q=data%20scientist",
+  "IBM": "https://www.ibm.com/careers/search?q=data%20scientist&field_keyword_05[0]=United%20Kingdom"
  },
  "external_lists": {
   "_doc": "Other lists of the same search to diff against on every refresh; a role there but not here is either dead, out of scope, or a missed board token.",
@@ -455,7 +460,13 @@
   "Fitch Ratings": "Fitch Group",
   "LexisNexis Risk Solutions": "RELX",
   "Ipsos in the UK": "Ipsos",
-  "QuantumBlack, AI by McKinsey": "QuantumBlack (McKinsey)"
+  "QuantumBlack, AI by McKinsey": "QuantumBlack (McKinsey)",
+  "Viator": "Tripadvisor",
+  "trg.": "TRG Screen",
+  "Formula.": "Formula 1",
+  "Tails.com | B Corp": "Tails.com",
+  "LabGenius Therapeutics": "LabGenius",
+  "Ravelin Technology": "Ravelin"
  },
  "teamtailor": [
   "bluelightcard",
@@ -482,6 +493,10 @@
   },
   "Ocado Logistics": {
    "host": "iahbme.fa.ocs.oraclecloud.com",
+   "site": "CX_1"
+  },
+  "Compare the Market": {
+   "host": "ebet.fa.em3.oraclecloud.com",
    "site": "CX_1"
   }
  },

@@ -171,6 +171,30 @@
    "url": "https://jobs.standardchartered.com/job/London-Director,-OTCR,-Data-Scientist/64997-en_GB/",
    "added": "2026-11-16",
    "note": "SCB careers site (SuccessFactors) has a JS-only search; the post page is server-rendered with the role in <title>"
+  },
+  {
+   "company": "Goldman Sachs",
+   "title": "Real Estate Data Science, Vice President",
+   "location": "London",
+   "url": "https://higher.gs.com/roles/185227"
+  },
+  {
+   "company": "Institute for Government",
+   "title": "Data Scientist",
+   "location": "London",
+   "url": "https://www.instituteforgovernment.org.uk/about-us/careers/current-vacancies/data-scientist"
+  },
+  {
+   "company": "BAE Systems",
+   "title": "NSL- Data Scientist",
+   "location": "London",
+   "url": "https://cybercareers.baesystems.com/job/London-NSL-Data-Scientist/1458896033/"
+  },
+  {
+   "company": "Sainsbury's",
+   "title": "Senior Data Scientist",
+   "location": "London",
+   "url": "https://www.sainsburys.jobs/jobs/description/400062217/"
   }
  ]
 }

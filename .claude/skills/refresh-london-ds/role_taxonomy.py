@@ -26,6 +26,7 @@ STANDARD_CORE = re.compile(r"""\b(
   | data\s+science\s+(manager|lead|leader|director|head|partner|team\s+lead|practice\s+lead)
   | (head|director|vp|vice\s+president|chief|manager|lead|principal|senior\s+manager|sr\.?\s+manager)
         \s*(,|:|-|–|of)?\s*(of\s+)?(\w+[\s&/]+){0,3}data\s+science\b
+  | data\s+science\s*(,|-|–|:)\s*(vice\s+president|vp|avp|executive\s+director|director|head|manager|lead)\b
   | decision\s+scientists?
   | product\s+scientists?
   | analytics\s+scientists?
@@ -78,6 +79,7 @@ TESTS = [
     ("Staff Scientist, Experimentation", "Standard DS"),
     ("Principal Scientist, Product Analytics", "Standard DS"),
     ("Director, Data Science (AI)", "Standard DS"),
+    ("Real Estate Data Science, Vice President", "Standard DS"),   # bank-grade suffix (Goldman Sachs, 23 Nov 2026)
     ("Head of Telematics Data Science", "Standard DS"),
     ("Senior Manager, Product Data Science & Analytics", "Standard DS"),
     ("Sr. Manager, Data Science", "Standard DS"),
