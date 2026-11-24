@@ -52,8 +52,11 @@ for r in sorted(rows, key=lambda r: (r["Company"].lower(), r["Level"] != "Senior
     if u not in prev_active: notes.append(f"NEW (refresh {DATE})")
     if brief: notes.append("FITS BRIEF")
     notes.append(f"verified via {via_of(r['Apply URL (unique active post)'])}")
+    # a pipeline status the user set on this URL (Applied, Interviewing, Rejected…) is theirs: keep it over "Active"
+    pstat = (prev_active.get(u) or [""] * 9)[7]
+    status = pstat if pstat and pstat not in ("Active", "Unverified") else "Active"
     out.append([r["Company"], r["Role"], "Standard DS", r["Level"], r["Approx London TC"], r["Location"],
-                r["Apply URL (unique active post)"], "Active", "; ".join(notes)])
+                r["Apply URL (unique active post)"], status, "; ".join(notes)])
 missing = [v for k, v in prev_active.items() if k not in seen]
 # a board the run could not read (429 / gated) makes its rows unverified, never closed: carry them forward
 unv_path = "/tmp/ldn_ds_unverified.json"; unv = json.load(open(unv_path)) if os.path.exists(unv_path) else {}
@@ -68,7 +71,9 @@ REASON = {"spa": "JS site not reachable this run (Playwright absent or fetch fai
 # Eightfold search's first 50 — were about to be closed because no board returned them; a GET on the post decides.)
 SPA_HOSTS = ("apply.careers.microsoft", "jobs.careers.microsoft", "lifeatspotify", "gresearch.com", "bloomberg.avature", "careers.point72", "careers.tiktok", "lifeattiktok")
 DEAD_TITLE = re.compile(r"no longer|not found|not available|closed|expired|jobs search|\d,\d{3}\+ |\bjobs in (the )?united states|^careers at |^jobs at |^job search", re.I)
-PAGE_DEAD = re.compile(r'"status"\s*,\s*"EXPIRED"|>\s*Expired\s*<|This (job|position|vacancy) (has expired|is no longer (available|open|accepting))|job is not available anymore', re.I)
+PAGE_DEAD = re.compile(r'"status"\s*,\s*"EXPIRED"|>\s*Expired\s*<|This (job|position|vacancy) (has expired|is no longer (available|open|accepting))|job is not available anymore'
+                       # Teamtailor keeps the role title on a closed post ("Senior Data Scientist - SMG") and says so only in the body (SMG, 24 Nov 2026)
+                       r'|is no longer active|the position was filled|the ad has expired', re.I)
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36", "Accept-Language": "en-GB,en;q=0.9"}
 _pw = {}
 def _spa_title(url):
@@ -158,8 +163,10 @@ for v in missing:
             out.append(row); kept.append(row); continue
         if verdict == "closed": closed.append(v); continue
         k = "page"
+    # a row that was already Unverified keeps its real last-verified date instead of inheriting the previous run's date
+    lv = re.search(r"last verified (\d{4}-\d{2}-\d{2})", v[8]); last_ok = lv.group(1) if lv and v[7] == "Unverified" else prev_date
     row[7] = "Unverified"
-    row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {prev_date}; " + prior
+    row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {last_ok}; " + prior
     out.append(row); carried.append(row)
 if "b" in _pw:
     try: _pw["b"].close(); _pw["p"].stop()
