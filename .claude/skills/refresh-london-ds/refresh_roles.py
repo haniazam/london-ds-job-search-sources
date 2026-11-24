@@ -15,7 +15,7 @@ if Playwright is missing — it just skips the browser companies).
 
 See SKILL.md for endpoints, gotchas and the upload step (assistant action).
 """
-import csv, html, json, os, re, sys, time, urllib.parse, urllib.request
+import csv, html, json, os, re, sys, time, urllib.error, urllib.parse, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from role_taxonomy import classify as role_type, COLLECT as DS   # core-role classifier (see role_taxonomy.py)
 
@@ -39,8 +39,28 @@ def get(url, t=20, post=None):
     with urllib.request.urlopen(r, timeout=t) as f:
         return f.read().decode("utf-8", "replace")
 
+def curl_post(url, post, t=30):
+    """POST via curl (browser-like TLS fingerprint); raises HTTPError on a non-2xx so callers treat it like get()."""
+    import subprocess
+    r = subprocess.run(["curl", "-s", "-w", "\n%{http_code}", "-A", UA["User-Agent"], "-H", "Content-Type: application/json",
+                        "-d", json.dumps(post), url], capture_output=True, text=True, timeout=t)
+    body, _, code = r.stdout.rpartition("\n")
+    if not code.startswith("2"):
+        raise urllib.error.HTTPError(url, int(code or 0), "curl fallback", {}, None)
+    return body
+
 active = []   # (company, role, level, location, url)
 norole = []   # (company, reason)
+
+UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
+def api_error(platform, tok, e):
+    """A board API error that is NOT a 404 (429 / 5xx / timeout) leaves the board's rows unverified, never closed.
+    A 404 means the board itself is gone (token moved), so its job URLs are dead and the rows may close."""
+    code = getattr(e, "code", None)
+    if code == 404:
+        print(f"[{platform}] {tok}: board 404 (gone)", file=sys.stderr); return
+    print(f"[{platform}] {tok}: {type(e).__name__} {code or ''} — rows carried forward as unverified", file=sys.stderr)
+    UNVERIFIED.setdefault(platform, []).append(tok)
 
 # ---------------- Greenhouse ----------------
 GREENHOUSE = REG["greenhouse"]
@@ -48,7 +68,7 @@ for tok in GREENHOUSE:
     try:
         d = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{tok}/jobs?content=false"))
     except Exception as e:
-        print(f"[gh] {tok}: {type(e).__name__}", file=sys.stderr); continue
+        api_error("greenhouse", tok, e); continue
     hits = []
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = (j.get("location") or {}).get("name", "")
@@ -69,7 +89,7 @@ for org in REG["ashby"]:
                 shown = loc if LON.search(loc) else f"{loc} (+London)"
                 active.append((org, t, level(t), shown, j.get("jobUrl")))
     except Exception as e:
-        print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr)
+        api_error("ashby", org, e)
 
 # ---------------- Lever ----------------
 for org in REG["lever"]:
@@ -80,7 +100,7 @@ for org in REG["lever"]:
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 active.append((org, t, level(t), loc, j.get("hostedUrl")))
     except Exception as e:
-        print(f"[lever] {org}: {type(e).__name__}", file=sys.stderr)
+        api_error("lever", org, e)
 
 # ---------------- Amazon ----------------
 seen = set()
@@ -101,20 +121,42 @@ for q in ["data scientist", "applied scientist"]:
     except Exception as e:
         print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr)
 
-UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 # ---------------- Workday CXS (mostly 0 London DS; re-check) ----------------
 WORKDAY = REG["workday"]
+wd_strikes = 0    # consecutive tenants lost to 429 -> after 2, one un-slept attempt each (the block is per-IP, so retries only burn the run's clock)
+def workday_page(url, offset):
+    """Workday rate-limits bursts across tenants (HTTP 429 since Nov 2026): pace calls and back off before giving up."""
+    tries = 1 if wd_strikes >= 2 else 3
+    for attempt in range(tries):
+        try:
+            return json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": "data scientist"}))
+        except Exception as e:
+            if getattr(e, "code", None) == 429:
+                # Workday's Cloudflare edge 429s Python-urllib's TLS fingerprint on most tenants (23 Nov 2026) while curl
+                # gets 200 from the same IP in the same second: re-issue the identical POST through curl first.
+                try: return json.loads(curl_post(url, {"appliedFacets": {}, "limit": 20, "offset": offset, "searchText": "data scientist"}))
+                except Exception: pass
+                if attempt < tries - 1: time.sleep(20 * (attempt + 1)); continue
+            raise
+def workday_search(url):
+    """All pages of the tenant's 'data scientist' search (20 per call; big tenants return 30-100 and a London post can sit past page 1)."""
+    d = workday_page(url, 0); posts = list(d.get("jobPostings", [])); total = d.get("total") or 0
+    while len(posts) < min(total, 200):
+        time.sleep(2); nxt = workday_page(url, len(posts)).get("jobPostings", [])
+        if not nxt: break
+        posts += nxt
+    d["jobPostings"] = posts; return d
 for name, url in WORKDAY.items():
     try:
-        d = json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": 0,
-                                      "searchText": "data scientist"}))
+        d = workday_search(url); wd_strikes = 0; time.sleep(4)
         for j in d.get("jobPostings", []):
             t = j.get("title", ""); loc = j.get("locationsText", "")
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 host = url.split("/wday/")[0]; site = url.rstrip("/").rsplit("/", 2)[-2]
                 active.append((name, t, level(t), loc, f"{host}/en-US/{site}{j.get('externalPath', '')}"))
     except Exception as e:
-        print(f"[workday] {name}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr)
+        if getattr(e, "code", None) == 429: wd_strikes += 1
+        print(f"[workday] {name}: {type(e).__name__} {getattr(e, 'code', '')} — rows carried forward as unverified", file=sys.stderr)
         UNVERIFIED.setdefault("workday", []).append(url.split("//")[1].split("/")[0].split(".")[0])   # tenant host, matches //<tenant>. in the row URL
 
 # ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
@@ -191,7 +233,7 @@ for co in REG.get("recruitee", []):
 # ---------------- Teamtailor (public JSON Feed at /jobs.json; locations in the schema.org jobposting) ----------------
 for co in REG.get("teamtailor", []):
     try:
-        d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
+        d = json.loads(get(f"https://{co}/jobs.json" if "." in co else f"https://{co}.teamtailor.com/jobs.json"))   # token may be a custom careers host (careers.smg.team)
     except Exception as e:
         print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
     hits = 0
@@ -254,7 +296,8 @@ if "apple" in REG:
             pg += 1
         print(f"[apple] {total} GBR results, {hits} London DS", file=sys.stderr)
     except Exception as e:
-        print(f"[apple] {type(e).__name__}", file=sys.stderr)
+        print(f"[apple] {type(e).__name__} — rows carried forward as unverified", file=sys.stderr)
+        UNVERIFIED.setdefault("apple", []).append("jobs.apple")   # matches //jobs.apple. in the row URL
 
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
@@ -283,7 +326,7 @@ def spa_refresh():
             # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
             # instead of failing the whole JS-site pass.
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = ((glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") + glob.glob("/opt/pw-browsers/chromium/chrome*")) or [None])[0]
             if not exe: raise
             b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
@@ -343,9 +386,20 @@ def spa_refresh():
 
         # Microsoft Eightfold (in-browser)
         try:
-            goto("https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&num=50&start=0", 2000)
-            d = json.loads(pg.inner_text("body"))
-            if not isinstance(d, dict) or "data" not in d: raise ValueError("Microsoft search returned no 'data' (rate-limited/gated)")   # unreadable != empty
+            # Eightfold returns at most 50 per call; page with start= (the SC-cleared Sr DS post sat beyond the first 50 on 2026-11-16)
+            pages = []; start = 0
+            while start < 300:                                   # Eightfold hands back 10 positions per call whatever num= says; data.count is the total (83 on 2026-11-16)
+                goto(f"https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=data%20scientist&num=50&start={start}", 1500)
+                try: d = json.loads(pg.inner_text("body"))
+                except ValueError:
+                    if start == 0: raise ValueError("Microsoft search returned non-JSON (rate-limited/gated)")   # unreadable != empty
+                    print(f"[spa] microsoft: page start={start} not JSON — keeping the first {start}", file=sys.stderr); break
+                if not isinstance(d, dict) or "data" not in d: raise ValueError("Microsoft search returned no 'data' (rate-limited/gated)")   # unreadable != empty
+                pages.append(d)
+                got = len((d.get("data") or {}).get("positions") or []); total = (d.get("data") or {}).get("count") or 0
+                start += got
+                if not got or start >= total: break
+            d = pages
             def walk(o):
                 if isinstance(o, dict):
                     t = o.get("name") or o.get("title")
@@ -436,7 +490,7 @@ def workable_page_fallback(accts):
         try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
         except Exception:
             import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
+            exe = ((glob.glob("/opt/pw-browsers/chromium-*/chrome-linux*/chrome") + glob.glob("/opt/pw-browsers/chromium/chrome*")) or [None])[0]
             b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():
@@ -484,10 +538,15 @@ if UNVERIFIED.get("workable"):
 def google_refresh():
     out, seen = [], set()
     base = "https://www.google.com/about/careers/applications/jobs/results/"
-    try:
-        html = get(base + "?location=London%2C%20UK&q=data%20scientist", t=25)
-    except Exception as e:
-        print("[google]", type(e).__name__, file=sys.stderr); return out
+    html = ""
+    for page_no in range(1, 6):                       # 20 results per page; London DS search ran to 3 pages on 2026-11-16
+        try:
+            chunk = get(base + f"?location=London%2C%20UK&q=data%20scientist&page={page_no}", t=25)
+        except Exception as e:
+            if page_no == 1: print("[google]", type(e).__name__, file=sys.stderr); return out
+            break
+        if not re.search(r"jobs/results/\d+-", chunk): break
+        html += chunk
     for m in re.finditer(r"jobs/results/(\d+)-([a-z0-9-]+)", html):
         jid, slug = m.group(1), m.group(2)
         if jid in seen: continue

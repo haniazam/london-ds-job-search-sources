@@ -56,6 +56,7 @@
   "ocadogroup",
   "onrunning",
   "optiver",
+  "payuk",
   "physicsx",
   "pinterest",
   "polyai",
@@ -82,18 +83,22 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
   "winton",
   "wise",
   "wppmedia",
-  "via",
-  "payuk"
+  "monks",
+  "oodlefinance"
  ],
  "ashby": [
   "Abound",
+  "airwallex",
   "arq",
+  "arrive",
+  "beamery",
   "bolt",
   "carwow",
   "chainalysis-careers",
@@ -114,6 +119,7 @@
   "loveholidays",
   "marshmallow",
   "moneybox",
+  "moss",
   "multiverse",
   "neko-health",
   "omaze",
@@ -127,6 +133,7 @@
   "render",
   "socure",
   "synthesia",
+  "teya",
   "trainline",
   "twelve",
   "voleon",
@@ -135,10 +142,10 @@
   "xyz-reality",
   "zego",
   "zilch",
-  "beamery",
-  "teya",
-  "moss",
-  "airwallex"
+  "edited",
+  "refractal",
+  "cint",
+  "hawk"
  ],
  "lever": [
   "analyticpartners",
@@ -185,26 +192,31 @@
   "IQVIA",
   "PublicisGroupe",
   "ReedBusinessInformationLimited",
+  "SyngentaGroup",
   "Talan",
   "Trainline",
   "asos",
-  "wise",
+  "entain",
   "qima",
-  "SyngentaGroup"
+  "wise",
+  "sportradar"
  ],
  "pinpoint": [
   "accenture",
   "alcumus",
   "cfc",
   "convexin",
+  "dogstrust",
   "field",
   "kharon",
   "made-tech",
   "oxfordeconomics",
+  "ravelin",
   "stint",
   "surgohealth",
   "systematica",
-  "dogstrust"
+  "uktv",
+  "youlend"
  ],
  "recruitee": [
   "cityscience"
@@ -237,13 +249,25 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "Visa": "https://visa.wd5.myworkdayjobs.com/wday/cxs/visa/Visa/jobs",
+  "AEGIS London": "https://aegislondon.wd3.myworkdayjobs.com/wday/cxs/aegislondon/Careers/jobs",
+  "Centrica": "https://centrica.wd3.myworkdayjobs.com/wday/cxs/centrica/Centrica/jobs",
+  "Formula 1": "https://formulaone.wd3.myworkdayjobs.com/wday/cxs/formulaone/F1/jobs",
+  "Betway (Super Group)": "https://myhcm.wd3.myworkdayjobs.com/wday/cxs/myhcm/Betway/jobs",
+  "Haleon": "https://gsknch.wd3.myworkdayjobs.com/wday/cxs/gsknch/GSKCareers/jobs",
+  "Cisco": "https://cisco.wd5.myworkdayjobs.com/wday/cxs/cisco/Cisco_Careers/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
   "QuriousAssociatesLimited",
   "Degree6",
-  "kimarutalent"
+  "kimarutalent",
+  "Orbis Group",
+  "Infused Solutions",
+  "William Alexander",
+  "Edenbrook",
+  "Women in Data®"
  ],
  "display_names": {
   "deepmind": "Google DeepMind",
@@ -381,7 +405,24 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "arrive": "Arrive",
+  "entain": "Entain",
+  "ravelin": "Ravelin Technology",
+  "monks": "Monks",
+  "oodlefinance": "Oodle Finance",
+  "argusmedia": "Argus Media",
+  "labgenius": "LabGenius",
+  "tailscom": "Tails.com",
+  "refractal": "Refractal",
+  "edited": "EDITED",
+  "youlend": "YouLend",
+  "uktv": "UKTV (BBC Studios)",
+  "careers.smg.team": "SMG",
+  "Entain": "Entain",
+  "cint": "Cint",
+  "sportradar": "Sportradar",
+  "hawk": "Hawk"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -390,7 +431,10 @@
   "Disney": "https://www.disneycareers.com/en/search-jobs?k=data%20scientist&l=London",
   "Spotify": "https://www.lifeatspotify.com/jobs?q=data%20scientist&l=london",
   "Expedia": "https://careers.expediagroup.com/jobs/?keyword=data+scientist&location=London",
-  "Ripple": "https://ripple.com/careers/all-jobs/"
+  "Ripple": "https://ripple.com/careers/all-jobs/",
+  "Standard Chartered": "https://jobs.standardchartered.com/search/?q=data+scientist&locationsearch=London",
+  "Meta": "https://www.metacareers.com/jobsearch/?offices[0]=London%2C%20UK&q=data%20scientist",
+  "IBM": "https://www.ibm.com/careers/search?q=data%20scientist&field_keyword_05[0]=United%20Kingdom"
  },
  "external_lists": {
   "_doc": "Other lists of the same search to diff against on every refresh; a role there but not here is either dead, out of scope, or a missed board token.",
@@ -413,12 +457,25 @@
   "JPMorgan Chase & Co.": "JPMorgan Chase",
   "BNY Mellon": "BNY",
   "Fitch Solutions": "Fitch Group",
-  "Fitch Ratings": "Fitch Group"
+  "Fitch Ratings": "Fitch Group",
+  "LexisNexis Risk Solutions": "RELX",
+  "Ipsos in the UK": "Ipsos",
+  "QuantumBlack, AI by McKinsey": "QuantumBlack (McKinsey)",
+  "Viator": "Tripadvisor",
+  "trg.": "TRG Screen",
+  "Formula.": "Formula 1",
+  "Tails.com | B Corp": "Tails.com",
+  "LabGenius Therapeutics": "LabGenius",
+  "Ravelin Technology": "Ravelin"
  },
  "teamtailor": [
   "bluelightcard",
   "mypos",
-  "yonder"
+  "yonder",
+  "argusmedia",
+  "careers.smg.team",
+  "labgenius",
+  "tailscom"
  ],
  "oraclehcm": {
   "_doc": "Oracle HCM Cloud career sites: host + siteNumber; refresh_roles.py queries the public recruitingCEJobRequisitions finder (keyword, paged).",
@@ -429,6 +486,18 @@
   "BNY": {
    "host": "eofe.fa.us2.oraclecloud.com",
    "site": "CX_1001"
+  },
+  "Ipsos": {
+   "host": "ecqf.fa.em2.oraclecloud.com",
+   "site": "IpsosCareers"
+  },
+  "Ocado Logistics": {
+   "host": "iahbme.fa.ocs.oraclecloud.com",
+   "site": "CX_1"
+  },
+  "Compare the Market": {
+   "host": "ebet.fa.em3.oraclecloud.com",
+   "site": "CX_1"
   }
  },
  "successfactors": {
