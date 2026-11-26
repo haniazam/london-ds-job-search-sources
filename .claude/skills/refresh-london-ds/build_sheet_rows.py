@@ -20,7 +20,10 @@ key = lambda u: (u or "").split("?")[0].rstrip("/")
 prev_rows, prev_date = [], None
 if PREV:
     prev_rows = json.load(open(PREV))
-    prev_date = datetime.date.fromtimestamp(os.path.getmtime(PREV)).isoformat()      # when the previous rows were generated
+    # when the previous rows were generated: the latest refresh date stamped in their Notes (the Sheet is only
+    # written by refreshes), falling back to the file's mtime when no row carries one
+    stamps = [m for r in prev_rows if len(r) >= 9 for m in re.findall(r"\b(\d{4}-\d{2}-\d{2})\b", r[8]) if m < DATE]
+    prev_date = max(stamps) if stamps else datetime.date.fromtimestamp(os.path.getmtime(PREV)).isoformat()
 else:                                                                               # default baseline: newest snapshot strictly before DATE
     SNAP = os.path.join(ROOT, "data", "snapshots")
     snaps = sorted(f for f in (os.listdir(SNAP) if os.path.isdir(SNAP) else []) if re.fullmatch(r"\d{4}-\d{2}-\d{2}\.csv", f) and f[:10] < DATE)
@@ -48,8 +51,9 @@ def unreadable(url):
     """The platform key whose board the run could not read, or None."""
     if "workable" in url and "workable" in unv: return "workable"
     if url.split("?")[0] in unv.get("manual", []): return "manual"
-    return next((k for k, ts in unv.items() for t in ts if f"/{t}" in url or f"//{t}." in url), None)
-REASON = {"spa": "JS site not reachable this run (Playwright absent or fetch failed)", "manual": "post page fetch failed this run",
+    path = url.split("?")[0].rstrip("/") + "/"
+    return next((k for k, ts in unv.items() for t in ts if f"/{t}/" in path or f"//{t}." in url), None)   # board token as a path segment, or host prefix
+REASON = {"spa": "JS site not reachable this run (Playwright absent or fetch failed)", "manual": "post page fetch failed this run", "workable": "board API rate-limited (429)",
           "page": "no board returned it and its job page could not be fetched", "unregistered": "its board is not in boards.json and the job page gave no verdict"}
 # ---- safety net: a row no source returned is re-checked on its own job page before it is called closed ----
 # (a board missing from the registry, a gated API or a transient error must never close a role; only a 404/410, a dead
@@ -90,8 +94,10 @@ for v in missing:
         if verdict == "error" or (verdict == "generic" and not reg): k = "page" if verdict == "error" else "unregistered"
     if k:
         row = list(v); row[7] = "Unverified"
+        lv = re.search(r"last verified (\d{4}-\d{2}-\d{2})", row[8])                       # already unverified last time: keep its real last-verified date
+        last_ok = lv.group(1) if (lv and v[7] == "Unverified") else prev_date
         prior = re.sub(r"^(not re-verified on \S+ \([^)]*\); last verified [^;]*; )+", "", re.sub(r"^NEW \(refresh [^)]*\); ", "", row[8]))
-        row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {prev_date}; " + prior
+        row[8] = f"not re-verified on {DATE} ({REASON.get(k, 'board API rate-limited')}); last verified {last_ok}; " + prior
         out.append(row); carried.append(row)
     else: closed.append(v)
 out.sort(key=lambda r: (r[0].lower(), r[3] != "Senior+", r[1].lower()))
