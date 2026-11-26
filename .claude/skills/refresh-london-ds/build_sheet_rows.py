@@ -89,6 +89,7 @@ for v in missing:
         if verdict == "live":
             row = list(v); row[7] = "Active"
             prior = re.sub(r"^(not re-verified on \S+ \([^)]*\); last verified [^;]*; )+", "", re.sub(r"^NEW \(refresh [^)]*\); ", "", row[8]))
+            prior = re.sub(r"^(verified via job page on \S+ \([^)]*\); )+", "", prior)   # earlier runs' prefix, else it stacks up
             row[8] = f"verified via job page on {DATE} (no board returned it{'' if reg else '; board not in boards.json'}); " + prior
             out.append(row); rescued.append(row); continue
         if verdict == "error" or (verdict == "generic" and not reg): k = "page" if verdict == "error" else "unregistered"
