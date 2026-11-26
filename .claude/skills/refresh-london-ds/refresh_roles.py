@@ -15,7 +15,7 @@ if Playwright is missing — it just skips the browser companies).
 
 See SKILL.md for endpoints, gotchas and the upload step (assistant action).
 """
-import csv, html, json, os, re, sys, time, urllib.parse, urllib.request
+import csv, html, json, os, re, sys, time, urllib.error, urllib.parse, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from role_taxonomy import classify as role_type, COLLECT as DS   # core-role classifier (see role_taxonomy.py)
 
@@ -31,13 +31,28 @@ EXCLUDE = re.compile(r"intern|graduate|apprentice|placement|industrial year|work
 
 def level(t): return "Senior+" if SENIOR.search(t) else "Regular/Mid"
 
-def get(url, t=20, post=None):
+def get(url, t=20, post=None, retries=1):
     data = json.dumps(post).encode() if post is not None else None
     hdr = dict(UA)
     if post is not None: hdr["Content-Type"] = "application/json"
     r = urllib.request.Request(url, data=data, headers=hdr)
-    with urllib.request.urlopen(r, timeout=t) as f:
-        return f.read().decode("utf-8", "replace")
+    for i in range(retries + 1):
+        try:
+            with urllib.request.urlopen(r, timeout=t) as f:
+                return f.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as e:
+            if i < retries and e.code in (429, 500, 502, 503, 504) and "workable.com" not in url:   # Workable has its own pacing below
+                time.sleep(8 * (i + 1)); continue
+            raise
+
+UNVERIFIED = {}   # platform -> [board tokens / hosts] the run could not read (error, rate-limited, gated);
+                  # build_sheet_rows.py carries those boards' rows forward as Unverified — an API error is never a closure
+def unverified(platform, token, e=None):
+    """Register a board the run could not read. A 404 is not an outage: the board token is gone (employer left the
+    ATS — e.g. DeepMind moved to google.com/about/careers in Nov 2026), so its rows close like an empty board."""
+    if isinstance(e, urllib.error.HTTPError) and e.code == 404:
+        print(f"[{platform}] {token}: board not found (404) — token is dead, rows close", file=sys.stderr); return
+    UNVERIFIED.setdefault(platform, []).append(token)
 
 active = []   # (company, role, level, location, url)
 norole = []   # (company, reason)
@@ -48,7 +63,7 @@ for tok in GREENHOUSE:
     try:
         d = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{tok}/jobs?content=false"))
     except Exception as e:
-        print(f"[gh] {tok}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[gh] {tok}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("greenhouse", tok, e); continue
     hits = []
     for j in d.get("jobs", []):
         t = j.get("title", ""); loc = (j.get("location") or {}).get("name", "")
@@ -69,7 +84,7 @@ for org in REG["ashby"]:
                 shown = loc if LON.search(loc) else f"{loc} (+London)"
                 active.append((org, t, level(t), shown, j.get("jobUrl")))
     except Exception as e:
-        print(f"[ashby] {org}: {type(e).__name__}", file=sys.stderr)
+        print(f"[ashby] {org}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("ashby", org, e)
 
 # ---------------- Lever ----------------
 for org in REG["lever"]:
@@ -80,7 +95,7 @@ for org in REG["lever"]:
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 active.append((org, t, level(t), loc, j.get("hostedUrl")))
     except Exception as e:
-        print(f"[lever] {org}: {type(e).__name__}", file=sys.stderr)
+        print(f"[lever] {org}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("lever", org, e)
 
 # ---------------- Amazon ----------------
 seen = set()
@@ -99,9 +114,8 @@ for q in ["data scientist", "applied scientist"]:
             seen.add(jid)
             active.append(("Amazon", t, level(t), "London", f"https://www.amazon.jobs{job.get('job_path')}"))
     except Exception as e:
-        print(f"[amazon] {q}: {type(e).__name__}", file=sys.stderr)
+        print(f"[amazon] {q}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("amazon", "www.amazon", e)
 
-UNVERIFIED = {}   # platform -> [board tokens] the run could not read (rate-limited / gated); the Sheet carries their rows forward as unverified
 # ---------------- Workday CXS (mostly 0 London DS; re-check) ----------------
 WORKDAY = REG["workday"]
 for name, url in WORKDAY.items():
@@ -115,7 +129,7 @@ for name, url in WORKDAY.items():
                 active.append((name, t, level(t), loc, f"{host}/en-US/{site}{j.get('externalPath', '')}"))
     except Exception as e:
         print(f"[workday] {name}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr)
-        UNVERIFIED.setdefault("workday", []).append(url.split("//")[1].split("/")[0].split(".")[0])   # tenant host, matches //<tenant>. in the row URL
+        unverified("workday", url.split("//")[1].split("/")[0].split(".")[0])   # tenant host, matches //<tenant>. in the row URL
 
 # ---------------- Workable (widget API; rate-limits hard -> pace calls) ----------------
 wk_strikes = 0    # consecutive accounts lost to 429 -> after 2, one un-slept attempt each (bounds the pass at ~2 min, not ~40)
@@ -167,7 +181,7 @@ for acct in REG.get("pinpoint", []):
     try:
         d = json.loads(get(f"https://{acct}.pinpointhq.com/postings.json"))
     except Exception as e:
-        print(f"[pinpoint] {acct}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[pinpoint] {acct}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("pinpoint", acct, e); continue
     items = d.get("data", d) if isinstance(d, dict) else d; hits = 0
     for j in items:
         t = j.get("title", ""); loc = json.dumps(j.get("location", "")) + " " + json.dumps(j.get("workplace_type", ""))
@@ -180,7 +194,7 @@ for co in REG.get("recruitee", []):
     try:
         d = json.loads(get(f"https://{co}.recruitee.com/api/offers/"))
     except Exception as e:
-        print(f"[recruitee] {co}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[recruitee] {co}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("recruitee", co, e); continue
     hits = 0
     for j in d.get("offers", []):
         t = j.get("title", ""); loc = f"{j.get('city','')} {j.get('country','')} {j.get('location','')}"
@@ -193,7 +207,7 @@ for co in REG.get("teamtailor", []):
     try:
         d = json.loads(get(f"https://{co}.teamtailor.com/jobs.json"))
     except Exception as e:
-        print(f"[teamtailor] {co}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[teamtailor] {co}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("teamtailor", co, e); continue
     hits = 0
     for j in d.get("items", []):
         t = j.get("title", "")
@@ -230,7 +244,7 @@ for name, base in REG.get("successfactors", {}).items():
     try:
         page = get(f"{base.rstrip('/')}/search/?q=data+scientist", 30)
     except Exception as e:
-        print(f"[successfactors] {name}: {type(e).__name__}", file=sys.stderr); continue
+        print(f"[successfactors] {name}: {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("successfactors", base.split("//")[-1].split("/")[0].rsplit(".", 1)[0], e); continue
     rows = re.findall(r'<a class="jobTitle-link" href="([^"]+)">([^<]+)</a>.*?<span class="jobLocation">\s*([^<]+?)\s*</span>', page, re.S); hits = 0
     for path, t, loc in rows:
         t = html.unescape(t).strip(); loc = html.unescape(loc).strip()
@@ -254,7 +268,7 @@ if "apple" in REG:
             pg += 1
         print(f"[apple] {total} GBR results, {hits} London DS", file=sys.stderr)
     except Exception as e:
-        print(f"[apple] {type(e).__name__}", file=sys.stderr)
+        print(f"[apple] {type(e).__name__} — rows carried forward as unverified", file=sys.stderr); unverified("apple", "jobs.apple", e)
 
 # ---------------- JS sites via Playwright (optional) ----------------
 try:
@@ -273,19 +287,30 @@ def spa_fail(site, e):
     """A JS-site block that raised leaves its rows unverified (build_sheet_rows.py carries them forward), never closed."""
     print(f"[spa] {site}", type(e).__name__, e, file=sys.stderr)
     UNVERIFIED.setdefault("spa", []).extend(h for h in SPA_HOSTS[site] if h not in UNVERIFIED.get("spa", []))
+def launch_chromium(p):
+    """Launch headless Chromium. pip's playwright may want a newer build than the pre-installed one
+    (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers), so on failure fall back to whatever binary is there
+    (the Nov-2026 image ships chrome-linux64/, not chrome-linux/) instead of failing the JS-site pass."""
+    import glob
+    try:
+        return p.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
+    except Exception:
+        cands = ["/opt/pw-browsers/chromium"]
+        for pat in ("/opt/pw-browsers/chromium-*/chrome-linux*/chrome",
+                    "/opt/pw-browsers/chromium_headless_shell-*/chrome-headless-shell-linux*/chrome-headless-shell"):
+            cands += sorted(glob.glob(pat), reverse=True)
+        last = None
+        for exe in cands:
+            if not os.path.exists(exe): continue
+            try:
+                return p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
+            except Exception as e: last = e
+        raise last or RuntimeError("no Chromium binary under /opt/pw-browsers")
+
 def spa_refresh():
     out = []
     with sync_playwright() as p:
-        try:
-            b = p.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
-        except Exception:
-            # pip's playwright may want a newer Chromium than the pre-installed one
-            # (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers); fall back to that binary
-            # instead of failing the whole JS-site pass.
-            import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
-            if not exe: raise
-            b = p.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
+        b = launch_chromium(p)
         ctx = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"])
         pg = ctx.new_page()
         def goto(url, wait=2500):
@@ -433,11 +458,7 @@ def workable_page_fallback(accts):
     pw = None
     if any("apply.workable.com" in r["Apply URL (unique active post)"] for rs in cand.values() for r in rs) and HAVE_PW:
         pw = sync_playwright().start()
-        try: b = pw.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
-        except Exception:
-            import glob
-            exe = (glob.glob("/opt/pw-browsers/chromium-*/chrome-linux/chrome") or [None])[0]
-            b = pw.chromium.launch(headless=True, executable_path=exe, args=["--ignore-certificate-errors"])
+        b = launch_chromium(pw)
         pg = b.new_context(ignore_https_errors=True, locale="en-GB", user_agent=UA["User-Agent"]).new_page()
     for a, rs in cand.items():
         verdicts = 0
@@ -503,7 +524,7 @@ def google_refresh():
 try:
     active += google_refresh()
 except Exception as e:
-    print("[google] failed:", type(e).__name__, file=sys.stderr)
+    print("[google] failed:", type(e).__name__, "— rows carried forward as unverified", file=sys.stderr); unverified("google", "www.google", e)
 
 # ---------------- employer-site posts found by discover.py (verified by GET + <title>) ----------------
 DISC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "discovered_posts.json")
@@ -517,7 +538,7 @@ if os.path.exists(DISC):
         try:                                                                   # every post is fetched: a Workable feed page answers 410 once the post is gone
             page = get(u, 30)
         except Exception as e:
-            print(f"[discovered] {p['company']}: {type(e).__name__}", file=sys.stderr); continue
+            print(f"[discovered] {p['company']}: {type(e).__name__} — carried forward as unverified", file=sys.stderr); unverified("manual", u.split("?")[0]); continue
         tm = re.search(r"<title>(.*?)</title>", page, re.S); title = (tm.group(1) if tm else "").lower()
         if re.search(r"data scien", title) and not re.search(r"no longer|not found|not available|closed|expired|jobs search|\d,\d{3}\+ ", title) \
                 and not PAGE_DEAD.search(page):

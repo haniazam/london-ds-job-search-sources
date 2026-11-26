@@ -154,13 +154,17 @@ with open(OUT,"w",newline="",encoding="utf-8") as f:
             v=(p2.get("lo") or p2.get("hi"))//1000; comp=(f"up to £{v}k" if "up to" in p2.get("how","") else f"from £{v}k")+" (posted)"
         if not comp:                                                   # hand-added posts carry their own sourced figure
             mc=MANUAL_COMP.get(r["_rec"].get("Apply URL (unique active post)","").split("?")[0])
-            if mc: comp=mc if "(" in mc else mc+" (sourced)"
+            # a manual figure counts as sourced only when it names its source; a bare "(est.)" guess falls through to the market band
+            if mc and re.search(r"\((posted|sourced|market est\.)",mc): comp=mc
+            elif mc and re.search(r"\(([^)]*)\)",mc) and not re.fullmatch(r".*\(\s*est\.?\s*\)",mc): comp=re.sub(r"\(",r"(sourced: ",mc,count=1)
+            elif mc and "(" not in mc: comp=mc+" (sourced)"
         if not comp:
             for o in OVR:
                 if o["company"].lower()==r["company"].lower() and re.search(o["title_regex"],r["title"]):
-                    if o.get("lo") and o.get("hi"): comp=f"£{o['lo']}k–£{o['hi']}k ({o['label']})"
-                    elif o.get("lo"): comp=f"~£{o['lo']}k+ ({o['label']})"
-                    else: comp=f"up to £{o['hi']}k ({o['label']})"
+                    lab=o["label"] if re.match(r"(posted|sourced|market est\.)",o["label"]) else "sourced: "+o["label"]   # the tier label is the point
+                    if o.get("lo") and o.get("hi"): comp=f"£{o['lo']}k–£{o['hi']}k ({lab})"
+                    elif o.get("lo"): comp=f"~£{o['lo']}k+ ({lab})"
+                    else: comp=f"up to £{o['hi']}k ({lab})"
                     break
         if not comp:
             k=band_key(r["title"]); med=(bands.get(k) or {}).get("median") or FALLBACK[k]
