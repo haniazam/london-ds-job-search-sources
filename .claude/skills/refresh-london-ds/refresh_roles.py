@@ -120,9 +120,16 @@ for q in ["data scientist", "applied scientist"]:
 WORKDAY = REG["workday"]
 for name, url in WORKDAY.items():
     try:
-        d = json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": 0,
-                                      "searchText": "data scientist"}))
-        for j in d.get("jobPostings", []):
+        # page through the search: big tenants (LSEG, Citi, Barclays) have more than 20 "data scientist" matches
+        # worldwide, and the London ones are not guaranteed to be in the first page (missed LSEG x4 on 27 Nov 2026)
+        postings, offset = [], 0
+        while True:
+            d = json.loads(get(url, post={"appliedFacets": {}, "limit": 20, "offset": offset,
+                                          "searchText": "data scientist"}))
+            page = d.get("jobPostings", []); postings += page; offset += len(page)
+            if not page or offset >= int(d.get("total", 0) or 0) or offset >= 200: break
+            time.sleep(1)
+        for j in postings:
             t = j.get("title", ""); loc = j.get("locationsText", "")
             if DS.search(t) and LON.search(loc) and not EXCLUDE.search(t):
                 host = url.split("/wday/")[0]; site = url.rstrip("/").rsplit("/", 2)[-2]

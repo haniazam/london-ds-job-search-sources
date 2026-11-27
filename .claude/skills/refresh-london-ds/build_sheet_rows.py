@@ -75,11 +75,14 @@ def page_verdict(url):
     except Exception: UA, DEAD, PAGE_DEAD = {"User-Agent": "Mozilla/5.0"}, re.compile(r"no longer|not found|expired|jobs search", re.I), re.compile(r"\"status\"\s*,\s*\"EXPIRED\"", re.I)
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=35) as f: page = f.read().decode("utf-8", "replace")
-    except urllib.error.HTTPError as e: return "closed" if e.code in (404, 410) else "error"
+    except urllib.error.HTTPError as e: return "closed" if e.code in (404, 410) else "error"   # 429/403/5xx: unreadable, never closed
     except Exception: return "error"
     m = re.search(r"<title>(.*?)</title>", page, re.S); title = _h.unescape(m.group(1)).strip() if m else ""
+    # a bot-wall (Cloudflare "Just a moment…" / challenge) or a page with no <title> at all is unreadable, not evidence of
+    # closure — Workday tenants sit behind Cloudflare and answer with a challenge page when rate-limited (27 Nov 2026)
+    if re.search(r"just a moment|cf-chl|challenge-platform|/cdn-cgi/challenge|enable javascript and cookies", page[:6000], re.I) or not title: return "error"
     if re.search(r"data scien|decision scien|product scien|analytics scien|marketing scien", title, re.I) and not DEAD.search(title) and not PAGE_DEAD.search(page): return "live"
-    return "closed" if (DEAD.search(title) or PAGE_DEAD.search(page) or not title) else "generic"
+    return "closed" if (DEAD.search(title) or PAGE_DEAD.search(page)) else "generic"
 closed, carried, rescued = [], [], []
 for v in missing:
     k = unreadable(v[6])

@@ -216,7 +216,8 @@
   "systematica",
   "dogstrust",
   "ravelin",
-  "youlend"
+  "youlend",
+  "transferroom"
  ],
  "recruitee": [
   "cityscience"
@@ -410,7 +411,8 @@
   "oodlefinance": "Oodle Finance",
   "ravelin": "Ravelin Technology",
   "youlend": "YouLend",
-  "ripjar": "Ripjar"
+  "ripjar": "Ripjar",
+  "transferroom": "TransferRoom"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
