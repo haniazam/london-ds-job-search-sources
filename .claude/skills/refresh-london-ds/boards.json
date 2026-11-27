@@ -56,6 +56,7 @@
   "ocadogroup",
   "onrunning",
   "optiver",
+  "payuk",
   "physicsx",
   "pinterest",
   "polyai",
@@ -82,18 +83,22 @@
   "typeform",
   "unity3d",
   "valtech",
+  "via",
   "virtu",
   "wehrtyou",
   "wheely",
   "winton",
   "wise",
   "wppmedia",
-  "via",
-  "payuk"
+  "oodlefinance"
  ],
  "ashby": [
   "Abound",
+  "Cint",
+  "airwallex",
   "arq",
+  "arrive",
+  "beamery",
   "bolt",
   "carwow",
   "chainalysis-careers",
@@ -101,9 +106,11 @@
   "cohere",
   "comind",
   "deel",
+  "edited",
   "elevenlabs",
   "faculty",
   "gradient-labs",
+  "hawk",
   "hims-and-hers",
   "iwoca.co.uk",
   "jack-jill-external-ats",
@@ -114,6 +121,7 @@
   "loveholidays",
   "marshmallow",
   "moneybox",
+  "moss",
   "multiverse",
   "neko-health",
   "omaze",
@@ -123,10 +131,12 @@
   "quantexa",
   "quantum",
   "ramp",
+  "refractal",
   "relay",
   "render",
   "socure",
   "synthesia",
+  "teya",
   "trainline",
   "twelve",
   "voleon",
@@ -134,11 +144,7 @@
   "wayve",
   "xyz-reality",
   "zego",
-  "zilch",
-  "beamery",
-  "teya",
-  "moss",
-  "airwallex"
+  "zilch"
  ],
  "lever": [
   "analyticpartners",
@@ -162,9 +168,11 @@
   "clarity-ai",
   "day30",
   "flinks",
+  "friendmts",
   "homeprotect",
   "hometrack",
   "humara-2",
+  "infosys-consulting-europe",
   "minderacraft",
   "motabilityfoundation",
   "oritain",
@@ -172,10 +180,10 @@
   "primait",
   "productmadness",
   "resultance",
+  "ripjar",
   "uncapped",
   "vortexa",
-  "warden-ai",
-  "infosys-consulting-europe"
+  "warden-ai"
  ],
  "smartrecruiters": [
   "Checkoutcom1",
@@ -185,12 +193,14 @@
   "IQVIA",
   "PublicisGroupe",
   "ReedBusinessInformationLimited",
+  "SyngentaGroup",
   "Talan",
   "Trainline",
   "asos",
-  "wise",
+  "entain",
   "qima",
-  "SyngentaGroup"
+  "sportradar",
+  "wise"
  ],
  "pinpoint": [
   "accenture",
@@ -204,7 +214,10 @@
   "stint",
   "surgohealth",
   "systematica",
-  "dogstrust"
+  "dogstrust",
+  "ravelin",
+  "youlend",
+  "transferroom"
  ],
  "recruitee": [
   "cityscience"
@@ -237,7 +250,10 @@
   "Citi": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/2/jobs",
   "Barclays": "https://barclays.wd3.myworkdayjobs.com/wday/cxs/barclays/External_Career_Site_Barclays/jobs",
   "Roche": "https://roche.wd3.myworkdayjobs.com/wday/cxs/roche/roche-ext/jobs",
-  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs"
+  "AIG": "https://aig.wd1.myworkdayjobs.com/wday/cxs/aig/aig/jobs",
+  "AEGIS London": "https://aegislondon.wd3.myworkdayjobs.com/wday/cxs/aegislondon/Careers/jobs",
+  "Cisco": "https://cisco.wd5.myworkdayjobs.com/wday/cxs/cisco/Cisco_Careers/jobs",
+  "Ryan Specialty": "https://ryansg.wd5.myworkdayjobs.com/wday/cxs/ryansg/Ryan_Specialty_Career_Site/jobs"
  },
  "recruiters_exclude": [
   "jobgether",
@@ -381,7 +397,22 @@
   "axle-energy": "Axle Energy",
   "SyngentaGroup": "Syngenta",
   "dogstrust": "Dogs Trust",
-  "payuk": "Pay.UK"
+  "payuk": "Pay.UK",
+  "friendmts": "Friend MTS",
+  "sportradar": "Sportradar",
+  "arrive": "Arrive",
+  "Cint": "Cint",
+  "edited": "EDITED",
+  "hawk": "Hawk",
+  "refractal": "Refractal",
+  "argusmedia": "Argus Media",
+  "labgenius": "LabGenius",
+  "entain": "Entain",
+  "oodlefinance": "Oodle Finance",
+  "ravelin": "Ravelin Technology",
+  "youlend": "YouLend",
+  "ripjar": "Ripjar",
+  "transferroom": "TransferRoom"
  },
  "employer_sites": {
   "_doc": "Employer-hosted career sites with no public ATS API; verify by GET + <title> (dead posts return 200 with a generic title). Harvest new post URLs from the radar / site-scoped searches.",
@@ -418,7 +449,9 @@
  "teamtailor": [
   "bluelightcard",
   "mypos",
-  "yonder"
+  "yonder",
+  "argusmedia",
+  "labgenius"
  ],
  "oraclehcm": {
   "_doc": "Oracle HCM Cloud career sites: host + siteNumber; refresh_roles.py queries the public recruitingCEJobRequisitions finder (keyword, paged).",
@@ -429,6 +462,14 @@
   "BNY": {
    "host": "eofe.fa.us2.oraclecloud.com",
    "site": "CX_1001"
+  },
+  "Compare the Market": {
+   "host": "ebet.fa.em3.oraclecloud.com",
+   "site": "CX_1"
+  },
+  "Ipsos": {
+   "host": "ecqf.fa.em2.oraclecloud.com",
+   "site": "IpsosCareers"
   }
  },
  "successfactors": {

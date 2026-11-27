@@ -24,7 +24,7 @@ def verified_rows(pause=3.0):
         try:
             with urllib.request.urlopen(urllib.request.Request(p["url"], headers=UA), timeout=35) as f: page = f.read().decode("utf-8", "replace")
         except Exception as e:
-            print(f"[manual] {p['company']} — {p['title']}: {type(e).__name__} (unverified this run)", file=sys.stderr)
+            print(f"[manual] {p['company']} — {p['title']}: {type(e).__name__}{' ' + str(e.code) if isinstance(e, urllib.error.HTTPError) else ''} ({'closed' if isinstance(e, urllib.error.HTTPError) and e.code in (404, 410) else 'unverified this run'})", file=sys.stderr)
             if not (isinstance(e, urllib.error.HTTPError) and e.code in (404, 410)): UNVERIFIED_URLS.append(p["url"].split("?")[0])
             continue
         m = re.search(r"<title>(.*?)</title>", page, re.S); title = html.unescape(m.group(1)) if m else ""
