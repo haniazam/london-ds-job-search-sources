@@ -245,11 +245,6 @@
   "closed"
  ],
  [
-  "Apple (Data Scientist - WPC - Analytics)",
-  "Closed — not returned by employer site (title verified) on the 2026-10-22 refresh (was live on 2026-10-22)",
-  "closed"
- ],
- [
   "ElevenLabs (Marketing Data Scientist)",
   "Closed — not returned by Ashby API on the 2026-10-22 refresh (was live on 2026-10-22)",
   "closed"
@@ -257,11 +252,6 @@
  [
   "iwoca (Data Scientist - iwocaPay Risk Squad)",
   "Closed — not returned by Ashby API on the 2026-10-22 refresh (was live on 2026-10-22)",
-  "closed"
- ],
- [
-  "LSEG (Data Scientist)",
-  "Closed — not returned by Workday API on the 2026-10-22 refresh (was live on 2026-10-22)",
   "closed"
  ],
  [
@@ -477,6 +467,11 @@
  [
   "JPMorgan Chase (Data Scientist Senior Associate (AI/ML) - Risk Management)",
   "Closed — not returned by employer site (title verified) on the 2026-11-26 refresh (was live on 2026-11-25)",
+  "closed"
+ ],
+ [
+  "Artefact (Senior Data Scientist)",
+  "Closed — not returned by Greenhouse API on the 2026-11-27 refresh (was live on 2026-11-26)",
   "closed"
  ]
 ]
